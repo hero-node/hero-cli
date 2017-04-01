@@ -1,0 +1,13 @@
+{
+  "name": "hero-cli",
+  "version": "0.0.1",
+  "bin": {
+    "hero": "./bin/index.js"
+  },
+  "devDependencies": {
+  },
+  "dependencies": {
+  },
+  "scripts": {
+  }
+}
