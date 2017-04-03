@@ -1,0 +1,5 @@
+{
+  "outDir": "dist",
+  "heroCliConfig": ".hero-cli.json",
+  "sourceFolder": "src"
+}
