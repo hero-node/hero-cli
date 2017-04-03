@@ -4,11 +4,11 @@ var autoprefixer = require('autoprefixer');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-var InterpolateHtmlPlugin = require('react-dev-utils/InterpolateHtmlPlugin');
-var WatchMissingNodeModulesPlugin = require('react-dev-utils/WatchMissingNodeModulesPlugin');
-var getClientEnvironment = require('./env');
-var paths = require('./paths');
-
+var InterpolateHtmlPlugin = require('../lib/InterpolateHtmlPlugin');
+var WatchMissingNodeModulesPlugin = require('../lib/WatchMissingNodeModulesPlugin');
+var getClientEnvironment = require('../lib/env');
+var paths = require('../lib/paths');
+var envName = process.argv.slice(2)[0];
 // @remove-on-eject-begin
 // `path` is not used after eject - see https://github.com/facebookincubator/create-react-app/issues/1174
 var path = require('path');
@@ -22,7 +22,7 @@ var publicPath = '/';
 // Omit trailing slash as %PUBLIC_PATH%/xyz looks better than %PUBLIC_PATH%xyz.
 var publicUrl = '';
 // Get environment variables to inject into our app.
-var env = getClientEnvironment(publicUrl);
+var env = getClientEnvironment(envName);
 
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.

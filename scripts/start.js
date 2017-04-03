@@ -8,48 +8,26 @@ var WebpackDevServer = require('webpack-dev-server');
 var historyApiFallback = require('connect-history-api-fallback');
 var httpProxyMiddleware = require('http-proxy-middleware');
 var detect = require('detect-port');
-var clearConsole = require('react-dev-utils/clearConsole');
-var checkRequiredFiles = require('../lib/checkRequiredFiles');
-var formatWebpackMessages = require('react-dev-utils/formatWebpackMessages');
-var getProcessForPort = require('react-dev-utils/getProcessForPort');
-var openBrowser = require('react-dev-utils/openBrowser');
-var prompt = require('react-dev-utils/prompt');
-var fs = require('fs');
+var clearConsole = require('../lib/clearConsole');
+var formatWebpackMessages = require('../lib/formatWebpackMessages');
+var getProcessForPort = require('../lib/getProcessForPort');
+var openBrowser = require('../lib/openBrowser');
+var prompt = require('../lib/prompt');
 var config = require('../config/webpack.config.dev');
-var paths = require('../config/paths');
+var paths = require('../lib/paths');
 
-var useYarn = fs.existsSync(paths.yarnLockFile);
-var cli = useYarn ? 'yarn' : 'npm';
+var cli = 'npm';
 var isInteractive = process.stdout.isTTY;
-
-// Warn and crash if required files are missing
-if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
-    process.exit(1);
-}
 
 // Tools like Cloud9 rely on this.
 var DEFAULT_PORT = parseInt(process.env.PORT, 10) || 3000;
 var compiler;
-var handleCompile;
 
-// You can safely remove this after ejecting.
-// We only use this block for testing of Create React App itself:
-var isSmokeTest = process.argv.some(arg => arg.indexOf('--smoke-test') > -1);
-
-if (isSmokeTest) {
-    handleCompile = function (err, stats) {
-        if (err || stats.hasErrors() || stats.hasWarnings()) {
-            process.exit(1);
-        } else {
-            process.exit(0);
-        }
-    };
-}
 
 function setupCompiler(host, port, protocol) {
   // "Compiler" is a low-level interface to Webpack.
   // It lets us listen to some events and provide our own custom messages.
-    compiler = webpack(config, handleCompile);
+    compiler = webpack(config);
 
   // "invalid" event fires when you have changed a file, and Webpack is
   // recompiling a bundle. WebpackDevServer takes care to pause serving the
