@@ -4,9 +4,11 @@
   "bin": {
     "hero": "./bin/index.js"
   },
+  "main": "entry/index.js",
   "devDependencies": {},
   "dependencies": {
-    "cross-spawn": "^5.1.0"
+    "cross-spawn": "^5.1.0",
+    "react-dev-utils": "^0.5.2"
   },
   "scripts": {}
 }
