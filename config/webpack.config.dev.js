@@ -34,7 +34,7 @@ var entries = getEntries(path.join(process.cwd(),entryFolder)).filter(name => {
     plugin: new HtmlWebpackPlugin({
         inject: true,
         template: paths.appHtml,
-        filename: attriName+'.html',
+        filename: name+'.html',
         minify: {
             removeComments: true,
             // collapseWhitespace: true,
