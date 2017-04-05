@@ -36,8 +36,6 @@ function getClientEnvironment(env) {
     var stringified = {
         'process.env': JSON.stringify(raw)
     };
-
-    console.log(stringified);
     return { raw, stringified };
 }
 

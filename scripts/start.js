@@ -86,7 +86,7 @@ function setupCompiler(host, port, protocol) {
         if (isInteractive) {
             clearConsole();
         }
-
+        console.log(stats);
     // We have switched off the default Webpack output in WebpackDevServer
     // options so we are going to "massage" the warnings and errors and present
     // them in a readable focused way.

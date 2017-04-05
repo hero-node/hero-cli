@@ -9,9 +9,10 @@
  */
 // @remove-on-eject-end
 'use strict';
-
+var entryFolder = 'src/entry';
 var autoprefixer = require('autoprefixer');
 var webpack = require('webpack');
+var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 var InterpolateHtmlPlugin = require('hero-dev-tools/InterpolateHtmlPlugin');
@@ -19,10 +20,76 @@ var WatchMissingNodeModulesPlugin = require('hero-dev-tools/WatchMissingNodeModu
 var envName = process.argv[2];
 var getClientEnvironment = require('./env');
 var paths = require('./paths');
-
-// @remove-on-eject-begin
-// `path` is not used after eject - see https://github.com/facebookincubator/create-react-app/issues/1174
 var path = require('path');
+
+var getEntries = require('../lib/getEntries');
+
+var entries = getEntries(path.join(process.cwd(),entryFolder)).filter(name => {
+  return /\.js$/.test(name);
+}).map((name, index) => {
+  var attriName = index +'-'+ (name.match(/(.*)\/(.*)\.js$/)[2]);
+  return {
+    file: name,
+    entryName: attriName,
+    plugin: new HtmlWebpackPlugin({
+        inject: true,
+        template: paths.appHtml,
+        filename: attriName+'.html',
+        minify: {
+            removeComments: true,
+            // collapseWhitespace: true,
+            // removeRedundantAttributes: true,
+            useShortDoctype: true,
+            // removeEmptyAttributes: true,
+            // removeStyleLinkTypeAttributes: true,
+            // keepClosingSlash: true,
+            // minifyJS: true,
+            // minifyCSS: true,
+            // minifyURLs: true
+        },
+        chunks: [attriName]
+    })
+  }
+});
+
+var buildEntries = {
+    webpackHotDevClient: require.resolve('hero-dev-tools/webpackHotDevClient'),
+// We ship a few polyfills by default:
+    polyfills:  require.resolve('./polyfills'),
+// Finally, this is your app's code:
+    appIndex:   paths.appIndexJs
+};
+entries.forEach(entry => {
+  buildEntries[entry.entryName] = entry.file
+});
+
+var indexPlugin = [
+  // Generates an `index.html` file with the <script> injected.
+      new HtmlWebpackPlugin({
+          inject: true,
+          template: paths.appHtml,
+          minify: {
+              removeComments: true,
+              // collapseWhitespace: true,
+              // removeRedundantAttributes: true,
+              useShortDoctype: true,
+              // removeEmptyAttributes: true,
+              // removeStyleLinkTypeAttributes: true,
+              // keepClosingSlash: true,
+              // minifyJS: true,
+              // minifyCSS: true,
+              // minifyURLs: true
+          },
+          chunks: ['appIndex']
+      })
+]
+var buildPlugins = entries.map(entry => {
+  console.log(entry.plugin);
+  return entry.plugin;
+}).concat(indexPlugin);
+
+console.log('buildEntries', buildEntries);
+
 // @remove-on-eject-end
 
 // Webpack uses `publicPath` to determine where the app is being served from.
@@ -38,33 +105,13 @@ var env = getClientEnvironment(envName);
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
 // The production configuration is different and lives in a separate file.
-module.exports = {
+var webConfig = {
   // You may want 'eval' instead if you prefer to see the compiled output in DevTools.
   // See the discussion in https://github.com/facebookincubator/create-react-app/issues/343.
     devtool: 'cheap-module-source-map',
   // These are the "entry points" to our application.
   // This means they will be the "root" imports that are included in JS bundle.
   // The first two entry points enable "hot" CSS and auto-refreshes for JS.
-    entry: [
-    // Include an alternative client for WebpackDevServer. A client's job is to
-    // connect to WebpackDevServer by a socket and get notified about changes.
-    // When you save a file, the client will either apply hot updates (in case
-    // of CSS changes), or refresh the page (in case of JS changes). When you
-    // make a syntax error, this client will display a syntax error overlay.
-    // Note: instead of the default WebpackDevServer client, we use a custom one
-    // to bring better experience for Create React App users. You can replace
-    // the line below with these two lines if you prefer the stock client:
-    // require.resolve('webpack-dev-server/client') + '?/',
-    // require.resolve('webpack/hot/dev-server'),
-        require.resolve('hero-dev-tools/webpackHotDevClient'),
-    // We ship a few polyfills by default:
-        require.resolve('./polyfills'),
-    // Finally, this is your app's code:
-        paths.appIndexJs
-    // We include the app code last so that if there is a runtime error during
-    // initialization, it doesn't blow up the WebpackDevServer client, and
-    // changing JS code would still trigger a refresh.
-    ],
     output: {
     // Next line is not used in dev but WebpackDevServer crashes without it:
         path: paths.appBuild,
@@ -73,7 +120,8 @@ module.exports = {
     // This does not produce a real file. It's just the virtual path that is
     // served by WebpackDevServer in development. This is the JS bundle
     // containing code from all our entry points, and the Webpack runtime.
-        filename: 'static/js/bundle.js',
+        filename: 'static/js/[name].[hash:8].js',
+        chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
     // This is the URL that app is served from. We use "/" in development.
         publicPath: publicPath
     },
@@ -210,12 +258,8 @@ module.exports = {
     // The public URL is available as %PUBLIC_URL% in index.html, e.g.:
     // <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     // In development, this will be an empty string.
+        new ProgressBarPlugin(),
         new InterpolateHtmlPlugin(env.raw),
-    // Generates an `index.html` file with the <script> injected.
-        new HtmlWebpackPlugin({
-            inject: true,
-            template: paths.appHtml
-        }),
     // Makes some environment variables available to the JS code, for example:
     // if (process.env.NODE_ENV === 'development') { ... }. See `./env.js`.
         new webpack.DefinePlugin(env.stringified),
@@ -239,3 +283,7 @@ module.exports = {
         tls: 'empty'
     }
 };
+webConfig.entry = buildEntries;
+webConfig.plugins = webConfig.plugins.concat(buildPlugins);
+console.log(webConfig);
+module.exports = webConfig;
