@@ -13,7 +13,7 @@
 var path = require('path');
 var fs = require('fs');
 var url = require('url');
-
+var heroConfig = require('./hero-config.json');
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebookincubator/create-react-app/issues/637
 var appDirectory = fs.realpathSync(process.cwd());
@@ -85,6 +85,7 @@ module.exports = {
   testsSetup: resolveApp('src/setupTests.js'),
   appNodeModules: resolveApp('node_modules'),
   nodePaths: nodePaths,
+  heroCliConfig: resolveApp(heroConfig.heroCliConfig),
   publicUrl: getPublicUrl(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json'))
 };
@@ -107,6 +108,7 @@ module.exports = {
   testsSetup: resolveApp('src/setupTests.js'),
   appNodeModules: resolveApp('node_modules'),
   nodePaths: nodePaths,
+  heroCliConfig: resolveApp(heroConfig.heroCliConfig),
   publicUrl: getPublicUrl(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json')),
   // These properties only exist before ejecting:
@@ -132,6 +134,7 @@ if (!reactScriptsLinked && __dirname.indexOf(path.join('packages', 'react-script
     testsSetup: resolveOwn('template/src/setupTests.js'),
     appNodeModules: resolveOwn('node_modules'),
     nodePaths: nodePaths,
+    heroCliConfig: resolveApp(heroConfig.heroCliConfig),
     publicUrl: getPublicUrl(resolveOwn('package.json')),
     servedPath: getServedPath(resolveOwn('package.json')),
     // These properties only exist before ejecting:

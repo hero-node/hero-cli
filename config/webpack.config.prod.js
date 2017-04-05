@@ -17,6 +17,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var ManifestPlugin = require('webpack-manifest-plugin');
 var InterpolateHtmlPlugin = require('hero-dev-tools/InterpolateHtmlPlugin');
 var paths = require('./paths');
+var envName = process.argv[2];
 var getClientEnvironment = require('./env');
 
 // @remove-on-eject-begin
@@ -35,7 +36,7 @@ var shouldUseRelativeAssetPaths = publicPath === './';
 // Omit trailing slash as %PUBLIC_URL%/xyz looks better than %PUBLIC_URL%xyz.
 var publicUrl = publicPath.slice(0, -1);
 // Get environment variables to inject into our app.
-var env = getClientEnvironment(publicUrl);
+var env = getClientEnvironment(envName);
 
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.

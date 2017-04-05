@@ -16,6 +16,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 var InterpolateHtmlPlugin = require('hero-dev-tools/InterpolateHtmlPlugin');
 var WatchMissingNodeModulesPlugin = require('hero-dev-tools/WatchMissingNodeModulesPlugin');
+var envName = process.argv[2];
 var getClientEnvironment = require('./env');
 var paths = require('./paths');
 
@@ -32,7 +33,7 @@ var publicPath = '/';
 // Omit trailing slash as %PUBLIC_PATH%/xyz looks better than %PUBLIC_PATH%xyz.
 var publicUrl = '';
 // Get environment variables to inject into our app.
-var env = getClientEnvironment(publicUrl);
+var env = getClientEnvironment(envName);
 
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
