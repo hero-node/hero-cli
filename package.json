@@ -9,7 +9,8 @@
   "dependencies": {
     "cross-spawn": "^5.1.0",
     "eslint": "^3.19.0",
-    "shelljs": "^0.7.7"
+    "shelljs": "^0.7.7",
+    "yargs": "^7.0.2"
   },
   "scripts": {}
 }
