@@ -17,6 +17,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var ManifestPlugin = require('webpack-manifest-plugin');
 var ensureSlash = require('hero-dev-tools/ensureSlash');
+var getEntries = require('hero-dev-tools/getEntries');
 var InterpolateHtmlPlugin = require('hero-dev-tools/InterpolateHtmlPlugin');
 var paths = require('./paths');
 var envName = process.argv[2];
@@ -40,10 +41,6 @@ var publicUrl = publicPath.slice(0, -1);
 // Get environment variables to inject into our app.
 var env = getClientEnvironment(envName);
 
-var getEntries = require('../lib/getEntries');
-
-
-console.log(paths.appSrc);
 var entries = getEntries(path.join(paths.appSrc, entryFolder)).filter(name => {
     return /\.js$/.test(name);
 }).map((name, index) => {

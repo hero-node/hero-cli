@@ -16,14 +16,13 @@ var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 var ensureSlash = require('hero-dev-tools/ensureSlash');
+var getEntries = require('hero-dev-tools/getEntries');
 var InterpolateHtmlPlugin = require('hero-dev-tools/InterpolateHtmlPlugin');
 var WatchMissingNodeModulesPlugin = require('hero-dev-tools/WatchMissingNodeModulesPlugin');
 var envName = process.argv[2];
 var getClientEnvironment = require('./env');
 var paths = require('./paths');
 var path = require('path');
-
-var getEntries = require('../lib/getEntries');
 
 var entries = getEntries(path.join(paths.appSrc, entryFolder)).filter(name => {
     return /\.js$/.test(name);
