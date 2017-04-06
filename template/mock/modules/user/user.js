@@ -1,5 +1,5 @@
 import Mock from 'mockjs';
-// Usage: 
+// Usage:
 // http://mockjs.com/examples.html
 
 function subRouter(express) {
@@ -9,7 +9,7 @@ function subRouter(express) {
 
     // 下载文件
     router.get('/user/download', function(req, res) {
-        return res.download(path.join(__dirname, '../download/sample.pdf'), '补件-' + new Date().getTime() + '.pdf');
+        return res.download(path.join(__dirname, '../download/key.txt'), 'Download-' + new Date().getTime() + '.pdf');
     });
 
     // Get Method

@@ -1,4 +1,4 @@
-console.log('Hello world');
+console.log('Hello Hero');
 var HeroAPI = require('hero-cli');
 
 HeroAPI.sayIntroduction();

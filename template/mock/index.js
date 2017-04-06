@@ -33,7 +33,11 @@ function bootstrap() {
     });
 
     require('http').createServer(app).listen(port, function () {
-        console.log(chalk.green('Express mock server listening on port ' + port));
+        console.log(chalk.green('Start successfully!'));
+        console.log();
+        console.log('Mock server is running at:');
+        console.log(chalk.cyan('http://localhost' + (port === 80 ? '' : ':' + port)));
+        console.log();
     });
 }
 

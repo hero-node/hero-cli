@@ -1,0 +1,6 @@
+{
+  "environments": {
+    "dev": "src/environments/environment-dev.js",
+    "prod": "src/environments/environment-prod.js"
+  }
+}
