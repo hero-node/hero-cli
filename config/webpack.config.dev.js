@@ -9,12 +9,13 @@
  */
 // @remove-on-eject-end
 'use strict';
-var entryFolder = 'src/entry';
+var entryFolder = 'entry';
 var autoprefixer = require('autoprefixer');
 var webpack = require('webpack');
 var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+var ensureSlash = require('hero-dev-tools/ensureSlash');
 var InterpolateHtmlPlugin = require('hero-dev-tools/InterpolateHtmlPlugin');
 var WatchMissingNodeModulesPlugin = require('hero-dev-tools/WatchMissingNodeModulesPlugin');
 var envName = process.argv[2];
@@ -24,71 +25,72 @@ var path = require('path');
 
 var getEntries = require('../lib/getEntries');
 
-var entries = getEntries(path.join(process.cwd(),entryFolder)).filter(name => {
-  return /\.js$/.test(name);
+var entries = getEntries(path.join(paths.appSrc, entryFolder)).filter(name => {
+    return /\.js$/.test(name);
 }).map((name, index) => {
-  var attriName = index +'-'+ (name.match(/(.*)\/(.*)\.js$/)[2]);
-  return {
-    file: name,
-    entryName: attriName,
-    plugin: new HtmlWebpackPlugin({
-        inject: true,
-        template: paths.appHtml,
-        filename: name+'.html',
-        minify: {
-            removeComments: true,
+    var filePath = name.replace(ensureSlash(path.join(paths.appSrc, entryFolder), true), '');
+    var attriName = index + '-' + (name.match(/(.*)\/(.*)\.js$/)[2]);
+    var fileNamePath = filePath.match(/(.*)\.js$/)[1];
+
+    return {
+        file: name,
+        entryName: attriName,
+        plugin: new HtmlWebpackPlugin({
+            inject: true,
+            template: paths.appHtml,
+            filename: fileNamePath + '.html',
+            minify: {
+                removeComments: true,
             // collapseWhitespace: true,
             // removeRedundantAttributes: true,
-            useShortDoctype: true,
+                useShortDoctype: true
             // removeEmptyAttributes: true,
             // removeStyleLinkTypeAttributes: true,
             // keepClosingSlash: true,
             // minifyJS: true,
             // minifyCSS: true,
             // minifyURLs: true
-        },
-        chunks: [attriName]
-    })
-  }
+            },
+            chunks: [attriName]
+        })
+    };
 });
 
 var buildEntries = {
     webpackHotDevClient: require.resolve('hero-dev-tools/webpackHotDevClient'),
 // We ship a few polyfills by default:
-    polyfills:  require.resolve('./polyfills'),
+    polyfills: require.resolve('./polyfills'),
 // Finally, this is your app's code:
-    appIndex:   paths.appIndexJs
+    appIndex: paths.appIndexJs
 };
+
 entries.forEach(entry => {
-  buildEntries[entry.entryName] = entry.file
+    buildEntries[entry.entryName] = entry.file;
 });
 
 var indexPlugin = [
   // Generates an `index.html` file with the <script> injected.
-      new HtmlWebpackPlugin({
-          inject: true,
-          template: paths.appHtml,
-          minify: {
-              removeComments: true,
+    new HtmlWebpackPlugin({
+        inject: true,
+        template: paths.appHtml,
+        minify: {
+            removeComments: true,
               // collapseWhitespace: true,
               // removeRedundantAttributes: true,
-              useShortDoctype: true,
+            useShortDoctype: true
               // removeEmptyAttributes: true,
               // removeStyleLinkTypeAttributes: true,
               // keepClosingSlash: true,
               // minifyJS: true,
               // minifyCSS: true,
               // minifyURLs: true
-          },
-          chunks: ['appIndex']
-      })
-]
+        },
+        chunks: ['appIndex']
+    })
+];
 var buildPlugins = entries.map(entry => {
-  console.log(entry.plugin);
-  return entry.plugin;
+    return entry.plugin;
 }).concat(indexPlugin);
-
-console.log('buildEntries', buildEntries);
 
 // @remove-on-eject-end
 
@@ -283,7 +285,7 @@ var webConfig = {
         tls: 'empty'
     }
 };
+
 webConfig.entry = buildEntries;
 webConfig.plugins = webConfig.plugins.concat(buildPlugins);
-console.log(webConfig);
 module.exports = webConfig;

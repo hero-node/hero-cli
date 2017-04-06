@@ -9,13 +9,14 @@
  */
 // @remove-on-eject-end
 'use strict';
-var entryFolder = 'src/entry';
+var entryFolder = 'entry';
 var autoprefixer = require('autoprefixer');
 var webpack = require('webpack');
 var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var ManifestPlugin = require('webpack-manifest-plugin');
+var ensureSlash = require('hero-dev-tools/ensureSlash');
 var InterpolateHtmlPlugin = require('hero-dev-tools/InterpolateHtmlPlugin');
 var paths = require('./paths');
 var envName = process.argv[2];
@@ -41,70 +42,73 @@ var env = getClientEnvironment(envName);
 
 var getEntries = require('../lib/getEntries');
 
-var entries = getEntries(path.join(process.cwd(),entryFolder)).filter(name => {
-  return /\.js$/.test(name);
+
+console.log(paths.appSrc);
+var entries = getEntries(path.join(paths.appSrc, entryFolder)).filter(name => {
+    return /\.js$/.test(name);
 }).map((name, index) => {
-  var attriName = index +'-'+ (name.match(/(.*)\/(.*)\.js$/)[2]);
-  return {
-    file: name,
-    entryName: attriName,
-    plugin: new HtmlWebpackPlugin({
-        inject: true,
-        template: paths.appHtml,
-        filename: attriName+'.html',
-        minify: {
-            removeComments: true,
+    var filePath = name.replace(ensureSlash(path.join(paths.appSrc, entryFolder), true), '');
+    var attriName = index + '-' + (name.match(/(.*)\/(.*)\.js$/)[2]);
+    var fileNamePath = filePath.match(/(.*)\.js$/)[1];
+
+    return {
+        file: name,
+        entryName: attriName,
+        plugin: new HtmlWebpackPlugin({
+            inject: true,
+            template: paths.appHtml,
+            filename: fileNamePath + '.html',
+            minify: {
+                removeComments: true,
             // collapseWhitespace: true,
             // removeRedundantAttributes: true,
-            useShortDoctype: true,
+                useShortDoctype: true
             // removeEmptyAttributes: true,
             // removeStyleLinkTypeAttributes: true,
             // keepClosingSlash: true,
             // minifyJS: true,
             // minifyCSS: true,
             // minifyURLs: true
-        },
-        chunks: [attriName]
-    })
-  }
+            },
+            chunks: [attriName]
+        })
+    };
 });
 
 var buildEntries = {
-    polyfills:  require.resolve('./polyfills'),
-    appIndex:   paths.appIndexJs
+    polyfills: require.resolve('./polyfills'),
+    appIndex: paths.appIndexJs
 };
+
 entries.forEach(entry => {
-  buildEntries[entry.entryName] = entry.file
+    buildEntries[entry.entryName] = entry.file;
 });
 
 
 var indexPlugin = [
   // Generates an `index.html` file with the <script> injected.
-      new HtmlWebpackPlugin({
-          inject: true,
-          template: paths.appHtml,
-          minify: {
-              removeComments: true,
+    new HtmlWebpackPlugin({
+        inject: true,
+        template: paths.appHtml,
+        minify: {
+            removeComments: true,
               // collapseWhitespace: true,
               // removeRedundantAttributes: true,
-              useShortDoctype: true,
+            useShortDoctype: true
               // removeEmptyAttributes: true,
               // removeStyleLinkTypeAttributes: true,
               // keepClosingSlash: true,
               // minifyJS: true,
               // minifyCSS: true,
               // minifyURLs: true
-          },
-          chunks: ['appIndex']
-      })
-]
+        },
+        chunks: ['appIndex']
+    })
+];
 var buildPlugins = entries.map(entry => {
-  return entry.plugin;
+    return entry.plugin;
 }).concat(indexPlugin);
 
-console.log('buildEntries', buildEntries);
-console.log('--------------');
-console.log('buildPlugins', buildPlugins);
 // Assert this just to be safe.
 // Development builds of React are slow and not intended for production.
 if (env.raw.NODE_ENV !== 'production') {
@@ -327,7 +331,7 @@ var webConfig = {
         tls: 'empty'
     }
 };
+
 webConfig.entry = buildEntries;
 webConfig.plugins = webConfig.plugins.concat(buildPlugins);
-console.log(webConfig);
 module.exports = webConfig;

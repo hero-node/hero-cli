@@ -52,6 +52,7 @@ var handleCompile;
 // You can safely remove this after ejecting.
 // We only use this block for testing of Create React App itself:
 var isSmokeTest = process.argv.some(arg => arg.indexOf('--smoke-test') > -1);
+
 if (isSmokeTest) {
     handleCompile = function (err, stats) {
         if (err || stats.hasErrors() || stats.hasWarnings()) {
@@ -86,7 +87,6 @@ function setupCompiler(host, port, protocol) {
         if (isInteractive) {
             clearConsole();
         }
-        console.log(stats);
     // We have switched off the default Webpack output in WebpackDevServer
     // options so we are going to "massage" the warnings and errors and present
     // them in a readable focused way.
@@ -142,6 +142,7 @@ function setupCompiler(host, port, protocol) {
 function onProxyError(proxy) {
     return function (err, req, res) {
         var host = req.headers && req.headers.host;
+
         console.log(
       chalk.red('Proxy error:') + ' Could not proxy request ' + chalk.cyan(req.url) +
       ' from ' + chalk.cyan(host) + ' to ' + chalk.cyan(proxy) + '.'
@@ -167,6 +168,7 @@ function addMiddleware(devServer) {
   // `proxy` lets you to specify a fallback server during development.
   // Every unrecognized request will be forwarded to it.
     var proxy = require(paths.appPackageJson).proxy;
+
     devServer.use(historyApiFallback({
     // Paths with dots should still use the history fallback.
     // See https://github.com/facebookincubator/create-react-app/issues/387.
@@ -217,6 +219,7 @@ function addMiddleware(devServer) {
             ws: true,
             xfwd: true
         });
+
         devServer.use(mayProxy, hpm);
 
     // Listen for the websocket 'upgrade' event and upgrade the connection.
@@ -296,6 +299,7 @@ function runDevServer(host, port, protocol) {
 function run(port) {
     var protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
     var host = process.env.HOST || 'localhost';
+
     setupCompiler(host, port, protocol);
     runDevServer(host, port, protocol);
 }
