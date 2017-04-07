@@ -24,18 +24,20 @@ function getClientEnvironment(env) {
         if (!environments || !environments[env]) {
             console.log(chalk.red('Unknown Environment "' + env + '".'));
             console.log('You may need to update ' + paths.heroCliConfig);
-            console.log(chalk.red('  Add attribute "' + env + '" under key "'+ config.environmentKey + '" in : ') + chalk.cyan(paths.heroCliConfig) + ' and set the value to the config file path');
+            console.log(chalk.red('  Add attribute "' + env + '" under key "' + config.environmentKey + '" in : ') + chalk.cyan(paths.heroCliConfig) + ' and set the value to the config file path');
             process.exit(1);
         }
     }
 
     var configPath = path.resolve(paths.heroCliConfig, '../', heroFileConfig[config.environmentKey][env]);
     var raw = require(configPath);
-    raw['NODE_ENV'] = process.env.NODE_ENV || 'development';
+
+    raw.NODE_ENV = process.env.NODE_ENV || 'development';
   // Stringify all values so we can feed into Webpack DefinePlugin
     var stringified = {
         'process.env': JSON.stringify(raw)
     };
+
     return { raw, stringified };
 }
 
