@@ -50,7 +50,7 @@ var entries = getEntries(path.join(paths.appSrc, entryFolder)).filter(name => {
             // minifyCSS: true,
             // minifyURLs: true
             },
-            chunks: [attriName]
+            chunks: [attriName, 'webpackHotDevClient']
         })
     };
 });
@@ -84,7 +84,7 @@ var indexPlugin = [
               // minifyCSS: true,
               // minifyURLs: true
         },
-        chunks: ['appIndex']
+        chunks: ['appIndex', 'webpackHotDevClient']
     })
 ];
 var buildPlugins = entries.map(entry => {
