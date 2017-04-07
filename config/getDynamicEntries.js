@@ -4,8 +4,8 @@ var entryFolder = require('./hero-config.json').entryFolder;
 var path = require('path');
 var paths = require('./paths');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ensureSlash = require('hero-dev-tools/ensureSlash');
-var getEntries = require('hero-dev-tools/getEntries');
+var ensureSlash = require('../lib/ensureSlash');
+var getEntries = require('../lib/getEntries');
 var webpackHotDevClientKey = 'webpackHotDevClient';
 var appIndexKey = 'appIndex';
 
@@ -20,7 +20,7 @@ buildEntries[appIndexKey] = paths.appIndexJs;
 function getEntryAndPlugins(isDevelopmentEnv) {
 
     if (isDevelopmentEnv) {
-        buildEntries[webpackHotDevClientKey] = require.resolve('hero-dev-tools/webpackHotDevClient');
+        buildEntries[webpackHotDevClientKey] = require.resolve('../lib/webpackHotDevClient');
     }
 
     var entries = getEntries(path.join(paths.appSrc, entryFolder)).filter(name => {

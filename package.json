@@ -43,7 +43,16 @@
     "webpack-dev-server": "1.16.2",
     "webpack-manifest-plugin": "1.1.0",
     "whatwg-fetch": "2.0.2",
-    "yargs": "7.0.2"
+    "yargs": "7.0.2",
+    "ansi-html": "0.0.5",
+    "escape-string-regexp": "1.0.5",
+    "filesize": "3.3.0",
+    "gzip-size": "3.0.0",
+    "html-entities": "1.2.0",
+    "opn": "4.0.2",
+    "recursive-readdir": "2.1.1",
+    "sockjs-client": "1.0.1",
+    "strip-ansi": "3.0.1"
   },
   "scripts": {}
 }

@@ -26,8 +26,8 @@ var url = require('url');
 var webpack = require('webpack');
 var config = require('../config/webpack.config.prod');
 var paths = require('../config/paths');
-var checkRequiredFiles = require('hero-dev-tools/checkRequiredFiles');
-var FileSizeReporter = require('hero-dev-tools/FileSizeReporter');
+var checkRequiredFiles = require('../lib/checkRequiredFiles');
+var FileSizeReporter = require('../lib/FileSizeReporter');
 var measureFileSizesBeforeBuild = FileSizeReporter.measureFileSizesBeforeBuild;
 var printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
 
@@ -93,6 +93,7 @@ function build(previousFileSizes) {
         var publicUrl = paths.publicUrl;
         var publicPath = config.output.publicPath;
         var publicPathname = url.parse(publicPath).pathname;
+
         if (publicUrl && publicUrl.indexOf('.github.io/') !== -1) {
       // "homepage": "http://user.github.io/project"
             console.log('The project was built assuming it is hosted at ' + chalk.green(publicPathname) + '.');
@@ -146,6 +147,7 @@ function build(previousFileSizes) {
                 console.log();
             }
             var build = path.relative(process.cwd(), paths.appBuild);
+
             console.log('The ' + chalk.cyan(build) + ' folder is ready to be deployed.');
             console.log('You may serve it with a static server:');
             console.log();

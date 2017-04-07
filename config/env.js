@@ -2,7 +2,7 @@
 
 var paths = require('./paths');
 var path = require('path');
-var checkRequiredFiles = require('hero-dev-tools/checkRequiredFiles');
+var checkRequiredFiles = require('../lib/checkRequiredFiles');
 var chalk = require('chalk');
 var config = require('./hero-config.json');
 

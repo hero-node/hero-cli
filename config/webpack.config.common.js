@@ -4,7 +4,7 @@ var autoprefixer = require('autoprefixer');
 var webpack = require('webpack');
 var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
-var InterpolateHtmlPlugin = require('hero-dev-tools/InterpolateHtmlPlugin');
+var InterpolateHtmlPlugin = require('../lib/InterpolateHtmlPlugin');
 var paths = require('./paths');
 var envName = process.argv[2];
 var getClientEnvironment = require('./env');

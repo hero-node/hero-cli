@@ -35,7 +35,7 @@ var nodePaths = (process.env.NODE_PATH || '')
 
 var envPublicUrl = process.env.PUBLIC_URL;
 
-var ensureSlash = require('hero-dev-tools/ensureSlash');
+var ensureSlash = require('../lib/ensureSlash');
 
 function getPublicUrl(appPackageJson) {
     return envPublicUrl || require(appPackageJson).homepage;
