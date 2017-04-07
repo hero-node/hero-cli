@@ -96,6 +96,8 @@ function setupCompiler(host, port, protocol) {
             console.log('Note that the development build is not optimized.');
             console.log('To create a production build, use ' + chalk.cyan(cli + ' run build') + '.');
             console.log();
+            console.log('To start the mock server, use ' + chalk.cyan(cli + ' run mock') + '.');
+            console.log();
             isFirstCompile = false;
         }
 
