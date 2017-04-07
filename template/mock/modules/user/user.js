@@ -14,7 +14,6 @@ function subRouter(express) {
 
     // Get Method
     router.get('/user', function(req, res) {
-        console.log(req.query);
         // http://www.expressjs.com.cn/4x/api.html#res.json
         return res.json({
             result: 'success',
