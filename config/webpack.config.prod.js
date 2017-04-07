@@ -51,7 +51,7 @@ webConfig.module.loaders = webConfig.module.loaders.concat([{
     loader: 'babel',
     query: {
         babelrc: false,
-        presets: [require.resolve('babel-preset-react-app')]
+        presets: ['es2015']
     }
 }]);
 

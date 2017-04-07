@@ -21,12 +21,7 @@ var webConfig = {
     // if there any conflicts. This matches Node resolution mechanism.
     // https://github.com/facebookincubator/create-react-app/issues/253
         fallback: paths.nodePaths,
-        extensions: ['.js', '.json', '.jsx', ''],
-        alias: {
-      // Support React Native Web
-      // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
-            'react-native': 'react-native-web'
-        }
+        extensions: ['.js', '.json', '.jsx', '']
     },
     resolveLoader: {
         root: paths.ownNodeModules,
