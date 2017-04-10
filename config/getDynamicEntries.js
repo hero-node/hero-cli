@@ -34,8 +34,8 @@ function getEntryAndPlugins(isDevelopmentEnv) {
             file: name,
             entryName: attriName,
             plugin: new HtmlWebpackPlugin({
-                inject: true,
-                template: paths.appHtml,
+                inject: 'head',
+                template: path.join(__dirname, 'entryTemplate.html'),
                 filename: fileNamePath + '.html',
                 minify: {
                     removeComments: true,
@@ -61,7 +61,7 @@ function getEntryAndPlugins(isDevelopmentEnv) {
     var indexPlugin = [
     // Generates an `index.html` file with the <script> injected.
         new HtmlWebpackPlugin({
-            inject: true,
+            inject: 'head',
             template: paths.appHtml,
             minify: {
                 removeComments: true,
