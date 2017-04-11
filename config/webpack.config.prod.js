@@ -7,7 +7,7 @@ var ManifestPlugin = require('webpack-manifest-plugin');
 var getDynamicEntries = require('./getDynamicEntries');
 var paths = require('./paths');
 
-var publicPath = paths.servedPath;
+var publicPath = '/';
 var dynamicEntries = getDynamicEntries(false);
 
 var envName = process.argv[2];
@@ -33,19 +33,6 @@ webConfig.output = {
 };
 
 webConfig.module.loaders = webConfig.module.loaders.concat([{
-    exclude: [
-        /\.html$/,
-        /\.(js|jsx)$/,
-        /\.css$/,
-        /\.json$/,
-        /\.svg$/
-    ],
-    loader: 'url',
-    query: {
-        limit: 10000,
-        name: 'static/media/[name].[hash:8].[ext]'
-    }
-}, {
     test: /\.(js|jsx)$/,
     include: paths.appSrc,
     loader: 'babel',

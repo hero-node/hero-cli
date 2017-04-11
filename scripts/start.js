@@ -130,6 +130,7 @@ function runDevServer(host, port, protocol) {
         host: host
     });
 
+    devServer.use(devServer.middleware);
   // Launch WebpackDevServer.
     devServer.listen(port, err => {
         if (err) {

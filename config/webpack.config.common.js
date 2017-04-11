@@ -39,6 +39,20 @@ var webConfig = {
         ],
         loaders: [
             {
+                exclude: [
+                    /\.html$/,
+                    /\.js$/,
+                    /\.css$/,
+                    /\.json$/,
+                    /\.svg$/
+                ],
+                loader: 'url',
+                query: {
+                    limit: 10000,
+                    name: 'static/media/[name].[hash:8].[ext]'
+                }
+            },
+            {
                 test: /\.json$/,
                 loader: 'json'
             },
