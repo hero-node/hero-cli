@@ -7,7 +7,7 @@ var ManifestPlugin = require('webpack-manifest-plugin');
 var getDynamicEntries = require('./getDynamicEntries');
 var paths = require('./paths');
 
-var publicPath = '/';
+var publicPath = '.';
 var dynamicEntries = getDynamicEntries(false);
 
 var envName = process.argv[2];
