@@ -4,7 +4,6 @@ var extend = require('extend');
 var webpack = require('webpack');
 var webConfig = require('./webpack.config.common');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-var WatchMissingNodeModulesPlugin = require('../lib/WatchMissingNodeModulesPlugin');
 var getDynamicEntries = require('./getDynamicEntries');
 var paths = require('./paths');
 var publicPath = '/';
@@ -67,8 +66,7 @@ var config = extend(true, {}, webConfig, {
     devtool: 'cheap-module-source-map',
     plugins: webConfig.plugins.concat([
         new webpack.HotModuleReplacementPlugin(),
-        new CaseSensitivePathsPlugin(),
-        new WatchMissingNodeModulesPlugin(paths.appNodeModules)
+        new CaseSensitivePathsPlugin()
     ])
 });
 

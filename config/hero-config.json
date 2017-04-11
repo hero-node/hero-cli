@@ -1,5 +1,5 @@
 {
-  "outDir": "dist",
+  "outDir": "build",
   "heroCliConfig": ".hero-cli.json",
   "environmentKey":"environments",
   "sourceFolder": "src",
