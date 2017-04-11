@@ -3,5 +3,6 @@
   "heroCliConfig": ".hero-cli.json",
   "environmentKey":"environments",
   "sourceFolder": "src",
-  "entryFolder": "entry"
+  "entryFolder": "entry",
+  "devServerPort": 4000
 }

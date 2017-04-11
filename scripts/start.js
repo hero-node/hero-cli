@@ -2,30 +2,21 @@
 
 process.env.NODE_ENV = 'development';
 
-// Load environment variables from .env file. Suppress warnings using silent
-// if this file is missing. dotenv will never modify any environment variables
-// that have already been set.
-// https://github.com/motdotla/dotenv
-require('dotenv').config({ silent: true });
-
 var chalk = require('chalk');
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
-var historyApiFallback = require('connect-history-api-fallback');
-var httpProxyMiddleware = require('http-proxy-middleware');
 var detect = require('detect-port');
 var clearConsole = require('../lib/clearConsole');
 var checkRequiredFiles = require('../lib/checkRequiredFiles');
 var formatWebpackMessages = require('../lib/formatWebpackMessages');
 var getProcessForPort = require('../lib/getProcessForPort');
-var openBrowser = require('../lib/openBrowser');
 var prompt = require('../lib/prompt');
-var fs = require('fs');
 var config = require('../config/webpack.config.dev');
 var paths = require('../config/paths');
+var heroCliConfig = require('../config/hero-config.json');
 
-var useYarn = fs.existsSync(paths.yarnLockFile);
-var cli = useYarn ? 'yarn' : 'npm';
+
+var cli = 'npm';
 var isInteractive = process.stdout.isTTY;
 
 // Warn and crash if required files are missing
@@ -34,33 +25,18 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 }
 
 // Tools like Cloud9 rely on this.
-var DEFAULT_PORT = parseInt(process.env.PORT, 10) || 4000;
+var DEFAULT_PORT = parseInt(process.env.PORT, 10) || heroCliConfig.devServerPort;
 var compiler;
-var handleCompile;
-
-// You can safely remove this after ejecting.
-// We only use this block for testing of Create React App itself:
-var isSmokeTest = process.argv.some(arg => arg.indexOf('--smoke-test') > -1);
-
-if (isSmokeTest) {
-    handleCompile = function (err, stats) {
-        if (err || stats.hasErrors() || stats.hasWarnings()) {
-            process.exit(1);
-        } else {
-            process.exit(0);
-        }
-    };
-}
 
 function setupCompiler(host, port, protocol) {
-  // "Compiler" is a low-level interface to Webpack.
-  // It lets us listen to some events and provide our own custom messages.
-    compiler = webpack(config, handleCompile);
+    // "Compiler" is a low-level interface to Webpack.
+    // It lets us listen to some events and provide our own custom messages.
+    compiler = webpack(config);
 
-  // "invalid" event fires when you have changed a file, and Webpack is
-  // recompiling a bundle. WebpackDevServer takes care to pause serving the
-  // bundle, so if you refresh, it'll wait instead of serving the old one.
-  // "invalid" is short for "bundle invalidated", it doesn't imply any errors.
+    // "invalid" event fires when you have changed a file, and Webpack is
+    // recompiling a bundle. WebpackDevServer takes care to pause serving the
+    // bundle, so if you refresh, it'll wait instead of serving the old one.
+    // "invalid" is short for "bundle invalidated", it doesn't imply any errors.
     compiler.plugin('invalid', function () {
         if (isInteractive) {
             clearConsole();
@@ -68,40 +44,25 @@ function setupCompiler(host, port, protocol) {
         console.log('Compiling...');
     });
 
-    var isFirstCompile = true;
-
-  // "done" event fires when Webpack has finished recompiling the bundle.
-  // Whether or not you have warnings or errors, you will get this event.
+    // "done" event fires when Webpack has finished recompiling the bundle.
+    // Whether or not you have warnings or errors, you will get this event.
     compiler.plugin('done', function (stats) {
         if (isInteractive) {
             clearConsole();
         }
-    // We have switched off the default Webpack output in WebpackDevServer
-    // options so we are going to "massage" the warnings and errors and present
-    // them in a readable focused way.
+        // We have switched off the default Webpack output in WebpackDevServer
+        // options so we are going to "massage" the warnings and errors and present
+        // them in a readable focused way.
         var messages = formatWebpackMessages(stats.toJson({}, true));
+
         var isSuccessful = !messages.errors.length && !messages.warnings.length;
-        var showInstructions = isSuccessful && (isInteractive || isFirstCompile);
+        var showInstructions = true;
 
         if (isSuccessful) {
             console.log(chalk.green('Compiled successfully!'));
         }
 
-        if (showInstructions) {
-            console.log();
-            console.log('The app is running at:');
-            console.log();
-            console.log('  ' + chalk.cyan(protocol + '://' + host + ':' + port + '/'));
-            console.log();
-            console.log('Note that the development build is not optimized.');
-            console.log('To create a production build, use ' + chalk.cyan(cli + ' run build') + '.');
-            console.log();
-            console.log('To start the mock server, use ' + chalk.cyan(cli + ' run mock') + '.');
-            console.log();
-            isFirstCompile = false;
-        }
-
-    // If errors exist, only show errors.
+        // If errors exist, only show errors.
         if (messages.errors.length) {
             console.log(chalk.red('Failed to compile.'));
             console.log();
@@ -125,91 +86,23 @@ function setupCompiler(host, port, protocol) {
             console.log('Use ' + chalk.yellow('// eslint-disable-next-line') + ' to ignore the next line.');
             console.log('Use ' + chalk.yellow('/* eslint-disable */') + ' to ignore all warnings in a file.');
         }
+
+        if (showInstructions) {
+            console.log();
+            console.log('The app is running at:');
+            console.log();
+            console.log('  ' + chalk.cyan(protocol + '://' + host + ':' + port + '/'));
+            console.log();
+            console.log('Note that the development build is not optimized.');
+            console.log('To create a production build, use ' + chalk.cyan(cli + ' run build') + '.');
+            console.log();
+            console.log('To start the mock server, use ' + chalk.cyan(cli + ' run mock') + '.');
+            console.log();
+        }
     });
 }
 
-// We need to provide a custom onError function for httpProxyMiddleware.
-// It allows us to log custom error messages on the console.
-function onProxyError(proxy) {
-    return function (err, req, res) {
-        var host = req.headers && req.headers.host;
-
-        console.log(
-      chalk.red('Proxy error:') + ' Could not proxy request ' + chalk.cyan(req.url) +
-      ' from ' + chalk.cyan(host) + ' to ' + chalk.cyan(proxy) + '.'
-    );
-        console.log(
-      'See https://nodejs.org/api/errors.html#errors_common_system_errors for more information (' +
-      chalk.cyan(err.code) + ').'
-    );
-        console.log();
-
-    // And immediately send the proper error response to the client.
-    // Otherwise, the request will eventually timeout with ERR_EMPTY_RESPONSE on the client side.
-        if (res.writeHead && !res.headersSent) {
-            res.writeHead(500);
-        }
-        res.end('Proxy error: Could not proxy request ' + req.url + ' from ' +
-      host + ' to ' + proxy + ' (' + err.code + ').'
-    );
-    };
-}
-
 function addMiddleware(devServer) {
-  // `proxy` lets you to specify a fallback server during development.
-  // Every unrecognized request will be forwarded to it.
-    var proxy = require(paths.appPackageJson).proxy;
-
-    // devServer.use(historyApiFallback({
-    //
-    //     htmlAcceptHeaders: proxy ?
-    //   ['text/html'] :
-    //   ['text/html', '*/*']
-    // }));
-    if (proxy) {
-        if (typeof proxy !== 'string') {
-            console.log(chalk.red('When specified, "proxy" in package.json must be a string.'));
-            console.log(chalk.red('Instead, the type of "proxy" was "' + typeof proxy + '".'));
-            console.log(chalk.red('Either remove "proxy" from package.json, or make it a string.'));
-            process.exit(1);
-        }
-
-    // Otherwise, if proxy is specified, we will let it handle any request.
-    // There are a few exceptions which we won't send to the proxy:
-    // - /index.html (served as HTML5 history API fallback)
-    // - /*.hot-update.json (WebpackDevServer uses this too for hot reloading)
-    // - /sockjs-node/* (WebpackDevServer uses this for hot reloading)
-    // Tip: use https://jex.im/regulex/ to visualize the regex
-        var mayProxy = /^(?!\/(index\.html$|.*\.hot-update\.json$|sockjs-node\/)).*$/;
-
-    // Pass the scope regex both to Express and to the middleware for proxying
-    // of both HTTP and WebSockets to work without false positives.
-        var hpm = httpProxyMiddleware(pathname => mayProxy.test(pathname), {
-            target: proxy,
-            logLevel: 'silent',
-            onProxyReq: function (proxyReq) {
-        // Browers may send Origin headers even with same-origin
-        // requests. To prevent CORS issues, we have to change
-        // the Origin to match the target URL.
-                if (proxyReq.getHeader('origin')) {
-                    proxyReq.setHeader('origin', proxy);
-                }
-            },
-            onError: onProxyError(proxy),
-            secure: false,
-            changeOrigin: true,
-            ws: true,
-            xfwd: true
-        });
-
-        devServer.use(mayProxy, hpm);
-
-    // Listen for the websocket 'upgrade' event and upgrade the connection.
-    // If this is not done, httpProxyMiddleware will not try to upgrade until
-    // an initial plain HTTP request is made.
-        devServer.listeningApp.on('upgrade', hpm.upgrade);
-    }
-
   // Finally, by now we have certainly resolved the URL.
   // It may be /index.html, so let the dev server try serving it again.
     devServer.use(devServer.middleware);
@@ -274,7 +167,6 @@ function runDevServer(host, port, protocol) {
         console.log(chalk.cyan('Starting the development server...'));
         console.log();
 
-        openBrowser(protocol + '://' + host + ':' + port + '/');
     });
 }
 
