@@ -19,19 +19,18 @@ function getFileList(root) {
     return res;
 }
 
-function init(express, app, upload) {
+function init(express, app, prefix) {
 
-    var rootPath = '/api';
+    var rootPath = prefix || '';
 
     getFileList(path.join(__dirname, 'modules'))
         .map(url => require(url))
         .forEach(mod => {
             app.use(
                 rootPath + mod.default.root,
-                mod.default.router(express, upload)
+                mod.default.router(express)
             );
         });
-
     app.use(rootPath, notFound);
 }
 export default { init };

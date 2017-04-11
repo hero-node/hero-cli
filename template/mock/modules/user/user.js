@@ -7,11 +7,6 @@ function subRouter(express) {
     /*eslint-disable*/
     var router = express.Router();
 
-    // 下载文件
-    router.get('/user/download', function(req, res) {
-        return res.download(path.join(__dirname, '../download/key.txt'), 'Download-' + new Date().getTime() + '.pdf');
-    });
-
     // Get Method
     router.get('/user', function(req, res) {
         // http://www.expressjs.com.cn/4x/api.html#res.json

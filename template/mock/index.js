@@ -1,46 +1,73 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import multer from 'multer';
-import router from './router';
-import cors from './middleware/cors';
-import delay from './middleware/delay';
-import path from 'path';
-import pkg from '../package.json';
+import log4js from 'log4js';
 import chalk from 'chalk';
+import express from 'express';
+import http from 'http';
+import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
+import proxy from 'express-http-proxy';
+import pkg from './package.json';
+import startMockServer from './startMockServer.js';
+import cors from './middleware/cors';
 
-var upload = multer({ dest: path.join(__dirname, '../temp/') });
-var app = express();
-var defaultPort = (pkg.config && pkg.config.mockServerPort) || 4005;
-var port = pkg.mockServerPort || defaultPort;
+const servers = pkg.serverConfig.proxyTargetURLs;
+const defaultPort = pkg.serverConfig.proxyBasePort;
+const mockAPIPrefix = pkg.serverConfig.mockAPIPrefix;
 
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
-// for parsing application/x-www-form-urlencoded
-app.use(bodyParser.json());
-app.use(delay);
-app.use(cors);
+log4js.configure({
+    appenders: [
+    { type: 'console' }, // 控制台输出
+        {
+            type: 'file', // 文件输出
+            filename: __dirname + '/logs/log.log',
+            maxLogSize: 1024000,
+            backups: 1,
+            category: 'normal'
+        }
+    ]
+});
 
-router.init(express, app, upload);
+const logger = log4js.getLogger('normal');
 
-function bootstrap() {
+logger.setLevel('INFO');
+
+(function startProxyServer() {
+    servers.forEach((url, index) => {
+        var port = defaultPort + index;
+        var app = express();
+
+        app.enable('trust proxy');
+        app.use(cookieParser());
+        app.use(bodyParser.urlencoded({ extended: false }));
+        app.use(bodyParser.json());
+        app.use(cors);
+        app.use('/api/v2/', proxy(url, {
+            forwardPath: function (req) {
+                return '/api/v2' + require('url').parse(req.url).path;
+            }
+        }));
+        app.use('/images/captcha.jpg', proxy(url, {
+            forwardPath: function (req) {
+                return '/images/captcha.jpg' + require('url').parse(req.url).path.substring(1);
+            }
+        }));
+
+        http.createServer(app).listen(port, function () {
+            if (index === 0) {
+                console.log(chalk.green('Start successfully! \n\nProxy server is running at:'));
+            }
+            console.log(chalk.cyan('http://localhost' + (port === 80 ? '' : ':' + port)) + ' will forward request to ' + chalk.cyan(url));
+        });
+    });
+})();
+
+startMockServer(defaultPort + servers.length, mockAPIPrefix);
+
+(function errorHandler() {
     process.on('uncaughtException', function (err) {
-        console.log(chalk.red(('uncaughtException: ' + err).red));
+        console.log(chalk.red(('uncaughtException: ' + err)));
     });
     process.on('unhandledRejection', function (reason, p) {
-        // application specific logging, throwing an error, or other logic here
+    // application specific logging, throwing an error, or other logic here
         console.log(chalk.red('Unhandled Rejection at: Promise ', p, ' reason: ', reason));
     });
-
-    require('http').createServer(app).listen(port, function () {
-        console.log(chalk.green('Start successfully!'));
-        console.log();
-        console.log('Mock server is running at:');
-        console.log(chalk.cyan('http://localhost' + (port === 80 ? '' : ':' + port)));
-        console.log();
-    });
-}
-
-bootstrap();
-
-export default { app, bootstrap };
+})();

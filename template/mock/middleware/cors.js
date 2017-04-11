@@ -1,16 +1,34 @@
-var middleware = function (req, res, next) {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-    res.header('Access-Control-Allow-Credentials', true);
-    res.header('Access-Control-Max-Age', 3600);
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+var allowMethods = 'Access-Control-Allow-Methods';
+var allowCredentials = 'Access-Control-Allow-Credentials';
+var allowMaxAge = 'Access-Control-Max-Age';
+var allowOrigin = 'Access-Control-Allow-Origin';
+var allowHeader = 'Access-Control-Allow-Headers';
 
-  // intercept OPTIONS method
-    if ('OPTIONS' === req.method) {
-        res.sendStatus(200);
-    } else {
-        next();
+var middleware = function (req, res, next) {
+
+    var origin = req.get('Origin');
+
+    if (origin) {
+
+        if (req.get(allowHeader) === undefined) {
+            res.header(allowHeader, 'Content-Type, Authorization');
+        }
+        if (req.get(allowMethods) === undefined) {
+            res.header(allowMethods, 'GET,PUT,POST,DELETE');
+        }
+
+        if (req.get(allowCredentials) === undefined) {
+            res.header(allowCredentials, true);
+        }
+
+        if (req.get(allowMaxAge) === undefined) {
+            res.header(allowMaxAge, 3600);
+        }
+
+        res.header(allowOrigin, origin);
     }
+
+    next();
 };
 
 export default middleware;
