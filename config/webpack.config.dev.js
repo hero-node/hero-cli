@@ -22,20 +22,6 @@ webConfig.output = {
     publicPath: publicPath
 };
 
-webConfig.module.loaders = webConfig.module.loaders.concat([{
-    test: /\.(js|jsx)$/,
-    include: paths.appSrc,
-    loader: 'babel',
-    query: {
-        babelrc: false,
-        presets: ['es2015'],
-        // This is a feature of `babel-loader` for webpack (not Babel itself).
-        // It enables caching results in ./node_modules/.cache/babel-loader/
-        // directory for faster rebuilds.
-        cacheDirectory: true
-    }
-}]);
-
 var dynamicEntries = getDynamicEntries(true);
 
 webConfig.entry = dynamicEntries.entry;

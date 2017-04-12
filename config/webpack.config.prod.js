@@ -32,16 +32,6 @@ webConfig.output = {
     publicPath: publicPath
 };
 
-webConfig.module.loaders = webConfig.module.loaders.concat([{
-    test: /\.(js|jsx)$/,
-    include: paths.appSrc,
-    loader: 'babel',
-    query: {
-        babelrc: false,
-        presets: ['es2015']
-    }
-}]);
-
 webConfig.entry = dynamicEntries.entry;
 webConfig.plugins = webConfig.plugins.concat(dynamicEntries.plugin);
 

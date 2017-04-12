@@ -32,7 +32,7 @@ var webConfig = {
     // It's important to do this before Babel processes the JS.
         preLoaders: [
             {
-                test: /\.(js|jsx)$/,
+                test: /\.js$/,
                 loader: 'eslint',
                 include: paths.appSrc
             }
@@ -42,7 +42,6 @@ var webConfig = {
                 exclude: [
                     /\.html$/,
                     /\.js$/,
-                    /\.css$/,
                     /\.json$/,
                     /\.svg$/
                 ],
@@ -50,6 +49,19 @@ var webConfig = {
                 query: {
                     limit: 10000,
                     name: 'static/media/[name].[hash:8].[ext]'
+                }
+            },
+            {
+                test: /\.js$/,
+                include: paths.appSrc,
+                loader: 'babel',
+                query: {
+                    babelrc: false,
+                    presets: ['es2015'],
+                    // This is a feature of `babel-loader` for webpack (not Babel itself).
+                    // It enables caching results in ./node_modules/.cache/babel-loader/
+                    // directory for faster rebuilds.
+                    cacheDirectory: true
                 }
             },
             {
