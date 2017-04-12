@@ -1,6 +1,19 @@
-console.log('Hello Hero');
-var HeroAPI = require('hero-cli');
+import 'hero-js/src/hero-app.html';
 
-HeroAPI.sayIntroduction();
+var args = {};
+var params = (window.location.search.split('?')[1] || '').split('&');
+var paramParts;
 
-console.log('环境变量：', process.env);
+for (var param in params) {
+    if (params.hasOwnProperty(param)) {
+        paramParts = params[param].split('=');
+        args[paramParts[0]] = decodeURIComponent(paramParts[1] || '');
+    }
+}
+var app = { tabs: [
+  { url: args.state, title: '首页', class: 'DRViewController', image: 'home_green' }
+] };
+
+window.document.write('<hero-app json=' + JSON.stringify(app) + '></hero-app>');
+
+console.log(process.env);
