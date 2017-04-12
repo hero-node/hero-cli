@@ -8,11 +8,14 @@ var ensureSlash = require('../lib/ensureSlash');
 var getEntries = require('../lib/getEntries');
 var webpackHotDevClientKey = 'webpackHotDevClient';
 var appIndexKey = 'appIndex';
+var webcomponentPolyfillKey = 'webcomponents-polyfill';
 
 var buildEntries = {
     // We ship a few polyfills by default:
     polyfills: require.resolve('./polyfills')
 };
+
+buildEntries[webcomponentPolyfillKey] = require.resolve('../lib/webcomponents-lite');
 // Finally, this is your app's code:
 
 buildEntries[appIndexKey] = paths.appIndexJs;
@@ -75,7 +78,7 @@ function getEntryAndPlugins(isDevelopmentEnv) {
                 // minifyCSS: true,
                 // minifyURLs: true
             },
-            chunks: isDevelopmentEnv ? [appIndexKey, webpackHotDevClientKey] : [appIndexKey]
+            chunks: isDevelopmentEnv ? [appIndexKey, webcomponentPolyfillKey, webpackHotDevClientKey] : [appIndexKey]
         })
     ];
     var buildPlugins = entries.map(entry => {
