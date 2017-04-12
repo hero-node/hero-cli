@@ -38,7 +38,8 @@ function getEntryAndPlugins(isDevelopmentEnv) {
             entryName: attriName,
             plugin: new HtmlWebpackPlugin({
                 inject: 'head',
-                template: path.join(__dirname, 'entryTemplate.html'),
+                // webconfig html file loader using Polymer HTML
+                template: '!!html!' + path.join(__dirname, 'entryTemplate.html'),
                 filename: fileNamePath + '.html',
                 minify: {
                     removeComments: true,
@@ -65,7 +66,8 @@ function getEntryAndPlugins(isDevelopmentEnv) {
     // Generates an `index.html` file with the <script> injected.
         new HtmlWebpackPlugin({
             inject: 'head',
-            template: paths.appHtml,
+            // webconfig html file loader using Polymer HTML
+            template: '!!html!' + paths.appHtml,
             minify: {
                 removeComments: true,
                 // collapseWhitespace: true,

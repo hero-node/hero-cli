@@ -25,7 +25,10 @@ var webConfig = {
     },
     resolveLoader: {
         root: paths.ownNodeModules,
-        moduleTemplates: ['*-loader']
+        moduleTemplates: ['*-loader'],
+        alias: {
+            'my-loader': path.join(__dirname, '../lib/my-loader')
+        }
     },
     module: {
     // First, run the linter.
@@ -50,6 +53,13 @@ var webConfig = {
                     limit: 10000,
                     name: 'static/media/[name].[hash:8].[ext]'
                 }
+            },
+            {
+                test: /\.html$/, // handles html files. <link rel="import" href="path.html"> and import 'path.html';
+                loader: 'babel!wc'
+                // if you are using es6 inside html use
+                // loader: 'babel-loader!wc-loader'
+                // similarly you can use coffee, typescript etc. pipe wc result through the respective loader.
             },
             {
                 test: /\.js$/,

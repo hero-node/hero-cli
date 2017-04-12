@@ -54,5 +54,8 @@
     "whatwg-fetch": "2.0.2",
     "yargs": "7.0.2"
   },
-  "scripts": {}
+  "scripts": {},
+  "devDependencies": {
+    "html-loader": "^0.4.5"
+  }
 }
