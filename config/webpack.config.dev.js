@@ -30,7 +30,6 @@ webConfig.plugins = webConfig.plugins.concat(dynamicEntries.plugin);
 
 var config = extend(true, {}, webConfig, {
 
-    bail: true,
     devtool: 'cheap-module-source-map',
     plugins: webConfig.plugins.concat([
         new webpack.HotModuleReplacementPlugin(),
