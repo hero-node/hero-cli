@@ -3,13 +3,18 @@
   "version": "0.0.1",
   "dependencies": {
     "hero-cli": "~2.0.0",
-    "hero-js": "~2.0.0",
-    "babel-cli": "~6.18.0",
-    "babel-core": "~6.21.0"
+    "hero-js": "~2.0.0"
   },
   "devDependencies":{
+    "babel-cli": "~6.18.0",
+    "babel-core": "~6.21.0",
+    "babel-eslint": "7.1.1",
+    "babel-preset-es2015": "6.24.0",
+    "babel-plugin-transform-class-properties": "6.19.0",
+    "babel-plugin-transform-decorators-legacy": "1.3.4",
     "body-parser": "~1.15.2",
     "cookie-parser": "~1.4.0",
+    "eslint": "3.16.1",
     "express": "~4.14.0",
     "express-http-proxy": "~0.6.0",
     "log4js": "~0.6.35",
