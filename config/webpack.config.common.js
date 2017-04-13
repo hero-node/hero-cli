@@ -67,7 +67,7 @@ var webConfig = {
                 loader: 'babel',
                 query: {
                     babelrc: false,
-                    presets: [require.resolve('babel-preset-react-app')],
+                    presets: ['es2015'],
                     plugins: [
                         'transform-decorators-legacy',
                         'transform-class-properties'
