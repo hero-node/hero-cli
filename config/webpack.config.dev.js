@@ -5,6 +5,7 @@ var webpack = require('webpack');
 var webConfig = require('./webpack.config.common');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 var getDynamicEntries = require('./getDynamicEntries');
+var WatchMissingNodeModulesPlugin = require('../lib/WatchMissingNodeModulesPlugin');
 var paths = require('./paths');
 var publicPath = '/';
 
@@ -16,8 +17,8 @@ webConfig.output = {
   // This does not produce a real file. It's just the virtual path that is
   // served by WebpackDevServer in development. This is the JS bundle
   // containing code from all our entry points, and the Webpack runtime.
-    filename: 'static/js/[name].[hash:8].js',
-    chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
+    filename: 'static/js/[name].js',
+    chunkFilename: 'static/js/[name.chunk.js',
   // This is the URL that app is served from. We use "/" in development.
     publicPath: publicPath
 };
@@ -33,7 +34,8 @@ var config = extend(true, {}, webConfig, {
     devtool: 'cheap-module-source-map',
     plugins: webConfig.plugins.concat([
         new webpack.HotModuleReplacementPlugin(),
-        new CaseSensitivePathsPlugin()
+        new CaseSensitivePathsPlugin(),
+        new WatchMissingNodeModulesPlugin(paths.appNodeModules)
     ])
 });
 
