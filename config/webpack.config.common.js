@@ -68,6 +68,10 @@ var webConfig = {
                 query: {
                     babelrc: false,
                     presets: ['es2015'],
+                    plugins: [
+                        'transform-decorators-legacy',
+                        'transform-class-properties'
+                    ],
                     // This is a feature of `babel-loader` for webpack (not Babel itself).
                     // It enables caching results in ./node_modules/.cache/babel-loader/
                     // directory for faster rebuilds.
