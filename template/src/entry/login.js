@@ -3,8 +3,10 @@ require('hero-js');
 var API = window.API;
 
 API.boot = function () {
-  
+
 };
+var a = 3;
+
 // eslint-disable-next-line
 API.special_logic = function (data) {
     if (data.click === 'login') {
@@ -51,7 +53,7 @@ window.ui = {
         {
             class: 'AppButton',
             frame: { x: '15', r: '15', y: '0', h: '44' },
-            title: '我的按钮'
+            title: '自定义的继承自Hero按钮实例'
         },
         {
             class: 'DRButton',

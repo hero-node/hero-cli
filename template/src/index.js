@@ -1,4 +1,7 @@
+// Hero Core Web Components
 import 'hero-js/src/hero-app.html';
+// Custom Web Components
+import '../public/components/app-button.html';
 
 var args = {};
 var params = (window.location.search.split('?')[1] || '').split('&');
