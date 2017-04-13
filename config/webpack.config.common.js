@@ -1,6 +1,5 @@
 'use strict';
 
-var autoprefixer = require('autoprefixer');
 var webpack = require('webpack');
 var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
@@ -21,7 +20,7 @@ var webConfig = {
     // if there any conflicts. This matches Node resolution mechanism.
     // https://github.com/facebookincubator/create-react-app/issues/253
         fallback: paths.nodePaths,
-        extensions: ['.js', '.json', '.jsx', '']
+        extensions: ['.js', '.json', '']
     },
     resolveLoader: {
         root: paths.ownNodeModules,
@@ -64,19 +63,7 @@ var webConfig = {
             {
                 test: /\.js$/,
                 include: paths.appSrc,
-                loader: 'babel',
-                query: {
-                    babelrc: false,
-                    presets: ['es2015'],
-                    plugins: [
-                        'transform-decorators-legacy',
-                        'transform-class-properties'
-                    ],
-                    // This is a feature of `babel-loader` for webpack (not Babel itself).
-                    // It enables caching results in ./node_modules/.cache/babel-loader/
-                    // directory for faster rebuilds.
-                    cacheDirectory: true
-                }
+                loader: 'babel'
             },
             {
                 test: /\.json$/,
@@ -97,17 +84,17 @@ var webConfig = {
         configFile: path.join(__dirname, '../eslintrc'),
         useEslintrc: false
     },
-    postcss: function () {
-        return [
-            autoprefixer({
-                browsers: [
-                    '>1%',
-                    'last 4 versions',
-                    'Firefox ESR',
-                    'not ie < 9' // React doesn't support IE8 anyway
-                ]
-            })
-        ];
+    babel: {
+        babelrc: false,
+        presets: [require.resolve('babel-preset-es2015')],
+        plugins: [
+            require.resolve('babel-plugin-transform-class-properties'),
+            require.resolve('babel-plugin-transform-decorators-legacy')
+        ],
+      // This is a feature of `babel-loader` for webpack (not Babel itself).
+      // It enables caching results in ./node_modules/.cache/babel-loader/
+      // directory for faster rebuilds.
+        cacheDirectory: true
     },
     plugins: [
         new ProgressBarPlugin(),

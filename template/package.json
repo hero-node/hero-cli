@@ -2,12 +2,10 @@
   "name": "hero-template",
   "version": "0.0.1",
   "dependencies": {
-    "babel-cli": "~6.18.0",
-    "babel-core": "~6.21.0",
-    "babel-plugin-transform-class-properties": "~6.19.0",
-    "babel-plugin-transform-decorators-legacy": "~1.3.4",
     "hero-cli": "~2.0.0",
-    "hero-js": "~2.0.0"
+    "hero-js": "~2.0.0",
+    "babel-cli": "~6.18.0",
+    "babel-core": "~6.21.0"
   },
   "devDependencies":{
     "body-parser": "~1.15.2",
