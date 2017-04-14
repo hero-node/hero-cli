@@ -2,8 +2,8 @@
   "name": "hero-template",
   "version": "0.0.1",
   "dependencies": {
-    "hero-cli": "~2.0.0",
-    "hero-js": "~2.0.0"
+    "hero-cli": "hero-mobile/hero-cli#v2.0",
+    "hero-js": "hero-mobile/hero-js#v2.0"
   },
   "devDependencies":{
     "babel-cli": "~6.18.0",
