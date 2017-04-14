@@ -6,24 +6,23 @@ var paths = require('./paths');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ensureSlash = require('../lib/ensureSlash');
 var getEntries = require('../lib/getEntries');
-var webpackHotDevClient = require.resolve('../lib/webpackHotDevClient');
+var webpackHotDevClientKey = 'web-hot-reload';
 var appIndexKey = 'appIndex';
+var webComponentsKey = 'webcomponents-lite';
+var polyfillKey = 'polyfills';
 
-var buildEntries = {};
+var buildEntries = {
+};
 
-buildEntries[appIndexKey] = [
-  // We ship a few polyfills by default:
-    require.resolve('../lib/webcomponents-lite'),
-    require.resolve('./polyfills'),
-  // Finally, this is your app's code:
-    paths.appIndexJs
-];
-
+// We ship a few polyfills by default:
+buildEntries[polyfillKey] = require.resolve('./polyfills');
+buildEntries[webComponentsKey] = require.resolve('../lib/webcomponents-lite');
+buildEntries[appIndexKey] = paths.appIndexJs;
 
 function getEntryAndPlugins(isDevelopmentEnv) {
 
     if (isDevelopmentEnv) {
-        buildEntries[appIndexKey].push(webpackHotDevClient);
+        buildEntries[webpackHotDevClientKey] = require.resolve('../lib/webpackHotDevClient');
     }
 
     var entries = getEntries(path.join(paths.appSrc, entryFolder)).filter(name => {
@@ -80,7 +79,7 @@ function getEntryAndPlugins(isDevelopmentEnv) {
                 // minifyCSS: true,
                 // minifyURLs: true
             },
-            chunks: [appIndexKey]
+            chunks: isDevelopmentEnv ? [webComponentsKey, polyfillKey, appIndexKey, webpackHotDevClientKey] : [webComponentsKey, polyfillKey, appIndexKey]
         })
     ];
     var buildPlugins = entries.map(entry => {

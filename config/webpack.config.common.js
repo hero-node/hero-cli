@@ -63,7 +63,19 @@ var webConfig = {
             {
                 test: /\.js$/,
                 include: paths.appSrc,
-                loader: 'babel'
+                loader: 'babel',
+                query: {
+                    babelrc: false,
+                    presets: [require.resolve('babel-preset-react-app')],
+                    plugins: [
+                        require.resolve('babel-plugin-transform-class-properties'),
+                        require.resolve('babel-plugin-transform-decorators-legacy')
+                    ],
+                // This is a feature of `babel-loader` for webpack (not Babel itself).
+                // It enables caching results in ./node_modules/.cache/babel-loader/
+                // directory for faster rebuilds.
+                    cacheDirectory: true
+                }
             },
             {
                 test: /\.json$/,
@@ -83,18 +95,6 @@ var webConfig = {
         // e.g. to enable no-console and no-debugger only in production.
         configFile: path.join(__dirname, '../eslintrc'),
         useEslintrc: false
-    },
-    babel: {
-        babelrc: false,
-        presets: [require.resolve('babel-preset-es2015')],
-        plugins: [
-            require.resolve('babel-plugin-transform-class-properties'),
-            require.resolve('babel-plugin-transform-decorators-legacy')
-        ],
-      // This is a feature of `babel-loader` for webpack (not Babel itself).
-      // It enables caching results in ./node_modules/.cache/babel-loader/
-      // directory for faster rebuilds.
-        cacheDirectory: true
     },
     plugins: [
         new ProgressBarPlugin(),
