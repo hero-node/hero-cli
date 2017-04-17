@@ -17,9 +17,9 @@ webConfig.output = {
   // This does not produce a real file. It's just the virtual path that is
   // served by WebpackDevServer in development. This is the JS bundle
   // containing code from all our entry points, and the Webpack runtime.
-    filename: 'static/js/[name].[hash:8].js',
+    filename: 'static/js/[name].js',
     // chunkFilename: 'static/js/[name.chunk.js',
-    chunkFilename: 'static/js/[name].[chunkhash:8].chunk.js',
+    chunkFilename: 'static/js/[name].chunk.js',
   // This is the URL that app is served from. We use "/" in development.
     publicPath: publicPath
 };
