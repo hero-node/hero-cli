@@ -1,9 +1,7 @@
-var pkg = require('../../package.json');
-var defaultPort = (pkg.config && pkg.config.mockServerPort) || 4005;
 
 var environment = {
     production: false,
-    backendURL: '//127.0.0.1' + (defaultPort === 80 ? '' : ':' + defaultPort)
+    backendURL: 'http://127.0.0.1:3009'
 };
 
 module.exports = environment;

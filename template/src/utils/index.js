@@ -24,6 +24,27 @@ function remove(arr, value) {
         arr.splice(a, 1);
     }
 }
+
+var _initData = null;
+
+function getInitData() {
+    if (localStorage.boot) {
+        _initData = JSON.parse(localStorage.boot);
+        localStorage.boot = '';
+    }
+    _initData = _initData || {};
+    var params = (window.location.search.split('?')[1] || '').split('&');
+
+    var param, paramParts;
+
+    for (param in params) {
+        if (params.hasOwnProperty(param)) {
+            paramParts = params[param].split('=');
+            _initData[paramParts[0]] = decodeURIComponent(paramParts[1] || '');
+        }
+    }
+    return _initData;
+}
 export {
-  remove, merge, contain
+  remove, merge, contain,getInitData
 };

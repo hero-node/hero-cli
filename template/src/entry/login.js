@@ -1,12 +1,10 @@
 require('hero-js');
 
-var API = window.API;
+var API = window.API = {};
 
 API.boot = function () {
 
 };
-var a = 3;
-
 // eslint-disable-next-line
 API.special_logic = function (data) {
     if (data.click === 'login') {

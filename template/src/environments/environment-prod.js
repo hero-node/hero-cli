@@ -1,6 +1,6 @@
 var environment = {
     production: true,
-    backendURL: '//www.dianrong.com'
+    backendURL: 'http://www.dianrong.com'
 };
 
 module.exports = environment;
