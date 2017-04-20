@@ -56,9 +56,9 @@ function watchSources() {
     })
     .on('error', function (error) { log('Watcher error: ' + error); })
     .on('all', function () {
-        log('------------------------------');
-        log('watcher.getWatched()', watcher.getWatched());
-        log('------------------------------');
+        // log('------------------------------');
+        // log('watcher.getWatched()', watcher.getWatched());
+        // log('------------------------------');
     });
 
 }

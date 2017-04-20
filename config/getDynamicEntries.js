@@ -28,6 +28,7 @@ function getEntryAndPlugins(isDevelopmentEnv) {
     var entries = getEntries(path.join(paths.appSrc, entryFolder)).filter(name => {
         return /\.js$/.test(name);
     }).map((name, index) => {
+        console.log(name);
         var filePath = name.replace(ensureSlash(path.join(paths.appSrc, entryFolder), true), '');
         var attriName = index + '-' + (name.match(/(.*)\/(.*)\.js$/)[2]);
         var fileNamePath = filePath.match(/(.*)\.js$/)[1];
