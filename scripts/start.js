@@ -15,6 +15,54 @@ var config = require('../config/webpack.config.dev');
 var paths = require('../config/paths');
 var heroCliConfig = require('../config/hero-config.json');
 
+var chokidar = require('chokidar');
+// Initialize watcher.
+
+var watcher = chokidar.watch(paths.appSrc, {
+    ignored: /[\/\\]\./,
+    persistent: true
+});
+
+var expectedType = /\.js$/;
+var loop = function () {};
+// Something to use when events are received.
+var log = console.log.bind(console);
+
+function watchSources() {
+    watcher
+  .on('add', function (path) {
+      if (expectedType.test(path)) {
+          log('File ADD: ' + path);
+          watcher.add(path);
+      }
+  })
+  // Using Webpack Re-Build
+  .on('change', loop)
+
+  .on('unlink', function (path) {
+      log('File REMOVE: ' + path);
+      watcher.unwatch(path);
+  });
+
+  // More possible events.
+    watcher
+    .on('addDir', function (path) {
+        log('Dir ADD: ' + path);
+        watcher.add(path);
+    })
+    .on('unlinkDir', function (path) {
+        log('Dir REMOVE: ' + path);
+        watcher.unwatch(path);
+    })
+    .on('error', function (error) { log('Watcher error: ' + error); })
+    .on('all', function () {
+        log('------------------------------');
+        log('watcher.getWatched()', watcher.getWatched());
+        log('------------------------------');
+    });
+
+}
+watchSources();
 
 var cli = 'npm';
 var isInteractive = process.stdout.isTTY;
