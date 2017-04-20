@@ -75,7 +75,7 @@ function setupCompiler(host, port, protocol) {
             console.log('You may use special comments to disable some warnings.');
             console.log('Use ' + chalk.yellow('// eslint-disable-next-line') + ' to ignore the next line.');
             console.log('Use ' + chalk.yellow('/* eslint-disable */') + ' to ignore all warnings in a file.');
-            
+
             return;
         }
 
@@ -122,6 +122,15 @@ function runDevServer(host, port, protocol) {
     // in the Webpack development configuration. Note that only changes
     // to CSS are currently hot reloaded. JS changes will refresh the browser.
         hot: true,
+        setup: function (app) {
+            app.use(function (req, res, next) {
+                console.log(req.url);
+                if (req.url === '/a.html?test=true') {
+                    console.log(devServer.middleware.invalidate());
+                }
+                next();
+            });
+        },
     // It is important to tell WebpackDevServer to use the same "root" path
     // as we specified in the config. In development, we always serve from /.
         publicPath: config.output.publicPath,
