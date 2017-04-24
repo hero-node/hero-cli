@@ -11,12 +11,21 @@ var checkRequiredFiles = require('../lib/checkRequiredFiles');
 var formatWebpackMessages = require('../lib/formatWebpackMessages');
 var getProcessForPort = require('../lib/getProcessForPort');
 var prompt = require('../lib/prompt');
-var config = require('../config/webpack.config.dev');
+
 var paths = require('../config/paths');
 var heroCliConfig = require('../config/hero-config.json');
-
 var chokidar = require('chokidar');
+var updateEntryFile = require('../lib/updateWebpackEntry');
+
+var availablePort;
+var cli = 'npm';
+var isInteractive = process.stdout.isTTY;
 // Initialize watcher.
+var isFirstWatch = true;
+var devServer = null;
+// Tools like Cloud9 rely on this.
+var DEFAULT_PORT = parseInt(process.env.PORT, 10) || heroCliConfig.devServerPort;
+var compiler;
 
 var watcher = chokidar.watch(paths.appSrc, {
     ignored: /[\/\\]\./,
@@ -24,61 +33,62 @@ var watcher = chokidar.watch(paths.appSrc, {
 });
 
 var expectedType = /\.js$/;
-var loop = function () {};
 // Something to use when events are received.
-var log = console.log.bind(console);
+var needUpdateEntry = false;
 
+function checkRebuild(path, isDelete) {
+    if (!isFirstWatch) {
+        needUpdateEntry = updateEntryFile(compiler, path, isDelete);
+        if (needUpdateEntry) {
+            console.log('---------------Rebuild----------');
+            // devServer.middleware.invalidate();
+            devServer.close();
+            run(availablePort);
+        }
+    }
+}
 function watchSources() {
-    watcher
-  .on('add', function (path) {
-      if (expectedType.test(path)) {
-          log('File ADD: ' + path);
-          watcher.add(path);
-      }
-  })
-  // Using Webpack Re-Build
-  .on('change', loop)
-
-  .on('unlink', function (path) {
-      log('File REMOVE: ' + path);
-      watcher.unwatch(path);
-  });
-
-  // More possible events.
-    watcher
-    .on('addDir', function (path) {
-        log('Dir ADD: ' + path);
-        watcher.add(path);
-    })
-    .on('unlinkDir', function (path) {
-        log('Dir REMOVE: ' + path);
+    watcher.on('add', function (path) {
+        if (expectedType.test(path)) {
+            // console.log('File ADD: ' + path);
+            watcher.add(path);
+            checkRebuild(path);
+        }
+    }).on('change', function (path) {
+        checkRebuild(path);
+    }).on('unlink', function (path) {
+        // Using Webpack Re-Build
+        // console.log('File REMOVE: ' + path);
         watcher.unwatch(path);
-    })
-    .on('error', function (error) { log('Watcher error: ' + error); })
-    .on('all', function () {
-        // log('------------------------------');
-        // log('watcher.getWatched()', watcher.getWatched());
-        // log('------------------------------');
+        checkRebuild(path, true);
+    });
+
+    // More possible events.
+    watcher.on('addDir', function (path) {
+        // console.log('Dir ADD: ' + path);
+        watcher.add(path);
+    }).on('unlinkDir', function (path) {
+        // console.log('Dir REMOVE: ' + path);
+        watcher.unwatch(path);
+    }).on('error', function (error) {
+        console.log('Watcher error: ' + error);
     });
 
 }
+
 watchSources();
 
-var cli = 'npm';
-var isInteractive = process.stdout.isTTY;
 
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
     process.exit(1);
 }
 
-// Tools like Cloud9 rely on this.
-var DEFAULT_PORT = parseInt(process.env.PORT, 10) || heroCliConfig.devServerPort;
-var compiler;
 
-function setupCompiler(host, port, protocol) {
+function setupCompiler(config, host, port, protocol) {
     // "Compiler" is a low-level interface to Webpack.
     // It lets us listen to some events and provide our own custom messages.
+
     compiler = webpack(config);
 
     // "invalid" event fires when you have changed a file, and Webpack is
@@ -95,6 +105,10 @@ function setupCompiler(host, port, protocol) {
     // "done" event fires when Webpack has finished recompiling the bundle.
     // Whether or not you have warnings or errors, you will get this event.
     compiler.plugin('done', function (stats) {
+
+        if (isFirstWatch) {
+            isFirstWatch = false;
+        }
         if (isInteractive) {
             clearConsole();
         }
@@ -154,10 +168,11 @@ function setupCompiler(host, port, protocol) {
             console.log();
         }
     });
+    // console.log(JSON.stringify(compiler));
 }
 
-function runDevServer(host, port, protocol) {
-    var devServer = new WebpackDevServer(compiler, {
+function runDevServer(config, host, port, protocol) {
+    devServer = new WebpackDevServer(compiler, {
     // Enable gzip compression of generated files.
         compress: true,
     // Silence WebpackDevServer's own logs since they're generally not useful.
@@ -172,10 +187,7 @@ function runDevServer(host, port, protocol) {
         hot: true,
         setup: function (app) {
             app.use(function (req, res, next) {
-                console.log(req.url);
-                if (req.url === '/a.html?test=true') {
-                    console.log(devServer.middleware.invalidate());
-                }
+
                 next();
             });
         },
@@ -184,7 +196,7 @@ function runDevServer(host, port, protocol) {
         publicPath: config.output.publicPath,
     // WebpackDevServer is noisy by default so we emit custom message instead
     // by listening to the compiler events with `compiler.plugin` calls above.
-        quiet: true,
+        // quiet: true,
         watchOptions: {
             ignored: /node_modules/
         },
@@ -210,11 +222,15 @@ function runDevServer(host, port, protocol) {
 }
 
 function run(port) {
+    delete require.cache[require.resolve('../config/webpack.config.dev')];
+    var config = require('../config/webpack.config.dev');
+
     var protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
     var host = process.env.HOST || 'localhost';
 
-    setupCompiler(host, port, protocol);
-    runDevServer(host, port, protocol);
+    availablePort = port;
+    setupCompiler(config, host, port, protocol);
+    runDevServer(config, host, port, protocol);
 }
 
 // We attempt to use the default port but if it is busy, we offer the user to

@@ -28,8 +28,9 @@ function getClientEnvironment(env) {
             process.exit(1);
         }
     }
-
+    // console.log('env=' + env);
     var configPath = path.resolve(paths.heroCliConfig, '../', heroFileConfig[config.environmentKey][env]);
+
     var raw = require(configPath);
 
     raw.NODE_ENV = process.env.NODE_ENV || 'development';

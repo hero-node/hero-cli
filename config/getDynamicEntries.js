@@ -10,17 +10,18 @@ var webpackHotDevClientKey = 'web-hot-reload';
 var appIndexKey = 'appIndex';
 var webComponentsKey = 'webcomponents-lite';
 var polyfillKey = 'polyfills';
-
-var buildEntries = {
-};
-
-// We ship a few polyfills by default:
-buildEntries[polyfillKey] = require.resolve('./polyfills');
-buildEntries[webComponentsKey] = require.resolve('../lib/webcomponents-lite');
-buildEntries[appIndexKey] = paths.appIndexJs;
+var getComponentsData = require('../lib/getComponentsData');
 
 function getEntryAndPlugins(isDevelopmentEnv) {
 
+    var buildEntries = {};
+
+    // We ship a few polyfills by default:
+    buildEntries[polyfillKey] = require.resolve('./polyfills');
+    buildEntries[webComponentsKey] = require.resolve('../lib/webcomponents-lite');
+    buildEntries[appIndexKey] = paths.appIndexJs;
+
+    // console.log('getEntryAndPlugins----------------');
     if (isDevelopmentEnv) {
         buildEntries[webpackHotDevClientKey] = require.resolve('../lib/webpackHotDevClient');
     }
@@ -28,15 +29,20 @@ function getEntryAndPlugins(isDevelopmentEnv) {
     var entries = getEntries(path.join(paths.appSrc, entryFolder)).filter(name => {
         return /\.js$/.test(name);
     }).map((name, index) => {
-        console.log(name);
-        var filePath = name.replace(ensureSlash(path.join(paths.appSrc, entryFolder), true), '');
+        var entryConfig = getComponentsData(name);
+
+        // console.log('entryConfig---------', entryConfig);
+        if (!entryConfig) {
+            return;
+        }
+        var filePath = name.replace(ensureSlash(path.join(paths.appSrc), true), '');
         var attriName = index + '-' + (name.match(/(.*)\/(.*)\.js$/)[2]);
         var fileNamePath = filePath.match(/(.*)\.js$/)[1];
 
         return {
             file: name,
             entryName: attriName,
-            plugin: new HtmlWebpackPlugin({
+            plugin: new HtmlWebpackPlugin(Object.assign({
                 inject: 'head',
                 // webconfig html file loader using Polymer HTML
                 template: '!!html!' + path.join(__dirname, 'entryTemplate.html'),
@@ -54,10 +60,13 @@ function getEntryAndPlugins(isDevelopmentEnv) {
               // minifyURLs: true
                 },
                 chunks: [attriName]
-            })
+            }, entryConfig))
         };
+    }).filter(function (entry) {
+        return !!entry;
     });
 
+    console.log('entries-------', entries);
     entries.forEach(entry => {
         buildEntries[entry.entryName] = entry.file;
     });

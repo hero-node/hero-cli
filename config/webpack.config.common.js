@@ -5,7 +5,10 @@ var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
 var InterpolateHtmlPlugin = require('../lib/InterpolateHtmlPlugin');
 var paths = require('./paths');
-var envName = process.argv[2];
+var envName = global.envName || process.argv[2];
+
+global.envName = envName;
+console.log(JSON.stringify(global.envName));
 var getClientEnvironment = require('./env');
 var env = getClientEnvironment(envName);
 

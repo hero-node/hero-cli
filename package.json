@@ -49,6 +49,7 @@
     "html-webpack-plugin": "2.24.0",
     "http-proxy-middleware": "0.17.3",
     "json-loader": "0.5.4",
+    "nodemon": "^1.11.0",
     "object-assign": "4.1.1",
     "opn": "4.0.2",
     "progress-bar-webpack-plugin": "1.9.3",

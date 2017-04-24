@@ -2,6 +2,8 @@
 
 var extend = require('extend');
 var webpack = require('webpack');
+
+delete require.cache[require.resolve('./webpack.config.common')];
 var webConfig = require('./webpack.config.common');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 var getDynamicEntries = require('./getDynamicEntries');
