@@ -4,5 +4,6 @@
   "environmentKey":"environments",
   "sourceFolder": "src",
   "entryFolder": "entry",
-  "devServerPort": 4000
+  "devServerPort": 4000,
+  "decoratorIdentifier": "__title"
 }
