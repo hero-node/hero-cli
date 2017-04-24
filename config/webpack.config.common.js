@@ -8,7 +8,7 @@ var paths = require('./paths');
 var envName = global.envName || process.argv[2];
 
 global.envName = envName;
-console.log(JSON.stringify(global.envName));
+// console.log(JSON.stringify(global.envName));
 var getClientEnvironment = require('./env');
 var env = getClientEnvironment(envName);
 

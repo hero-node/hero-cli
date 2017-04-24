@@ -39,8 +39,8 @@ function getEntryAndPlugins(isDevelopmentEnv) {
         var fileNamePath = filePath.match(/(.*)\.js$/)[1];
 
         if (entryConfig.template) {
-            console.log(name);
-            console.log(entryConfig.template);
+            // console.log(name);
+            // console.log(entryConfig.template);
             entryConfig.template = '!!html!' + path.join(name.replace('/\.js$/', ''), '../', entryConfig.template);
         }
         var options = Object.assign({
@@ -63,7 +63,7 @@ function getEntryAndPlugins(isDevelopmentEnv) {
             chunks: [attriName]
         }, entryConfig);
 
-        console.log(options);
+        // console.log(options);
         return {
             file: name,
             entryName: attriName,
@@ -73,7 +73,7 @@ function getEntryAndPlugins(isDevelopmentEnv) {
         return !!entry;
     });
 
-    console.log('entries-------', entries);
+    // console.log('entries-------', entries);
     entries.forEach(entry => {
         buildEntries[entry.entryName] = entry.file;
     });
