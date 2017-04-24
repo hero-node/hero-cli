@@ -37,13 +37,16 @@ var expectedType = /\.js$/;
 var needUpdateEntry = false;
 
 function checkRebuild(path, isDelete) {
-    if (!isFirstWatch) {
-        needUpdateEntry = updateEntryFile(compiler, path, isDelete);
-        if (needUpdateEntry) {
-            console.log('---------------Rebuild----------');
+    // Is JS File
+    if (expectedType.test(path)) {
+        if (!isFirstWatch) {
+            needUpdateEntry = updateEntryFile(compiler, path, isDelete);
+            if (needUpdateEntry) {
             // devServer.middleware.invalidate();
-            devServer.close();
-            run(availablePort);
+                devServer.close();
+            // eslint-disable-next-line
+                run(availablePort);
+            }
         }
     }
 }

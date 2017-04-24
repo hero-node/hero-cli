@@ -1,6 +1,5 @@
 'use strict';
 
-var entryFolder = require('./hero-config.json').entryFolder;
 var path = require('path');
 var paths = require('./paths');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -26,7 +25,7 @@ function getEntryAndPlugins(isDevelopmentEnv) {
         buildEntries[webpackHotDevClientKey] = require.resolve('../lib/webpackHotDevClient');
     }
 
-    var entries = getEntries(path.join(paths.appSrc, entryFolder)).filter(name => {
+    var entries = getEntries(path.join(paths.appSrc)).filter(name => {
         return /\.js$/.test(name);
     }).map((name, index) => {
         var entryConfig = getComponentsData(name);
@@ -39,28 +38,36 @@ function getEntryAndPlugins(isDevelopmentEnv) {
         var attriName = index + '-' + (name.match(/(.*)\/(.*)\.js$/)[2]);
         var fileNamePath = filePath.match(/(.*)\.js$/)[1];
 
+        if (entryConfig.template) {
+            console.log(name);
+            console.log(entryConfig.template);
+            entryConfig.template = '!!html!' + path.join(name.replace('/\.js$/', ''), '../', entryConfig.template);
+        }
+        var options = Object.assign({
+            inject: 'head',
+            // webconfig html file loader using Polymer HTML
+            template: '!!html!' + path.join(__dirname, 'entryTemplate.html'),
+            filename: fileNamePath + '.html',
+            minify: {
+                removeComments: true,
+          // collapseWhitespace: true,
+          // removeRedundantAttributes: true,
+                useShortDoctype: true
+          // removeEmptyAttributes: true,
+          // removeStyleLinkTypeAttributes: true,
+          // keepClosingSlash: true,
+          // minifyJS: true,
+          // minifyCSS: true,
+          // minifyURLs: true
+            },
+            chunks: [attriName]
+        }, entryConfig);
+
+        console.log(options);
         return {
             file: name,
             entryName: attriName,
-            plugin: new HtmlWebpackPlugin(Object.assign({
-                inject: 'head',
-                // webconfig html file loader using Polymer HTML
-                template: '!!html!' + path.join(__dirname, 'entryTemplate.html'),
-                filename: fileNamePath + '.html',
-                minify: {
-                    removeComments: true,
-              // collapseWhitespace: true,
-              // removeRedundantAttributes: true,
-                    useShortDoctype: true
-              // removeEmptyAttributes: true,
-              // removeStyleLinkTypeAttributes: true,
-              // keepClosingSlash: true,
-              // minifyJS: true,
-              // minifyCSS: true,
-              // minifyURLs: true
-                },
-                chunks: [attriName]
-            }, entryConfig))
+            plugin: new HtmlWebpackPlugin(options)
         };
     }).filter(function (entry) {
         return !!entry;
