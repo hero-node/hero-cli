@@ -6,10 +6,12 @@ function _defineProp(obj, key, value) {
         value: value
     });
 }
-function Entry(target, name, descriptor) {
-    _defineProp(target, '__entryConfig', target[name]);
-    return descriptor;
+function Entry(config) {
+    return function (Target) {
+        _defineProp(Target, '__entryConfig', config);
+    };
 }
+
 module.exports = {
     Entry: Entry
 };
