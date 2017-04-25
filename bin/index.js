@@ -36,7 +36,6 @@ switch (script) {
     case 'build':
     case 'init':
     case 'start':
-    case 'test':
         result = spawn.sync('node', [require.resolve('../scripts/' + script)].concat(args), { stdio: 'inherit' });
 
         if (result.signal) {
