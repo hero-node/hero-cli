@@ -102,8 +102,10 @@ function setupCompiler(config, host, port, protocol) {
     // "Compiler" is a low-level interface to Webpack.
     // It lets us listen to some events and provide our own custom messages.
     // console.log(config, host, port, protocol);
-    compiler = webpack(config, function (err, stats) {
-        console.log(err);
+    compiler = webpack(config, function (err) {
+        if (err) {
+            console.log(err);
+        }
     });
 
     // "invalid" event fires when you have changed a file, and Webpack is
@@ -237,12 +239,14 @@ function runDevServer(config, host, port, protocol) {
 }
 
 function run(port) {
+    var config, protocol, host;
+
     try {
         delete require.cache[require.resolve('../config/webpack.config.dev')];
-        var config = require('../config/webpack.config.dev');
+        config = require('../config/webpack.config.dev');
 
-        var protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
-        var host = process.env.HOST || 'localhost';
+        protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
+        host = process.env.HOST || 'localhost';
 
         availablePort = port;
         setupCompiler(config, host, port, protocol);
