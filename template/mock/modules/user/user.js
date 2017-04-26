@@ -8,7 +8,7 @@ function subRouter(express) {
     var router = express.Router();
 
     // Get Method
-    router.get('/user', function(req, res) {
+    router.post('/users/login', function(req, res) {
         // http://www.expressjs.com.cn/4x/api.html#res.json
         return res.json({
             result: 'success',
@@ -24,6 +24,6 @@ function subRouter(express) {
 }
 
 export default {
-    root: '/',
+    root: '/api/v2',
     router: subRouter
 };

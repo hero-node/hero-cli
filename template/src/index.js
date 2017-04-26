@@ -1,3 +1,8 @@
+if (typeof Promise === 'undefined') {
+    require('promise/lib/rejection-tracking').enable();
+    window.Promise = require('promise/lib/es6-extensions.js');
+}
+
 // Hero Core Web Components
 import 'hero-js/src/hero-app.html';
 // Custom Web Components

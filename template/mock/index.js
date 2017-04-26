@@ -2,12 +2,16 @@ import log4js from 'log4js';
 import chalk from 'chalk';
 import express from 'express';
 import http from 'http';
+import fs from 'fs';
+import path from 'path';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import proxy from 'express-http-proxy';
 import pkg from './package.json';
 import startMockServer from './startMockServer.js';
 import cors from './middleware/cors';
+
+var httpProxy = require('http-proxy');
 
 const servers = pkg.serverConfig.proxyTargetURLs;
 const defaultPort = pkg.serverConfig.proxyBasePort;
@@ -33,34 +37,41 @@ logger.setLevel('INFO');
 (function startProxyServer() {
     servers.forEach((url, index) => {
         var port = defaultPort + index;
-        var app = express();
+        var proxy = httpProxy.createProxyServer({
+          changeOrigin: true,
 
-        app.enable('trust proxy');
-        app.use(cookieParser());
-        app.use(bodyParser.urlencoded({ extended: false }));
-        app.use(bodyParser.json());
-        app.use(cors);
-        app.use('/api/v2/', proxy(url, {
-            forwardPath: function (req) {
-                return '/api/v2' + require('url').parse(req.url).path;
-            }
-        }));
-        app.use('/images/captcha.jpg', proxy(url, {
-            forwardPath: function (req) {
-                return '/images/captcha.jpg' + require('url').parse(req.url).path.substring(1);
-            }
-        }));
-
-        http.createServer(app).listen(port, function () {
-            if (index === 0) {
-                console.log(chalk.green('Start successfully! \n\nProxy server is running at:'));
-            }
-            console.log(chalk.cyan('http://localhost' + (port === 80 ? '' : ':' + port)) + ' will forward request to ' + chalk.cyan(url));
         });
+
+        // To modify the proxy connection before data is sent, you can listen
+        // for the 'proxyReq' event. When the event is fired, you will receive
+        // the following arguments:
+        // (http.ClientRequest proxyReq, http.IncomingMessage req,
+        //  http.ServerResponse res, Object options). This mechanism is useful when
+        // you need to modify the proxy request before the proxy connection
+        // is made to the target.
+        //
+        proxy.on('proxyReq', function(proxyReq, req, res, options) {
+
+        });
+        proxy.on('proxyRes', function (proxyRes, req, res) {
+          res.setHeader('access-control-allow-credentials', true);
+          res.setHeader('access-control-allow-origin', req.headers.origin);
+        });
+
+        var server = http.createServer(function(req, res) {
+          // You can define here your custom logic to handle the request
+          // and then proxy the request.
+          proxy.web(req, res, {
+            target: 'https://www-demo.dianrong.com'
+          });
+        });
+
+        server.listen(port);
+        console.log("listeing on port "+port);
     });
 })();
 
-startMockServer(defaultPort + servers.length, mockAPIPrefix);
+// startMockServer(defaultPort + servers.length, mockAPIPrefix);
 
 (function errorHandler() {
     process.on('uncaughtException', function (err) {

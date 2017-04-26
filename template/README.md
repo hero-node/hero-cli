@@ -9,3 +9,4 @@
 
 # 启动MockServer
 `npm run mock`
+Open URL: http://localhost:4000?state=http://localhost:4000/entry/login.html

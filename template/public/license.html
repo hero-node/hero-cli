@@ -33,9 +33,6 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        html * {
-            max-height: 1000000px;
-        }
     </style>
     <style>
         hero-app {
@@ -43,9 +40,13 @@
         }
 
         .scroller {
-            padding: 0 1em;
+            padding: 0 1em; */
             height: 100%;
-            overflow: scroll;
+            /* overflow: scroll; */
+            width: 100%;
+            box-sizing: border-box;
+            position: relative;
+            padding-top: 3.5em;
             -webkit-overflow-scrolling: touch;
         }
 
@@ -83,7 +84,13 @@
     </style>
     <style>
         .tabs-scroller {
-            overflow-x: auto;
+          overflow-x: auto;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          background: #FFF;
+          overflow-y: hidden;
         }
 
         .tabs {
@@ -112,7 +119,9 @@
             height: 2px;
             background: #00BC8D;
         }
-
+        .main {
+            padding: 1em 1em 0;
+        }
         .main section {
             display: none;
         }

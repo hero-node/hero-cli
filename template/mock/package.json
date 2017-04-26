@@ -16,18 +16,10 @@
     "mockjs": "^1.0.1-beta3"
   },
   "serverConfig": {
-    "mockAPIPrefix": "/api",
+    "mockAPIPrefix": "",
     "proxyBasePort": 3000,
     "proxyTargetURLs": [
-      "https://borrower-dev.dianrong.com",
-      "https://borrower-demo.dianrong.com",
-      "https://borrower.dianrong.com",
-      "https://www-dev.dianrong.com",
-      "https://www-demo.dianrong.com",
-      "https://www.dianrong.com",
-      "https://cashloan-dev.dianrong.com",
-      "https://cashloan-demo.dianrong.com",
-      "https://cashloan.dianrong.com"
+      "www-dev.dianrong.com"
     ]
   },
   "devDependencies": {},
