@@ -44,6 +44,7 @@ function _checkRebuild(path, isDelete) {
         if (!isFirstWatch) {
             needUpdateEntry = updateEntryFile(compiler, path, isDelete);
             if (needUpdateEntry) {
+                // console.log('restart....');
             // devServer.middleware.invalidate();
                 devServer.close();
             // eslint-disable-next-line
