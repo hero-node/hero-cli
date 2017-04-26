@@ -6,31 +6,32 @@ var spawn = require('cross-spawn');
 var script = process.argv[2];
 var args = process.argv.slice(3);
 var yargs = require('yargs');
-var fs = require('fs');
 var result = null;
 
 function showUsage() {
-    var argv = yargs
-      .usage('Usage: $0 <command> [options]')
-      .command(['init [project-directory]'], 'Initialize workspace, copy project and other basic configuration')
-      .example('$0 init my-hero-app')
-      .demandOption(['init'])
-      .epilog('copyright 2017')
-      .argv;
+    // var argv = yargs
+    //   .usage('Usage: $0 <command> [options]')
+    //   .usage(['init [project-directory]'], 'Initialize workspace, copy project and other basic configuration')
+    //   // .command(['start [options]'], 'Initialize workspace, copy project and other basic configuration')
+    //   // .command(['build [options]'], 'Initialize workspace, copy project and other basic configuration')
+    //   .example('$0 init my-hero-app')
+    //   .demandOption([])
+    //   // .epilog('copyright 2017')
+    //   .argv;
 
-    var s = fs.createReadStream(argv.file);
-
-    var lines = 0;
-
-    s.on('data', function (buf) {
-        lines += buf.toString().match(/\n/g).length;
-    });
-
-    s.on('end', function () {
-        console.log(lines);
-    });
-
-    console.log('See: https://github.com/dianrong/Hero');
+    console.log();
+    console.log('Usage: ' + yargs.argv.$0 + ' <command>');
+    console.log();
+    console.log('where <command> is one of:');
+    console.log('    init, start, build');
+    console.log();
+    console.log(yargs.argv.$0 + ' <cmd> -h\tquick help on <cmd>');
+    console.log(yargs.argv.$0 + ' init\tInitialize workspace, copy project and other basic configuration');
+    console.log(yargs.argv.$0 + ' start\tStart the http server');
+    console.log(yargs.argv.$0 + ' build\tCreate a build package');
+    console.log();
+    console.log('See: https://github.com/hero-mobile/hero-cli');
+    console.log();
 }
 switch (script) {
     case 'build':

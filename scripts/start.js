@@ -13,12 +13,50 @@ var checkRequiredFiles = require('../lib/checkRequiredFiles');
 var formatWebpackMessages = require('../lib/formatWebpackMessages');
 var getProcessForPort = require('../lib/getProcessForPort');
 var prompt = require('../lib/prompt');
-
+var pgk = require('../package.json');
 var paths = require('../config/paths');
 var heroCliConfig = require('../config/hero-config.json');
 var chokidar = require('chokidar');
 var updateEntryFile = require('../lib/updateWebpackEntry');
+var commandName = Object.keys(pgk.bin)[0];
 
+function showUsage() {
+    var argv = require('yargs')
+        .usage('Usage: ' + commandName + ' start [options]')
+        // .command('count', 'Count the lines in a file')
+        .example(commandName + ' start -e dev', 'Start the server using the dev configuration')
+        .option('e', {
+            demandOption: true,
+            // default: '/etc/passwd',
+            describe: 'Environment name of the configuration when start the server\n ' +
+                      'Available names refer to \n\n' +
+                      '<you-project-path>/' + heroCliConfig.heroCliConfig + '\n\nand then add attribute environment names to attribute [' + heroCliConfig.environmentKey + '] in that file',
+            type: 'string'
+        })
+        .help('h')
+        .epilog('copyright 2017')
+        .detectLocale(false)
+        .argv;
+
+    var fs = require('fs');
+    var s = fs.createReadStream(argv.file);
+
+    var lines = 0;
+
+    s.on('data', function (buf) {
+        lines += buf.toString().match(/\n/g).length;
+    });
+
+    s.on('end', function () {
+        console.log(lines);
+    });
+
+    process.exit(1);
+}
+
+if (yargs.argv.h || !yargs.argv.e) {
+    showUsage();
+}
 global.argv = yargs.argv;
 
 var availablePort;
