@@ -38,11 +38,16 @@ var expectedType = /\.js$/;
 var needUpdateEntry = false;
 
 function _checkRebuild(path, isDelete) {
-    // console.log('check.....');
+    // console.log('check.....=' + path);
     // Is JS File
     if (expectedType.test(path)) {
         if (!isFirstWatch) {
-            needUpdateEntry = updateEntryFile(compiler, path, isDelete);
+            try {
+                needUpdateEntry = updateEntryFile(compiler, path, isDelete);
+            } catch (e) {
+                console.log(e);
+                needUpdateEntry = false;
+            }
             if (needUpdateEntry) {
                 // console.log('restart....');
             // devServer.middleware.invalidate();
@@ -84,9 +89,6 @@ function watchSources() {
 
 }
 
-watchSources();
-
-
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
     process.exit(1);
@@ -96,8 +98,10 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 function setupCompiler(config, host, port, protocol) {
     // "Compiler" is a low-level interface to Webpack.
     // It lets us listen to some events and provide our own custom messages.
-
-    compiler = webpack(config);
+    // console.log(config, host, port, protocol);
+    compiler = webpack(config, function (err, stats) {
+        console.log(err);
+    });
 
     // "invalid" event fires when you have changed a file, and Webpack is
     // recompiling a bundle. WebpackDevServer takes care to pause serving the
@@ -230,25 +234,29 @@ function runDevServer(config, host, port, protocol) {
 }
 
 function run(port) {
-    delete require.cache[require.resolve('../config/webpack.config.dev')];
-    var config = require('../config/webpack.config.dev');
+    try {
+        delete require.cache[require.resolve('../config/webpack.config.dev')];
+        var config = require('../config/webpack.config.dev');
 
-    var protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
-    var host = process.env.HOST || 'localhost';
+        var protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
+        var host = process.env.HOST || 'localhost';
 
-    availablePort = port;
-    setupCompiler(config, host, port, protocol);
-    runDevServer(config, host, port, protocol);
+        availablePort = port;
+        setupCompiler(config, host, port, protocol);
+        runDevServer(config, host, port, protocol);
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 // We attempt to use the default port but if it is busy, we offer the user to
 // run on a different port. `detect()` Promise resolves to the next free port.
 detect(DEFAULT_PORT).then(port => {
     if (port === DEFAULT_PORT) {
+        console.log('A: port = ' + port);
         run(port);
         return;
     }
-
     var existingProcess, question;
 
     existingProcess = getProcessForPort(DEFAULT_PORT);
@@ -261,6 +269,7 @@ detect(DEFAULT_PORT).then(port => {
 
         prompt(question, true).then(shouldChangePort => {
             if (shouldChangePort) {
+                console.log('B: port = ' + port);
                 run(port);
             }
         });
