@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import router from './router';
 import cors from './middleware/cors';
 import delay from './middleware/delay';
@@ -13,6 +14,7 @@ function startMockServer(port, prefix) {
     app.use(bodyParser.urlencoded({ extended: true }));
     // for parsing application/x-www-form-urlencoded
     app.use(bodyParser.json());
+    app.use(cookieParser());
     app.use(delay);
     app.use(cors);
     app.use(options);

@@ -1,15 +1,8 @@
 import log4js from 'log4js';
 import chalk from 'chalk';
-import express from 'express';
 import http from 'http';
-import fs from 'fs';
-import path from 'path';
-import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
-import proxy from 'express-http-proxy';
 import pkg from './package.json';
 import startMockServer from './startMockServer.js';
-import cors from './middleware/cors';
 
 var httpProxy = require('http-proxy');
 
@@ -38,7 +31,7 @@ logger.setLevel('INFO');
     servers.forEach((url, index) => {
         var port = defaultPort + index;
         var proxy = httpProxy.createProxyServer({
-          changeOrigin: true,
+            changeOrigin: true
 
         });
 
@@ -50,28 +43,33 @@ logger.setLevel('INFO');
         // you need to modify the proxy request before the proxy connection
         // is made to the target.
         //
-        proxy.on('proxyReq', function(proxyReq, req, res, options) {
+        proxy.on('proxyReq', function (proxyReq, req, res, options) {
 
         });
         proxy.on('proxyRes', function (proxyRes, req, res) {
-          res.setHeader('access-control-allow-credentials', true);
-          res.setHeader('access-control-allow-origin', req.headers.origin);
+            res.setHeader('access-control-allow-credentials', true);
+            res.setHeader('access-control-allow-origin', req.headers.origin);
         });
 
-        var server = http.createServer(function(req, res) {
+        var server = http.createServer(function (req, res) {
           // You can define here your custom logic to handle the request
           // and then proxy the request.
-          proxy.web(req, res, {
-            target: 'https://www-demo.dianrong.com'
-          });
+            proxy.web(req, res, {
+                target: url
+            });
         });
 
-        server.listen(port);
-        console.log("listeing on port "+port);
+        server.listen(port, function () {
+            console.log();
+            console.log(chalk.green('Proxy server is running at:'));
+            console.log(chalk.cyan('http://localhost' + (port === 80 ? '' : ':' + port)) + ' will proxy to ' + url);
+            console.log();
+
+        });
     });
 })();
 
-// startMockServer(defaultPort + servers.length, mockAPIPrefix);
+startMockServer(defaultPort + servers.length, mockAPIPrefix);
 
 (function errorHandler() {
     process.on('uncaughtException', function (err) {
