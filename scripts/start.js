@@ -3,6 +3,7 @@
 process.env.NODE_ENV = 'development';
 
 var chalk = require('chalk');
+var _ = require('lodash');
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
 var detect = require('detect-port');
@@ -36,7 +37,8 @@ var expectedType = /\.js$/;
 // Something to use when events are received.
 var needUpdateEntry = false;
 
-function checkRebuild(path, isDelete) {
+function _checkRebuild(path, isDelete) {
+    // console.log('check.....');
     // Is JS File
     if (expectedType.test(path)) {
         if (!isFirstWatch) {
@@ -50,6 +52,8 @@ function checkRebuild(path, isDelete) {
         }
     }
 }
+var checkRebuild = _.throttle(_checkRebuild, 1000, { 'trailing': true });
+
 function watchSources() {
     watcher.on('add', function (path) {
         if (expectedType.test(path)) {
