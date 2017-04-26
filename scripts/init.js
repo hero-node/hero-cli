@@ -1,9 +1,13 @@
 'use strict';
-
+// Spawn Process
 var fs = require('fs');
 var path = require('path');
 var chalk = require('chalk');
 var shell = require('shelljs');
+var yargs = require('yargs');
+
+global.argv = yargs.argv;
+
 var generatedApp = process.argv[2];
 
 if (!generatedApp) {

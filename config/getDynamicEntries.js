@@ -10,13 +10,18 @@ var appIndexKey = 'appIndex';
 var webComponentsKey = 'webcomponents-lite';
 var getComponentsData = require('../lib/getComponentsData');
 
+var isStandAlone = global.argv.s;
+
 function getEntryAndPlugins(isDevelopmentEnv) {
 
     var buildEntries = {};
 
     // We ship a few polyfills by default:
-    buildEntries[webComponentsKey] = require.resolve('../lib/webcomponents-lite');
-    buildEntries[appIndexKey] = paths.appIndexJs;
+
+    if (!isStandAlone) {
+        buildEntries[webComponentsKey] = require.resolve('../lib/webcomponents-lite');
+        buildEntries[appIndexKey] = paths.appIndexJs;
+    }
 
     // console.log('getEntryAndPlugins----------------');
     if (isDevelopmentEnv) {
@@ -76,7 +81,7 @@ function getEntryAndPlugins(isDevelopmentEnv) {
         buildEntries[entry.entryName] = entry.file;
     });
 
-    var indexPlugin = [
+    var indexPlugin = isStandAlone ? [] : [
     // Generates an `index.html` file with the <script> injected.
         new HtmlWebpackPlugin({
             inject: 'head',

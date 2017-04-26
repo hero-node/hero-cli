@@ -1,19 +1,19 @@
 'use strict';
 
+var path = require('path');
 var webpack = require('webpack');
 var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 
 var InterpolateHtmlPlugin = require('../lib/InterpolateHtmlPlugin');
 var paths = require('./paths');
-var envName = global.envName || process.argv[2];
+
+var envName = global.envName || global.argv.e;
 
 // Hero will restart webpack, keep the variable
 global.envName = envName;
 // console.log(JSON.stringify(global.envName));
 var getClientEnvironment = require('./env');
 var env = getClientEnvironment(envName);
-
-var path = require('path');
 
 var webConfig = {
 

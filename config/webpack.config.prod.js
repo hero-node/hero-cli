@@ -7,18 +7,10 @@ var ManifestPlugin = require('webpack-manifest-plugin');
 var getDynamicEntries = require('./getDynamicEntries');
 var paths = require('./paths');
 
+var notGenerateSourceMap = global.argv.m;
+
 var publicPath = '.';
 var dynamicEntries = getDynamicEntries(false);
-
-var envName = process.argv[2];
-var getClientEnvironment = require('./env');
-var env = getClientEnvironment(envName);
-
-// Assert this just to be safe.
-// Development builds of React are slow and not intended for production.
-if (env.raw.NODE_ENV !== 'production') {
-    throw new Error('Production builds must have NODE_ENV=production.');
-}
 
 webConfig.output = {
   // The build folder.
@@ -37,7 +29,7 @@ webConfig.plugins = webConfig.plugins.concat(dynamicEntries.plugin);
 
 var config = extend(true, {}, webConfig, {
 
-    devtool: 'source-map',
+    devtool: notGenerateSourceMap ? '' : 'source-map',
     plugins: webConfig.plugins.concat([
         new webpack.optimize.UglifyJsPlugin({
             compress: {

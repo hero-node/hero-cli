@@ -1,7 +1,8 @@
 'use strict';
-
+// Spawn Process
 process.env.NODE_ENV = 'development';
 
+var yargs = require('yargs');
 var chalk = require('chalk');
 var _ = require('lodash');
 var webpack = require('webpack');
@@ -17,6 +18,8 @@ var paths = require('../config/paths');
 var heroCliConfig = require('../config/hero-config.json');
 var chokidar = require('chokidar');
 var updateEntryFile = require('../lib/updateWebpackEntry');
+
+global.argv = yargs.argv;
 
 var availablePort;
 var cli = 'npm';

@@ -2,6 +2,11 @@
 
 process.env.NODE_ENV = 'production';
 
+// Spawn Process
+var yargs = require('yargs');
+
+global.argv = yargs.argv;
+
 var chalk = require('chalk');
 var fs = require('fs-extra');
 var path = require('path');

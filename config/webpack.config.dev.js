@@ -3,6 +3,8 @@
 var extend = require('extend');
 var webpack = require('webpack');
 
+var notGenerateSourceMap = global.argv.m;
+
 delete require.cache[require.resolve('./webpack.config.common')];
 var webConfig = require('./webpack.config.common');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
@@ -33,7 +35,7 @@ webConfig.plugins = webConfig.plugins.concat(dynamicEntries.plugin);
 
 var config = extend(true, {}, webConfig, {
 
-    devtool: 'cheap-module-source-map',
+    devtool: notGenerateSourceMap ? '' : 'cheap-module-source-map',
     plugins: webConfig.plugins.concat([
         new webpack.HotModuleReplacementPlugin(),
         new CaseSensitivePathsPlugin(),
