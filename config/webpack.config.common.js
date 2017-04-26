@@ -7,6 +7,7 @@ var InterpolateHtmlPlugin = require('../lib/InterpolateHtmlPlugin');
 var paths = require('./paths');
 var envName = global.envName || process.argv[2];
 
+// Hero will restart webpack, keep the variable
 global.envName = envName;
 // console.log(JSON.stringify(global.envName));
 var getClientEnvironment = require('./env');
