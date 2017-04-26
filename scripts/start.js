@@ -45,7 +45,7 @@ function _checkRebuild(path, isDelete) {
             try {
                 needUpdateEntry = updateEntryFile(compiler, path, isDelete);
             } catch (e) {
-                console.log(e);
+                e && console.log(e);
                 needUpdateEntry = false;
             }
             if (needUpdateEntry) {
@@ -117,7 +117,7 @@ function setupCompiler(config, host, port, protocol) {
     // "done" event fires when Webpack has finished recompiling the bundle.
     // Whether or not you have warnings or errors, you will get this event.
     compiler.plugin('done', function (stats) {
-
+        watchSources();
         if (isFirstWatch) {
             isFirstWatch = false;
         }
@@ -253,7 +253,7 @@ function run(port) {
 // run on a different port. `detect()` Promise resolves to the next free port.
 detect(DEFAULT_PORT).then(port => {
     if (port === DEFAULT_PORT) {
-        console.log('A: port = ' + port);
+        // console.log('A: port = ' + port);
         run(port);
         return;
     }
@@ -269,7 +269,7 @@ detect(DEFAULT_PORT).then(port => {
 
         prompt(question, true).then(shouldChangePort => {
             if (shouldChangePort) {
-                console.log('B: port = ' + port);
+                // console.log('B: port = ' + port);
                 run(port);
             }
         });
