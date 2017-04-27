@@ -116,7 +116,7 @@ Inside index.html, you can use it for similar purposes:
 The page will reload if you make edits in folder `src`.<br>
 You will see the build errors and lint warnings in the console.
 
-<img src='https://github.com/hero-mobile/hero-cli/blob/master/images/readme/syntax-error-terminal?raw=true' width='600' alt='syntax error terminal'>
+<img src='https://github.com/hero-mobile/hero-cli/blob/master/images/readme/syntax-error-terminal.png?raw=true' width='600' alt='syntax error terminal'>
 
 #### `npm run mock`
 
