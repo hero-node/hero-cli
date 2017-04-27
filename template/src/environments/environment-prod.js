@@ -5,4 +5,3 @@ var environment = {
 };
 
 module.exports = environment;
-// # sourceMappingURL=environment.prod.js.map

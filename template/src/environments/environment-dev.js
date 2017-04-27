@@ -1,4 +1,3 @@
-
 var environment = {
     publicPath: '',
     production: false,
@@ -6,4 +5,3 @@ var environment = {
 };
 
 module.exports = environment;
-// # sourceMappingURL=environment.js.map
