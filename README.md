@@ -98,7 +98,8 @@ Once the installation is done, you can run some commands inside the project fold
 Runs the app in development mode.<br>
 Open [http://localhost:4000/?state=http://localhost:4000/entry/login.html](http://localhost:4000/?state=http://localhost:4000/entry/login.html) to view it in the browser.
 
-This command invoke `hero start -e <env>` underneath. The available `<env>` values come from keys configured in attribute `environments` in file `.hero-cli.json`.<br>
+This command invoke `hero start -e <env>` underneath. You can run `hero start -h` for help<br>
+The available `<env>` values come from keys configured in attribute `environments` in file `.hero-cli.json`.<br>
 And then, hero-cli will load the corresponding configurations under folder `src/environments` according to the `<env>` value.<br>When start successfully, you can access those configurations via `process.env`.
 
 In JavaScript code, you can use `process.env` to access it like this:
@@ -130,7 +131,8 @@ You will see the build errors and lint warnings in the console.
   "mockAPIPrefix": "",
   // the initial port used by proxy/mock server
   "proxyBasePort": 3000,
-  // start an instance of proxy server for every url in #proxyTargetURLs, the port number increment by step 1
+  // start an instance of proxy server for every url in #proxyTargetURLs
+  // the port number increment by step 1
   "proxyTargetURLs": [
     "http://www.my-website.com"
   ]
@@ -138,7 +140,8 @@ You will see the build errors and lint warnings in the console.
 
 ```
 
-once start successfully, you can see below messages:
+Once start successfully, you can see below messages:
+
 ```
 Proxy server is running at:
 http://localhost:3000 will proxy to http://www.my-website.com
@@ -151,13 +154,9 @@ http://localhost:3001
 #### `npm run build`
 
 Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+It correctly bundles Hero App in production mode and optimizes the build for the best performance.
+
+This command invoke `hero build -e <env>` underneath, The available `<env>` value as same as [npm start](#npm-start). And you can run `hero build -h` for more options.<br>
 
 The build is minified and the filenames include the hashes.<br>
 Your app is ready to be deployed!
-
-# 安装依赖
-`npm install`
-
-# 生成项目
-`hero init <project-name>`

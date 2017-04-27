@@ -35,7 +35,7 @@ function showUsage() {
         })
         .option('s', {
             // demandOption: false,
-            describe: 'build pakcage without dependecies like hero-js or webcomponents, just app logic'
+            describe: 'build pakcage without dependecies like hero-js or webcomponents, just code in <you-project-path>/src folder'
         })
         .option('m', {
             // demandOption: false,
