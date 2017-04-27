@@ -101,7 +101,7 @@ Open [http://localhost:4000/?state=http://localhost:4000/entry/login.html](http:
 This command invoke `hero start -e <env>` underneath. The available `<env>` values come from keys configured in attribute `environments` in file `.hero-cli.json`.<br>
 And then, hero-cli will load the corresponding configurations under folder `src/environments` according to the `<env>` value.<br>When start successfully, you can access those configurations via `process.env`.
 
-In JavaScript code, you can `process.env` to access it like this:
+In JavaScript code, you can use `process.env` to access it like this:
 
 ```javascript
 console.log(process.env['My-Attribute-Key']);
@@ -120,13 +120,28 @@ You will see the build errors and lint warnings in the console.
 
 #### `npm run mock`
 
-* Start the mock serer using the codes in folder [/mock](https://github.com/hero-mobile/hero-cli/tree/master/template/mock)
-* Start the proxy server, the proxy target in configuration file [/mock/package.json#serverConfig](https://github.com/hero-mobile/hero-cli/blob/master/template/mock/package.json)
+* Start the mock serer using the codes in folder [mock/](https://github.com/hero-mobile/hero-cli/tree/master/template/mock)
+* Start the proxy server, the proxy target in configuration file [mock/package.json#serverConfig](https://github.com/hero-mobile/hero-cli/blob/master/template/mock/package.json)
+
+```javascript
+
+"serverConfig": {
+  // the prefix of mock server url
+  "mockAPIPrefix": "",
+  // the initial port used by proxy/mock server
+  "proxyBasePort": 3000,
+  // start an instance of proxy server for every url in #proxyTargetURLs, the port number increment by step 1
+  "proxyTargetURLs": [
+    "http://www.my-website.com"
+  ]
+}
+
+```
 
 once start successfully, you can see below messages:
 ```
 Proxy server is running at:
-http://localhost:3000 will proxy to https://www.my-website.com
+http://localhost:3000 will proxy to http://www.my-website.com
 
 
 Mock server is running at:
