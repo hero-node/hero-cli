@@ -1,9 +1,9 @@
-# Hero-CLI
+# Hero-cli
 
 Create Hero apps with no build configuration.
 
 * [Getting Started](#getting-started) – How to create a new app.
-* [User Guide](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md) – How to develop apps bootstrapped with Hero App.
+* [User Guide](https://github.com/hero-mobile/docs/hero-cli) – How to develop apps bootstrapped with Hero App.
 
 Hero App works on Android, iOS, and Modem browser.<br>
 If something doesn’t work please [file an issue](https://github.com/hero-mobile/hero-cli/issues/new).
@@ -21,6 +21,8 @@ npm start
 
 Then open [http://localhost:4000/?state=http://localhost:4000/entry/login.html](http://localhost:4000/?state=http://localhost:4000/entry/login.html) to see your app.<br>
 When you’re ready to deploy to production, create a minified bundle with `npm run build`. For more build options please refer to [Build Options](https://hero-mobile.github.io/docs/build-options)
+
+<img src='https://github.com/hero-mobile/hero-cli/tree/master/images/readme/hero-start.png' width='600' alt='npm start'>
 
 ### Get Started Immediately
 
