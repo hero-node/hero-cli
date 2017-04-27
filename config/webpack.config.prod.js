@@ -6,10 +6,17 @@ var webConfig = require('./webpack.config.common');
 var ManifestPlugin = require('webpack-manifest-plugin');
 var getDynamicEntries = require('./getDynamicEntries');
 var paths = require('./paths');
+var heroCliConfig = require('./hero-config.json');
+var getClientEnvironment = require('./env');
+var env = getClientEnvironment().raw;
 
+var publicPath = env[heroCliConfig.homePageKey];
+
+if (typeof publicPath !== 'string') {
+    publicPath = '/';
+}
 var notGenerateSourceMap = global.argv.m;
 
-var publicPath = '.';
 var dynamicEntries = getDynamicEntries(false);
 
 webConfig.output = {

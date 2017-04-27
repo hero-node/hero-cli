@@ -15,8 +15,6 @@ var checkRequiredFiles = require('../lib/checkRequiredFiles');
 var FileSizeReporter = require('../lib/FileSizeReporter');
 var printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
 
-console.log(yargs.argv);
-
 var pgk = require('../package.json');
 var commandName = Object.keys(pgk.bin)[0];
 

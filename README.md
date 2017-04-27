@@ -111,6 +111,7 @@ console.log(process.env['My-Attribute-Key']);
 Inside index.html, you can use it for similar purposes:
 
 ```html
+<base href="%My-Attribute-Key%"/>
 <link rel="shortcut icon" href="%My-Attribute-Key%/favicon.ico">
 ```
 
@@ -154,9 +155,28 @@ http://localhost:3001
 #### `npm run build`
 
 Builds the app for production to the `build` folder.<br>
+The build is minified and the filenames include the hashes.<br>
 It correctly bundles Hero App in production mode and optimizes the build for the best performance.
 
-This command invoke `hero build -e <env>` underneath, The available `<env>` value as same as [npm start](#npm-start). And you can run `hero build -h` for more options.<br>
+This command invoke `hero build -e <env>` underneath, The available `<env>` value as same as [npm start](#npm-start). And you can run `hero build -h` for more options as below.<br>
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+* -s<br>Build this project to standalone version, which to run in Native App environment. That's to say, build version without libarary like [webcomponent polyfills](https://www.polymer-project.org/) or [hero-js](https://github.com/hero-mobile/hero-js) which is necessary when Hero App run in web browser.
+
+* -m<br>Build this project without sourcemap
+
+##### Building for Relative Paths
+By default, Hero-cli produces a build assuming your app is hosted at the server root.
+To override this, specify the value([Valid Values see Webpack#publicPath](http://webpack.github.io/docs/configuration.html#output-publicpath)) of key `__homepage`(This name is preserved for this purpose) in your configuration file in `src/environments`.
+
+for example:
+
+```
+
+var environment = {
+    __homepage: 'http://mywebsite.com/relativepath'
+};
+
+module.exports = environment;
+
+```
+This will let Hero App correctly infer the root path to use in the generated HTML file.

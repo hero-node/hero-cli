@@ -11,8 +11,15 @@ var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 var getDynamicEntries = require('./getDynamicEntries');
 var WatchMissingNodeModulesPlugin = require('../lib/WatchMissingNodeModulesPlugin');
 var paths = require('./paths');
-var publicPath = '/';
+var heroCliConfig = require('./hero-config.json');
+var getClientEnvironment = require('./env');
+var env = getClientEnvironment().raw;
 
+var publicPath = env[heroCliConfig.homePageKey];
+
+if (typeof publicPath !== 'string') {
+    publicPath = '/';
+}
 webConfig.output = {
   // Next line is not used in dev but WebpackDevServer crashes without it:
     path: paths.appBuild,

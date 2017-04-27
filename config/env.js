@@ -11,7 +11,12 @@ if (!checkRequiredFiles([paths.heroCliConfig])) {
     process.exit(1);
 }
 
-function getClientEnvironment(env) {
+function getClientEnvironment() {
+    var env = global.envName || global.argv.e;
+
+  // Hero will restart webpack, keep the variable
+    global.envName = env;
+
     var heroFileConfig = require(paths.heroCliConfig);
     var environments = heroFileConfig[config.environmentKey];
 

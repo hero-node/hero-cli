@@ -7,13 +7,8 @@ var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 var InterpolateHtmlPlugin = require('../lib/InterpolateHtmlPlugin');
 var paths = require('./paths');
 
-var envName = global.envName || global.argv.e;
-
-// Hero will restart webpack, keep the variable
-global.envName = envName;
-// console.log(JSON.stringify(global.envName));
 var getClientEnvironment = require('./env');
-var env = getClientEnvironment(envName);
+var env = getClientEnvironment();
 
 var webConfig = {
 
