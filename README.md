@@ -63,8 +63,8 @@ Inside that directory, it will generate the initial project structure and then y
 ├── mock/
 │   └── ...
 ├── public
-│   ├── favicon.ico
-│   └── license.html
+│   ├── ...
+│   └── favicon.ico
 ├── src
 │   ├── ...
 │   ├── environments/
@@ -89,23 +89,36 @@ During the development:
 * You may create subdirectories inside `src`. For faster rebuilds, only files inside `src` are processed by Webpack. You need to **put any JS and CSS files inside `src`**, or Webpack won’t see them.
 * You may add your mock data inside `mock`.
 * You can put your assets like images into `public`,  it will not be processed by Webpack. Instead it will be copied into the build folder untouched.
-* You can put configurations into `src/environments`(This folder name is configured in file `.hero-cli.json`, you can change it later), In JavaScript code, you can use it like this:
-
-```javascript
-console.log(process.env['my-attribute-key']);
-```
+* You can put configurations into `src/environments`(This folder name is configured in file `.hero-cli.json`, you can change it later), In JavaScript or HTML code, you can use it as describled below.
 
 Once the installation is done, you can run some commands inside the project folder:
 
-### `npm start`
+#### `npm start`
 
 Runs the app in development mode.<br>
 Open [http://localhost:4000/?state=http://localhost:4000/entry/login.html](http://localhost:4000/?state=http://localhost:4000/entry/login.html) to view it in the browser.
 
-The page will reload if you make edits.<br>
+This command invoke `hero start -e <env>` underneath. The available `<env>` values come from keys configured in attribute `environments` in file `.hero-cli.json`.<br>
+And then, hero-cli will load the corresponding configurations under folder `src/environments` according to the `<env>` value.<br>When start successfully, you can access those configurations via `process.env`.
+
+In JavaScript code, you can `process.env` to access it like this:
+
+```javascript
+console.log(process.env['My-Attribute-Key']);
+```
+
+Inside index.html, you can use it for similar purposes:
+
+```html
+<link rel="shortcut icon" href="%My-Attribute-Key%/favicon.ico">
+```
+
+The page will reload if you make edits in folder `src`.<br>
 You will see the build errors and lint warnings in the console.
 
-### `npm run mock`
+<img src='https://github.com/hero-mobile/hero-cli/blob/master/images/readme/syntax-error-terminal?raw=true' width='600' alt='syntax error terminal'>
+
+#### `npm run mock`
 
 * Start the mock serer using the codes in folder [/mock](https://github.com/hero-mobile/hero-cli/tree/master/template/mock)
 * Start the proxy server, the proxy target in configuration file [/mock/package.json#serverConfig](https://github.com/hero-mobile/hero-cli/blob/master/template/mock/package.json)
@@ -120,7 +133,7 @@ Mock server is running at:
 http://localhost:3001
 ```
 
-### `npm run build`
+#### `npm run build`
 
 Builds the app for production to the `build` folder.<br>
 It correctly bundles React in production mode and optimizes the build for the best performance.
