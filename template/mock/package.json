@@ -18,7 +18,7 @@
     "mockAPIPrefix": "",
     "proxyBasePort": 3000,
     "proxyTargetURLs": [
-      "https://www-dev.dianrong.com"
+      "https://www.my-website.com"
     ]
   },
   "devDependencies": {},

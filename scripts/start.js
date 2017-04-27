@@ -87,7 +87,7 @@ function _checkRebuild(path, isDelete) {
             try {
                 needUpdateEntry = updateEntryFile(compiler, path, isDelete);
             } catch (e) {
-                e && console.log(e);
+                // e && console.log(e);
                 needUpdateEntry = false;
             }
             if (needUpdateEntry) {
