@@ -60,22 +60,41 @@ It will create a directory called `my-app` inside the current folder.<br>
 Inside that directory, it will generate the initial project structure and then you can run command `npm install` to install the dependencies manually:
 
 ```
-my-app/
-  README.md
-  node_modules/
-  package.json
-  .gitignore
-  mock/
-  public/
-    favicon.ico
-    index.html
-  src/
-    entry/
-    index.html
-    index.js
+├── mock/
+│   └── ...
+├── public
+│   ├── favicon.ico
+│   └── license.html
+├── src
+│   ├── ...
+│   ├── environments/
+│   ├── index.html
+│   └── index.js
+├── .editorconfig
+├── .gitattributes
+├── .gitignore
+├── .hero-cli.json
+├── package.json
+└── README.md
+```
+For the project to build, **these files must exist with exact filenames**:
+
+* `src/index.html` is the entry page;
+* `src/index.js` is the JavaScript entry point.
+* `.hero-cli.json` is the configuration file for hero-cli build
+
+
+During the development:
+
+* You may create subdirectories inside `src`. For faster rebuilds, only files inside `src` are processed by Webpack. You need to **put any JS and CSS files inside `src`**, or Webpack won’t see them.
+* You may add your mock data inside `mock`.
+* You can put your assets like images into `public`,  it will not be processed by Webpack. Instead it will be copied into the build folder untouched.
+* You can put configurations into `src/environments`(This folder name is configured in file `.hero-cli.json`, you can change it later), In JavaScript code, you can use it like this:
+
+```javascript
+console.log(process.env['my-attribute-key']);
 ```
 
-No configuration or complicated folder structures, just the files you need to build your app.<br>
 Once the installation is done, you can run some commands inside the project folder:
 
 ### `npm start`
