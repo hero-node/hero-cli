@@ -4,21 +4,71 @@ process.env.NODE_ENV = 'production';
 
 // Spawn Process
 var yargs = require('yargs');
-
-global.argv = yargs.argv;
-
 var chalk = require('chalk');
 var fs = require('fs-extra');
 var path = require('path');
 var url = require('url');
 var webpack = require('webpack');
-var config = require('../config/webpack.config.prod');
 var paths = require('../config/paths');
+var heroCliConfig = require('../config/hero-config.json');
 var checkRequiredFiles = require('../lib/checkRequiredFiles');
 var FileSizeReporter = require('../lib/FileSizeReporter');
 var printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
 
+console.log(yargs.argv);
+
+var pgk = require('../package.json');
+var commandName = Object.keys(pgk.bin)[0];
+
+function showUsage() {
+    var argv = require('yargs')
+        .usage('Usage: ' + commandName + ' build [options]')
+        // .command('count', 'Count the lines in a file')
+        .example(commandName + ' start -e dev', 'Start the server using the dev configuration')
+        .option('e', {
+            demandOption: true,
+            // default: '/etc/passwd',
+            describe: 'Environment name of the configuration when start the server\n ' +
+                      'Available value refer to \n\n' +
+                      '<you-project-path>/' + heroCliConfig.heroCliConfig + '\n\nor you can add attribute environment names to attribute [' + heroCliConfig.environmentKey + '] in that file',
+            type: 'string'
+        })
+        .option('s', {
+            // demandOption: false,
+            describe: 'build pakcage without dependecies like hero-js or webcomponents, just app logic'
+        })
+        .option('m', {
+            // demandOption: false,
+            describe: 'build without sourcemap'
+        })
+        .nargs('e', 1)
+        .help('h')
+        .epilog('copyright 2017')
+        .argv;
+
+    var s = fs.createReadStream(argv.file);
+
+    var lines = 0;
+
+    s.on('data', function (buf) {
+        lines += buf.toString().match(/\n/g).length;
+    });
+
+    s.on('end', function () {
+        console.log(lines);
+    });
+
+    process.exit(1);
+}
+
+if (yargs.argv.h || yargs.argv.e === undefined || (typeof yargs.argv.e === 'boolean')) {
+    showUsage();
+}
+global.argv = yargs.argv;
+
+var config = require('../config/webpack.config.prod');
 // Warn and crash if required files are missing
+
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
     process.exit(1);
 }

@@ -21,7 +21,7 @@ var updateEntryFile = require('../lib/updateWebpackEntry');
 var commandName = Object.keys(pgk.bin)[0];
 
 function showUsage() {
-    var argv = require('yargs')
+    var argv = yargs
         .usage('Usage: ' + commandName + ' start [options]')
         // .command('count', 'Count the lines in a file')
         .example(commandName + ' start -e dev', 'Start the server using the dev configuration')
@@ -29,10 +29,11 @@ function showUsage() {
             demandOption: true,
             // default: '/etc/passwd',
             describe: 'Environment name of the configuration when start the server\n ' +
-                      'Available names refer to \n\n' +
-                      '<you-project-path>/' + heroCliConfig.heroCliConfig + '\n\nand then add attribute environment names to attribute [' + heroCliConfig.environmentKey + '] in that file',
+                      'Available value refer to \n\n' +
+                      '<you-project-path>/' + heroCliConfig.heroCliConfig + '\n\nor you can add attribute environment names to attribute [' + heroCliConfig.environmentKey + '] in that file',
             type: 'string'
         })
+        .nargs('e', 1)
         .help('h')
         .epilog('copyright 2017')
         .detectLocale(false)
@@ -54,7 +55,7 @@ function showUsage() {
     process.exit(1);
 }
 
-if (yargs.argv.h || !yargs.argv.e) {
+if (yargs.argv.h || yargs.argv.e === undefined || typeof yargs.argv.e === 'boolean') {
     showUsage();
 }
 global.argv = yargs.argv;
