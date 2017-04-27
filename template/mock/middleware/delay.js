@@ -4,4 +4,4 @@ var middleware = function (req, res, next) {
     }, parseInt(Math.random() * 200, 10));
 };
 
-export default middleware;
+module.exports = middleware;

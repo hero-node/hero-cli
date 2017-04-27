@@ -1,20 +1,20 @@
-import log4js from 'log4js';
-import chalk from 'chalk';
-import http from 'http';
-import pkg from './package.json';
-import startMockServer from './startMockServer.js';
-
 var httpProxy = require('http-proxy');
+var log4js = require('log4js');
+var chalk = require('chalk');
+var http = require('http');
 
-const servers = pkg.serverConfig.proxyTargetURLs;
-const defaultPort = pkg.serverConfig.proxyBasePort;
-const mockAPIPrefix = pkg.serverConfig.mockAPIPrefix;
+var pkg = require('./package.json');
+var startMockServer = require('./startMockServer.js');
 
 log4js.configure({
     appenders: [
-    { type: 'console' }, // 控制台输出
         {
-            type: 'file', // 文件输出
+            // 控制台输出
+            type: 'console'
+        },
+        {
+            // 文件输出
+            type: 'file',
             filename: __dirname + '/logs/log.log',
             maxLogSize: 1024000,
             backups: 1,
@@ -23,29 +23,31 @@ log4js.configure({
     ]
 });
 
-const logger = log4js.getLogger('normal');
+var logger = log4js.getLogger('normal');
+var servers = pkg.serverConfig.proxyTargetURLs;
+var defaultPort = pkg.serverConfig.proxyBasePort;
+var mockAPIPrefix = pkg.serverConfig.mockAPIPrefix;
 
 logger.setLevel('INFO');
 
-(function startProxyServer() {
-    servers.forEach((url, index) => {
+function errorHandler() {
+    process.on('uncaughtException', function (err) {
+        console.log(chalk.red(('uncaughtException: ' + err)));
+    });
+    process.on('unhandledRejection', function (reason, p) {
+    // application specific logging, throwing an error, or other logic here
+        console.log(chalk.red('Unhandled Rejection at: Promise ', p, ' reason: ', reason));
+    });
+}
+
+function startProxyServer() {
+    servers.forEach(function (url, index) {
         var port = defaultPort + index;
         var proxy = httpProxy.createProxyServer({
             changeOrigin: true
 
         });
 
-        // To modify the proxy connection before data is sent, you can listen
-        // for the 'proxyReq' event. When the event is fired, you will receive
-        // the following arguments:
-        // (http.ClientRequest proxyReq, http.IncomingMessage req,
-        //  http.ServerResponse res, Object options). This mechanism is useful when
-        // you need to modify the proxy request before the proxy connection
-        // is made to the target.
-        //
-        proxy.on('proxyReq', function (proxyReq, req, res, options) {
-
-        });
         proxy.on('proxyRes', function (proxyRes, req, res) {
             res.setHeader('access-control-allow-credentials', true);
             res.setHeader('access-control-allow-origin', req.headers.origin);
@@ -67,16 +69,8 @@ logger.setLevel('INFO');
 
         });
     });
-})();
+}
 
+errorHandler();
+startProxyServer();
 startMockServer(defaultPort + servers.length, mockAPIPrefix);
-
-(function errorHandler() {
-    process.on('uncaughtException', function (err) {
-        console.log(chalk.red(('uncaughtException: ' + err)));
-    });
-    process.on('unhandledRejection', function (reason, p) {
-    // application specific logging, throwing an error, or other logic here
-        console.log(chalk.red('Unhandled Rejection at: Promise ', p, ' reason: ', reason));
-    });
-})();

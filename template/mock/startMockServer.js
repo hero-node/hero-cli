@@ -1,11 +1,11 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import cookieParser from 'cookie-parser';
-import router from './router';
-import cors from './middleware/cors';
-import delay from './middleware/delay';
-import options from './middleware/options';
-import chalk from 'chalk';
+var express  = require('express');
+var bodyParser  = require('body-parser');
+var cookieParser  = require('cookie-parser');
+var router  = require('./router');
+var cors  = require('./middleware/cors');
+var delay  = require('./middleware/delay');
+var options  = require('./middleware/options');
+var chalk  = require('chalk');
 
 function startMockServer(port, prefix) {
 
@@ -29,4 +29,4 @@ function startMockServer(port, prefix) {
     });
 }
 
-export default startMockServer;
+module.exports = startMockServer;

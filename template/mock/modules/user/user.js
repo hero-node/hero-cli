@@ -1,4 +1,4 @@
-import Mock from 'mockjs';
+var Mock = require('mockjs');
 // Usage:
 // http://mockjs.com/examples.html
 
@@ -23,7 +23,7 @@ function subRouter(express) {
     return router;
 }
 
-export default {
+module.exports = {
     root: '/api/v2',
     router: subRouter
 };

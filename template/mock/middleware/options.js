@@ -8,4 +8,4 @@ var middleware = function (req, res, next) {
     }
 };
 
-export default middleware;
+module.exports = middleware;

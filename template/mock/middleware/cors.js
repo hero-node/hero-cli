@@ -31,4 +31,4 @@ var middleware = function (req, res, next) {
     next();
 };
 
-export default middleware;
+module.exports = middleware;
