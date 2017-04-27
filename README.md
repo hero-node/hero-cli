@@ -20,6 +20,7 @@ npm start
 ```
 
 Then open [http://localhost:4000/?state=http://localhost:4000/entry/login.html](http://localhost:4000/?state=http://localhost:4000/entry/login.html) to see your app.<br>
+You can start the mock server during the development with command `npm run mock`.<br>
 When you’re ready to deploy to production, create a minified bundle with `npm run build`. For more build options please refer to [Build Options](https://hero-mobile.github.io/docs/build-options)
 
 <img src='https://github.com/hero-mobile/hero-cli/blob/master/images/readme/hero-start.png?raw=true' width='600' alt='npm start'>
