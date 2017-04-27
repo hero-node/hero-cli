@@ -91,6 +91,46 @@ During the development:
 * You can put your assets like images into `public`,  it will not be processed by Webpack. Instead it will be copied into the build folder untouched.
 * You can put configurations into `src/environments`(This folder name is configured in file `.hero-cli.json`, you can change it later), In JavaScript or HTML code, you can use it as describled below.
 
+```javascript
+// example content of .hero-cli.json
+{
+  "environments": {
+    "dev": "src/environments/environment-dev.js",
+    "prod": "src/environments/environment-prod.js"
+  }
+}
+
+```
+
+* Any JS file Using [Decorator](https://github.com/wycats/javascript-decorators/blob/master/README.md) `@Entry()` onto certain JavaScript `class` or `function`, this file will treated as entry file, during the development or build process, a HTML file would generated using [html-webpack-plugin](https://www.npmjs.com/package/html-webpack-plugin) plugin, options specified as first argument in `@Entry()` will passed to Webpack plugin html-webpack-plugin transparently.
+
+```javascript
+import { Component, Boot, Message } from 'hero-js';
+import { Entry } from 'hero-cli/decorator';
+
+var defaultUIViews = {
+
+}
+
+@Entry()
+@Component({
+  view: defaultUIViews
+})
+export class DecoratePage {
+
+    @Boot
+    before(data){
+      console.log('Bootstrap successfully!')
+    }
+
+    @Message('__data.click && __data.click == "login"')
+    login(data) {
+      console.log('Send Login Request...')
+    }
+}
+
+```
+
 Once the installation is done, you can run some commands inside the project folder:
 
 #### `npm start`
