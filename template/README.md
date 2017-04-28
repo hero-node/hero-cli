@@ -1,12 +1,32 @@
-# 安装依赖
-`npm install`
+This project is created by [hero-cli](https://github.com/hero-mobile/hero-cli).
 
-# 运行
-`npm start`
+For more detail, see file [Documentation](https://hero-mobile.github.io).
 
-# 打包
-`npm run build`
+## How to start
+Run command:
 
-# 启动MockServer
-`npm run mock`
-Open URL: http://localhost:4000?state=http://localhost:4000/entry/login.html
+```sh
+npm install
+npm start
+
+```
+
+Once start successfully, open URL: [http://localhost:4000?state=http://localhost:4000/entry/login.html](http://localhost:4000?state=http://localhost:4000/entry/login.html).
+
+## How to build
+Run command:
+
+```sh
+npm run build
+
+```
+
+## How to start mock server
+For more detail, see file ./mock/README.md.
+
+Run command:
+
+```sh
+npm run mock
+
+```
