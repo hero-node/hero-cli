@@ -20,7 +20,7 @@ var commandName = Object.keys(pgk.bin)[0];
 
 function showUsage() {
     var argv = require('yargs')
-        .usage('Usage: ' + commandName + ' build [options]')
+        .usage('Usage: ' + commandName + ' build <options>')
         // .command('count', 'Count the lines in a file')
         .example(commandName + ' start -e dev', 'Start the server using the dev configuration')
         .option('e', {
