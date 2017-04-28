@@ -242,41 +242,44 @@ When you run command `hero start -e dev` or `hero build -e dev`, all variables f
 
 #### `hero start`
 
-Runs the app in development mode. And you can run `hero start -h` for help<br>
+Runs the app in development mode. And you can run `hero start -h` for help.<br>
 
-The available `<env>` values come from keys configured in attribute `environments` in file `.hero-cli.json`.<br>
-And then, hero-cli will load the corresponding configurations under folder `src/environments` according to the `<env>` value.<br>When start successfully, you can access those configurations via `process.env`.
+This command has one mandatory parameter `-e`.
+Usage: `hero start -e <env>`
 
-In JavaScript code, you can use `process.env` to access it like this:
+The available `<env>` values come from keys configured in attribute `environments` in file `.hero-cli.json`.
 
-```javascript
-console.log(process.env['My-Attribute-Key']);
-```
+Hero-cli will load the corresponding configurations according to the `<env>` value by rules mentioned [above](#adding-development-environment-variables-via-`.hero-cli.json`).<br>
 
-
-The page will reload if you make edits in folder `src`.<br>
+When start successfully, the page will reload if you make edits in folder `src`.<br>
 You will see the build errors and lint warnings in the console.
 
 <img src='https://github.com/hero-mobile/hero-cli/blob/master/images/readme/syntax-error-terminal.png?raw=true' width='600' alt='syntax error terminal'>
 
 #### `hero build`
 
-Builds the app for production to the `build` folder.<br>
+Builds the app for production to the `build` folder. And you can run `hero build -h` for help.<br>
 The build is minified and the filenames include the hashes.<br>
 It correctly bundles Hero App in production mode and optimizes the build for the best performance.
 
-This command invoke `hero build -e <env>` underneath, The available `<env>` value as same as [npm start](#npm-start). And you can run `hero build -h` for more options as below.<br>
+This command has one mandatory parameter `-e`.
+Usage: `hero build -e <env>`
 
-* `-s`<br>Build this project to standalone version, which to run in Native App environment. That's to say, build version without libarary like [webcomponent polyfills](https://www.polymer-project.org/) or [hero-js](https://github.com/hero-mobile/hero-js) which is necessary when Hero App run in web browser.
+The available `<env>` values and configurations loading rules as same as [`hero start`](#`hero start`) .
 
-* `-m`<br>Build this project without sourcemap
+And has another two options:
+
+* `-s`<br>Build the boundle as standalone version, which should run in Native App environment. That's to say, build version without libarary like [webcomponent polyfills](https://www.polymer-project.org/) or [hero-js](https://github.com/hero-mobile/hero-js)(These libarary is necessary for Hero App run in web browser, not Native App).
+
+* `-m`<br>Build the boundle without sourcemap
 
 ##### Building for Relative Paths
 By default, Hero-cli produces a build assuming your app is hosted at the server root.
-To override this, specify the value([Valid Values see Webpack#publicPath](http://webpack.github.io/docs/configuration.html#output-publicpath)) of key `__homepage`(This name is preserved for this purpose) in your configuration file in `src/environments`.
+To override this, specify the value of **preserved key `__homepage`** in your configuration file. Accept values see [Webpack#publicpath](http://webpack.github.io/docs/configuration.html#output-publicpath).
 
-for example:
+For example:
 
+Here is the content of `src/environments/environment-prod.js`
 ```javascript
 
 var environment = {
