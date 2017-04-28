@@ -3,7 +3,7 @@
 Create Hero apps with no build configuration.
 
 * [Getting Started](#getting-started) – How to create a new app.
-* [User Guide](https://github.com/hero-mobile/docs/hero-cli) – How to develop apps bootstrapped with Hero App.
+* [User Guide](#user-guide) – How to develop apps bootstrapped with Hero App.
 
 Hero App works on Android, iOS, and Modem browser.<br>
 If something doesn’t work please [file an issue](https://github.com/hero-mobile/hero-cli/issues/new).
@@ -15,25 +15,26 @@ npm install -g hero-mobile/hero-cli
 
 hero init my-app
 cd my-app/
+
 npm install
-npm start
+
 ```
+Once the installation is done, you can run some commands inside the project folder:
 
-Then open [http://localhost:4000/?state=http://localhost:4000/entry/login.html](http://localhost:4000/?state=http://localhost:4000/entry/login.html) to see your app.<br>
-You can start the mock server during the development with command `npm run mock`.<br>
-When you’re ready to deploy to production, create a minified bundle with `npm run build`. For more build options please refer to [Build Options](https://hero-mobile.github.io/docs/build-options)
+* `npm start` Start the application.
+* `npm run mock` You can start the mock server during the development.
+* `npm run build` When you’re ready to deploy to production, create a minified bundle with this command.
 
-<img src='https://github.com/hero-mobile/hero-cli/blob/master/images/readme/hero-start.png?raw=true' width='600' alt='npm start'>
+Run `npm start` and then open [http://localhost:4000/?state=http://localhost:4000/entry/login.html](http://localhost:4000/?state=http://localhost:4000/entry/login.html) to see your app.<br>
+
+<img src='https://github.com/hero-mobile/hero-cli/blob/master/images/readme/start-homepage.png?raw=true' width='600' alt='npm start'>
 
 ### Get Started Immediately
 
-You **don’t** need to install or configure tools like Webpack or Babel.<br>
-They are preconfigured and hidden so that you can focus on the code.
-
-Just create a project, and you’re good to go.
+Hero-cli using [Webpack](http://webpack.github.io/) to build the boudle for deployment while you don't need to install or configure them.<br>
+They are preconfigured and hidden so that you can focus on the code. Just create a project, and you’re good to go.
 
 ## Getting Started
-
 
 ### Installation
 
@@ -67,7 +68,9 @@ Inside that directory, it will generate the initial project structure and then y
 │   └── favicon.ico
 ├── src
 │   ├── ...
-│   ├── environments/
+│   ├── environments
+│   │   ├── environment-dev.js
+│   │   └── environment-prod.js
 │   ├── index.html
 │   └── index.js
 ├── .editorconfig
@@ -81,62 +84,31 @@ For the project to build, **these files must exist with exact filenames**:
 
 * `src/index.html` is the entry page;
 * `src/index.js` is the JavaScript entry point.
-* `.hero-cli.json` is the configuration file for hero-cli build
+* `.hero-cli.json` is the configuration file for hero-cli build, it tell hero loads which configuration when you run command `hero start -e dev` or `hero build -e prod`(which is invoked by `npm start` or `npm build`) according to the value of `-e` parameter. For more build options please refer to [Build Options](#build-options).
+
+You can delete or rename the other files.
+
+* `mock` where you can put your mock data inside, which is convenient for you during development. You can view [Usage Here](https://github.com/hero-mobile/hero-cli/tree/master/template/mock).
+* `public` assets like images inside this folder will **copied into the build folder untouched**. It will not be processed by Webpack.
+* `src` For faster rebuilds, only files inside this folder are processed by Webpack. You need to **put any JS and CSS files inside this folder**, or Webpack won’t see them.
+* `src/environments` where your configurations exists, this folder name or folder path is configured in file `.hero-cli.json`, you can change it later) and access the configuration in JavaScript or HTML code. See [Adding Custom Environment Variables](#adding-custom-environment-variables).
+
+#### Entry Page
+
+You may curious about where is the `entry/login.html`
 
 
-During the development:
+## User Guide
 
-* You may create subdirectories inside `src`. For faster rebuilds, only files inside `src` are processed by Webpack. You need to **put any JS and CSS files inside `src`**, or Webpack won’t see them.
-* You may add your mock data inside `mock`.
-* You can put your assets like images into `public`,  it will not be processed by Webpack. Instead it will be copied into the build folder untouched.
-* You can put configurations into `src/environments`(This folder name is configured in file `.hero-cli.json`, you can change it later), In JavaScript or HTML code, you can use it as describled below.
+### Build Options
 
-```javascript
-// example content of .hero-cli.json
-{
-  "environments": {
-    "dev": "src/environments/environment-dev.js",
-    "prod": "src/environments/environment-prod.js"
-  }
-}
-
-```
-
-* Any JS file Using [Decorator](https://github.com/wycats/javascript-decorators/blob/master/README.md) `@Entry()` onto certain JavaScript `class` or `function`, this file will treated as entry file, during the development or build process, a HTML file would generated using [html-webpack-plugin](https://www.npmjs.com/package/html-webpack-plugin) plugin, options specified as first argument in `@Entry()` will passed to Webpack plugin html-webpack-plugin transparently.
-
-```javascript
-import { Component, Boot, Message } from 'hero-js';
-import { Entry } from 'hero-cli/decorator';
-
-var defaultUIViews = {
-
-}
-
-@Entry()
-@Component({
-  view: defaultUIViews
-})
-export class DecoratePage {
-
-    @Boot
-    before(data){
-      console.log('Bootstrap successfully!')
-    }
-
-    @Message('__data.click && __data.click == "login"')
-    login(data) {
-      console.log('Send Login Request...')
-    }
-}
-
-```
-
-Once the installation is done, you can run some commands inside the project folder:
 
 #### `npm start`
 
 Runs the app in development mode.<br>
 Open [http://localhost:4000/?state=http://localhost:4000/entry/login.html](http://localhost:4000/?state=http://localhost:4000/entry/login.html) to view it in the browser.
+
+<img src='https://github.com/hero-mobile/hero-cli/blob/master/images/readme/hero-start.png?raw=true' width='600' alt='npm start'>
 
 This command invoke `hero start -e <env>` underneath. You can run `hero start -h` for help<br>
 The available `<env>` values come from keys configured in attribute `environments` in file `.hero-cli.json`.<br>
@@ -220,3 +192,48 @@ module.exports = environment;
 
 ```
 This will let Hero App correctly infer the root path to use in the generated HTML file.
+
+
+Example:
+
+```javascript
+//  content of .hero-cli.json
+{
+  "environments": {
+    "dev": "src/environments/environment-dev.js",
+    "prod": "src/environments/environment-prod.js"
+  }
+}
+
+```
+### Generate HTML
+
+* Any JS file Using [Decorator](https://github.com/wycats/javascript-decorators/blob/master/README.md) `@Entry()` onto certain JavaScript `class` or `function`, this file will treated as entry file, during the development or build process, a HTML file would generated using [html-webpack-plugin](https://www.npmjs.com/package/html-webpack-plugin) plugin, options specified as first argument in `@Entry()` will passed to Webpack plugin html-webpack-plugin transparently.
+
+```javascript
+import { Component, Boot, Message } from 'hero-js';
+import { Entry } from 'hero-cli/decorator';
+
+var defaultUIViews = {
+
+}
+
+@Entry()
+@Component({
+  view: defaultUIViews
+})
+export class DecoratePage {
+
+    @Boot
+    before(data){
+      console.log('Bootstrap successfully!')
+    }
+
+    @Message('__data.click && __data.click == "login"')
+    login(data) {
+      console.log('Send Login Request...')
+    }
+}
+
+```
+### Adding Custom Environment Variables
