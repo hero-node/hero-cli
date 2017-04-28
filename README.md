@@ -27,7 +27,7 @@ Once the installation is done, you can run some commands inside the project fold
 
 Run `npm start` and then open [http://localhost:4000/?state=http://localhost:4000/entry/login.html](http://localhost:4000/?state=http://localhost:4000/entry/login.html) to see your app.<br>
 
-<img src='https://github.com/hero-mobile/hero-cli/blob/master/images/readme/start-homepage.png?raw=true' width='600' alt='npm start'>
+<img src='https://github.com/hero-mobile/hero-cli/blob/master/images/readme/start-homepage.png?raw=true' width='375' height='667' alt='npm start'>
 
 ### Get Started Immediately
 
