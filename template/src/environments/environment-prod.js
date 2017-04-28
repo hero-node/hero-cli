@@ -1,5 +1,5 @@
 var environment = {
-    publicPath: '/mkt/assets2cash',
+    __homepage: '/',
     production: true,
     backendURL: 'http://www.dianrong.com'
 };

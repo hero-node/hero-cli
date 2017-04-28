@@ -1,12 +1,4 @@
-if (typeof Promise === 'undefined') {
-    require('promise/lib/rejection-tracking').enable();
-    window.Promise = require('promise/lib/es6-extensions.js');
-}
-
-// Hero Core Web Components
 import 'hero-js/src/hero-app.html';
-// Custom Web Components
-import '../public/components/app-button.html';
 
 var args = {};
 var params = (window.location.search.split('?')[1] || '').split('&');
@@ -24,4 +16,7 @@ var app = { tabs: [
 
 window.document.write('<hero-app json=' + JSON.stringify(app) + '></hero-app>');
 
+var arr = [2, 3];
+
+console.log(...arr);
 console.log(process.env);

@@ -7,6 +7,8 @@ var host = window.location.origin;
 
 var ui2Data = Hero.getState();
 
+var title;
+
 var defaultUIViews = {
       version:0,
       backgroundColor:'ffffff',
@@ -85,22 +87,11 @@ export class DecoratePage {
 
     @BeforeMessage
     before(data){
-      if (ui2Data.phone && ui2Data.password && ui2Data.phone.length > 0 && ui2Data.password.length > 0) {
-          Hero.out({datas:{name:'loginBtn',enable:true}});
-      }else{
-          Hero.out({datas:{name:'loginBtn',enable:false}});
-      }
+      console.log('Bootstrap ')
     }
 
     @Message('__data.click && __data.click == "login"')
     login(data) {
-      request('/api/v2/users/login','POST', {
-        identity:ui2Data.phone,
-        password:ui2Data.password
-      }).then(function(){
-        Hero.out({command:'goto:'+host+'/home.html'})
-      }, function(){
-        console.log('Server Error...')
-      });
+      console.log('Send Login Request...')
     }
 }
