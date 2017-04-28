@@ -22,7 +22,6 @@ function startMockServer(port, prefix) {
     router.init(express, app, prefix);
 
     require('http').createServer(app).listen(port, function () {
-        console.log();
         console.log(chalk.green('Mock server is running at:'));
         console.log(chalk.cyan('http://localhost' + (port === 80 ? '' : ':' + port)));
         console.log();
