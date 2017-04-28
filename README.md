@@ -142,6 +142,64 @@ export class DecoratePage {
 ```
 
 ### Adding Custom Environment Variables
+Your project can consume variables declared in your environment as if they were declared locally in your JS files. By default you will have any environment variables starting with `HERO_APP_`. These environment variables can be useful for consuming sensitive data that lives outside of version control.<br>
+
+**The environment variables are embedded during the build time**.<br>
+
+#### Referencing Environment Variables in the JavaScript
+
+These environment variables will be defined for you on `process.env`.
+For example, having an environment variable named `HERO_APP_SECRET_CODE` will be exposed in your JS as `process.env.HERO_APP_SECRET_CODE`.
+
+```javascript
+
+console.log('Send Request with Token: '+ process.env.HERO_APP_SECRET_CODE);
+
+```
+
+There is also a special built-in environment variable called `NODE_ENV`. You can read it from `process.env.NODE_ENV`. When you run `hero start`, it is always equal to `'development'`, when you run `hero build` to make a production bundle, it is always equal to `'production'`. **You cannot override `NODE_ENV` manually**. This prevents developers from accidentally deploying a slow development build to production.<br>
+
+Having access to the `NODE_ENV` is also useful for performing actions conditionally:
+
+```javascript
+
+if (process.env.NODE_ENV !== 'production') {
+  analytics.disable();
+}
+
+```
+
+#### Referencing Environment Variables in the HTML
+For example, let’s define a variable `HERO_APP_WEBSITE_NAME` with value `Welcome Hero`, and you can access it like this:
+
+```html
+<title>%HERO_APP_WEBSITE_NAME%</title>
+
+```
+
+When you load the app in the browser and inspect the <title>, you will see its value set to `Welcome Hero`:
+
+```html
+<title>Welcome Hero</title>
+
+```
+#### Adding Temporary Environment Variables In Your Shell
+Defining environment variables can vary between OSes. It’s also important to know that this manner is temporary for the life of the shell session.
+
+##### Windows (cmd.exe)
+```
+set HERO_APP_SECRET_CODE=abcdef&&npm start
+
+```
+
+##### Linux, macOS (Bash)
+```
+REACT_APP_SECRET_CODE=abcdef npm start
+
+```
+
+#### Adding Development Environment Variables via `.hero-cli.json`
+
 
 
 
@@ -164,12 +222,6 @@ In JavaScript code, you can use `process.env` to access it like this:
 console.log(process.env['My-Attribute-Key']);
 ```
 
-Inside index.html, you can use it for similar purposes:
-
-```html
-<base href="%My-Attribute-Key%"/>
-<link rel="shortcut icon" href="%My-Attribute-Key%/favicon.ico">
-```
 
 The page will reload if you make edits in folder `src`.<br>
 You will see the build errors and lint warnings in the console.
