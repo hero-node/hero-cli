@@ -19,7 +19,9 @@ var heroCliConfig = require('../config/hero-config.json');
 var chokidar = require('chokidar');
 var updateEntryFile = require('../lib/updateWebpackEntry');
 var commandName = Object.keys(pgk.bin)[0];
+// var proxyConfig = require(paths.heroCliConfig).proxy;
 
+// console.log(proxyConfig);
 function showUsage() {
     var argv = yargs
         .usage('Usage: ' + commandName + ' start <options>')
@@ -228,6 +230,21 @@ function setupCompiler(config, host, port, protocol) {
 }
 
 function runDevServer(config, host, port, protocol) {
+    var path = require('path');
+    var mockRouter = null;
+
+    console.log(paths.appSrc);
+    var mockIndex = path.join(paths.appSrc, '../', 'mock/index.js');
+
+    console.log(mockIndex);
+
+    if (checkRequiredFiles([mockIndex])) {
+        try {
+            mockRouter = require(mockIndex);
+        } catch (e) {
+            console.log('No Mock Data');
+        }
+    }
     devServer = new WebpackDevServer(compiler, {
     // Enable gzip compression of generated files.
         compress: true,
@@ -242,10 +259,7 @@ function runDevServer(config, host, port, protocol) {
     // to CSS are currently hot reloaded. JS changes will refresh the browser.
         hot: true,
         setup: function (app) {
-            app.use(function (req, res, next) {
-
-                next();
-            });
+            app.use(mockRouter);
         },
     // It is important to tell WebpackDevServer to use the same "root" path
     // as we specified in the config. In development, we always serve from /.
