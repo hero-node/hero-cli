@@ -87,11 +87,24 @@ export class DecoratePage {
 
     @BeforeMessage
     before(data){
-      console.log('Bootstrap ')
+      if (ui2Data.phone && ui2Data.password && ui2Data.phone.length > 0 && ui2Data.password.length > 0) {
+          Hero.out({datas:{name:'loginBtn',enable:true}});
+      }else{
+          Hero.out({datas:{name:'loginBtn',enable:false}});
+      }
     }
 
     @Message('__data.click && __data.click == "login"')
     login(data) {
-      console.log('Send Login Request...')
+      console.log('Send Login Request...');
+      
+      request('/api/v2/users/login','POST', {
+        identity:ui2Data.phone,
+        password:ui2Data.password
+      }).then(function(){
+        Hero.out({command:'goto:'+host+'/home.html'})
+      }, function(){
+        console.log('Server Error...')
+      });
     }
 }

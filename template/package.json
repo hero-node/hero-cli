@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "dependencies": {
     "axios": "^0.16.1",
+    "hero-cli": "github:hero-mobile/hero-cli",
+    "hero-js": "github:hero-mobile/hero-js",
     "promise": "^7.1.1"
   },
   "devDependencies": {
