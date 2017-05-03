@@ -5,5 +5,5 @@
   "sourceFolder": "src",
   "entryFolder": "entry",
   "homePageKey": "__homepage",
-  "devServerPort": 4000
+  "devServerPort": 3000
 }

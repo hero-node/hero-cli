@@ -25,7 +25,7 @@ Once the installation is done, you can run some commands inside the project fold
 * `npm run mock` You can start the mock server during the development.
 * `npm run build` When you’re ready to deploy to production, create a minified bundle with this command.
 
-Run `npm start` and then open [http://localhost:4000/?state=http://localhost:4000/entry/login.html](http://localhost:4000/?state=http://localhost:4000/entry/login.html) to see your app.<br>
+Run `npm start` and then open [http://localhost:3000/?state=http://localhost:3000/entry/login.html](http://localhost:3000/?state=http://localhost:3000/entry/login.html) to see your app.<br>
 
 <img src='https://github.com/hero-mobile/hero-cli/blob/master/images/readme/start-homepage.png?raw=true' width='375' height='667' alt='npm start'>
 
@@ -121,7 +121,7 @@ Which would cause a HTML file generated using Webpack plugin [html-webpack-plugi
 * Generated HTML file can access the [Adding Custom Environment Variables](#adding-custom-environment-variables).
 
 Example:<br>
-Below JS will generate a HTML file at `<build>/entry/login.html`, that's why we can visit [http://localhost:4000/entry/login.html](http://localhost:4000/entry/login.html).
+Below JS will generate a HTML file at `<build>/entry/login.html`, that's why we can visit [http://localhost:3000/entry/login.html](http://localhost:3000/entry/login.html).
 
 ```javascript
 // content of file: src/entry/login.js
