@@ -11,8 +11,6 @@ var detect = require('detect-port');
 var clearConsole = require('../lib/clearConsole');
 var checkRequiredFiles = require('../lib/checkRequiredFiles');
 var formatWebpackMessages = require('../lib/formatWebpackMessages');
-var getProcessForPort = require('../lib/getProcessForPort');
-var prompt = require('../lib/prompt');
 var pgk = require('../package.json');
 var paths = require('../config/paths');
 var heroCliConfig = require('../config/hero-config.json');
@@ -329,6 +327,7 @@ detect(DEFAULT_PORT).then(port => {
         return;
     }
     var existingProcess, question;
+    var getProcessForPort = require('../lib/getProcessForPort');
 
     existingProcess = getProcessForPort(DEFAULT_PORT);
     if (isInteractive) {
@@ -338,7 +337,7 @@ detect(DEFAULT_PORT).then(port => {
         ((existingProcess) ? ' Probably:\n  ' + existingProcess : '')) +
         '\n\nWould you like to run the app on another port instead?';
 
-        prompt(question, true).then(shouldChangePort => {
+        require('../lib/prompt')(question, true).then(shouldChangePort => {
             if (shouldChangePort) {
                 // console.log('B: port = ' + port);
                 run(port);
