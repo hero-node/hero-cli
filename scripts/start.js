@@ -17,7 +17,6 @@ var heroCliConfig = require('../config/hero-config.json');
 var chokidar = require('chokidar');
 var updateEntryFile = require('../lib/updateWebpackEntry');
 var commandName = Object.keys(pgk.bin)[0];
-var proxyConfig = require(paths.heroCliConfig).proxy;
 
 function showUsage() {
     var argv = yargs
@@ -257,13 +256,14 @@ function runDevServer(config, host, port, protocol) {
         hot: true,
         setup: function (app) {
             var proxy;
-
+            var proxyConfig = require(paths.heroCliConfig).proxy;
+            
             if (proxyConfig) {
                 proxy = require('express-http-proxy');
 
                 Object.keys(proxyConfig).forEach(function (url) {
                     app.use(url, proxy(proxyConfig[url], {
-                        proxyReqPathResolver: function (req) {
+                        forwardPath: function (req) {
                             return url + require('url').parse(req.url).path;
                         }
                     }));
