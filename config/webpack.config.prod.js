@@ -40,7 +40,7 @@ var config = extend(true, {}, webConfig, {
     plugins: webConfig.plugins.concat([
         new webpack.optimize.UglifyJsPlugin({
             compress: {
-                'screw_ie8': true, // React doesn't support IE8
+                'screw_ie8': true,
                 warnings: false
             },
             mangle: {
