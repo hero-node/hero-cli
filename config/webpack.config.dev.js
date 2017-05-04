@@ -2,7 +2,7 @@
 
 var extend = require('extend');
 var webpack = require('webpack');
-
+var AppCachePlugin = require('appcache-webpack-plugin');
 var notGenerateSourceMap = global.argv.m;
 
 delete require.cache[require.resolve('./webpack.config.common')];
@@ -44,6 +44,14 @@ var config = extend(true, {}, webConfig, {
 
     devtool: notGenerateSourceMap ? '' : 'cheap-module-source-map',
     plugins: webConfig.plugins.concat([
+        new AppCachePlugin({
+            cache: ['/images/ok.png'],
+          // network: null,  // No network access allowed!
+          // fallback: ['failwhale.jpg'],
+          // settings: ['prefer-online'],
+            exclude: ['file.txt', /.*\.js$/],  // Exclude file.txt and all .js files
+            output: 'app.appcache'
+        }),
         new webpack.HotModuleReplacementPlugin(),
         new CaseSensitivePathsPlugin(),
         new WatchMissingNodeModulesPlugin(paths.appNodeModules)

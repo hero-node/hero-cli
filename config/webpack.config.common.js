@@ -3,7 +3,6 @@
 var path = require('path');
 var webpack = require('webpack');
 var ProgressBarPlugin = require('progress-bar-webpack-plugin');
-var AppCachePlugin = require('appcache-webpack-plugin');
 var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 var InterpolateHtmlPlugin = require('../lib/InterpolateHtmlPlugin');
 var paths = require('./paths');

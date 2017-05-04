@@ -2,6 +2,7 @@
 
 var extend = require('extend');
 var webpack = require('webpack');
+var AppCachePlugin = require('appcache-webpack-plugin');
 var webConfig = require('./webpack.config.common');
 var ManifestPlugin = require('webpack-manifest-plugin');
 var getDynamicEntries = require('./getDynamicEntries');
@@ -50,6 +51,14 @@ var config = extend(true, {}, webConfig, {
                 comments: false,
                 'screw_ie8': true
             }
+        }),
+        new AppCachePlugin({
+            cache: ['/images/ok.png'],
+            // network: null,  // No network access allowed!
+            // fallback: ['failwhale.jpg'],
+            // settings: ['prefer-online'],
+            exclude: ['file.txt', /.*\.js$/],  // Exclude file.txt and all .js files
+            output: 'app.appcache'
         }),
         // Generate a manifest file which contains a mapping of all asset filenames
         // to their corresponding output file so that tools can pick it up without
