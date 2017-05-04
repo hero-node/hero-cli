@@ -7,7 +7,7 @@ var ensureSlash = require('../lib/ensureSlash');
 var getEntries = require('../lib/getEntries');
 var webpackHotDevClientKey = 'web-hot-reload';
 var appIndexKey = 'appIndex';
-var webComponentsKey = 'webcomponents-lite';
+// var webComponentsKey = 'webcomponents-lite';
 var getComponentsData = require('../lib/getComponentsData');
 
 var isStandAlone = global.argv.s;
@@ -19,7 +19,7 @@ function getEntryAndPlugins(isDevelopmentEnv) {
     // We ship a few polyfills by default:
 
     if (!isStandAlone) {
-        buildEntries[webComponentsKey] = require.resolve('../lib/webcomponents-lite');
+        // buildEntries[webComponentsKey] = require.resolve('../lib/webcomponents-lite');
         buildEntries[appIndexKey] = paths.appIndexJs;
     }
 
@@ -99,7 +99,8 @@ function getEntryAndPlugins(isDevelopmentEnv) {
                 // minifyCSS: true,
                 // minifyURLs: true
             },
-            chunks: isDevelopmentEnv ? [webComponentsKey, appIndexKey, webpackHotDevClientKey] : [webComponentsKey, appIndexKey]
+            // chunks: isDevelopmentEnv ? [webComponentsKey, appIndexKey, webpackHotDevClientKey] : [webComponentsKey, appIndexKey]
+            chunks: isDevelopmentEnv ? [appIndexKey, webpackHotDevClientKey] : [appIndexKey]
         })
     ];
     var buildPlugins = entries.map(entry => {
