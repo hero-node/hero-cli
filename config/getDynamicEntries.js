@@ -7,10 +7,12 @@ var ensureSlash = require('../lib/ensureSlash');
 var getEntries = require('../lib/getEntries');
 var webpackHotDevClientKey = 'web-hot-reload';
 var appIndexKey = 'appIndex';
+var heroConfig = require('./hero-config.json');
 // var webComponentsKey = 'webcomponents-lite';
 var getComponentsData = require('../lib/getComponentsData');
-
+var heroCliConfig = require(paths.heroCliConfig);
 var isStandAlone = global.argv.s;
+var inlineSourceRegex = heroConfig.inlineSourceRegex;
 
 function getEntryAndPlugins(isDevelopmentEnv) {
 
@@ -45,6 +47,9 @@ function getEntryAndPlugins(isDevelopmentEnv) {
             // console.log(name);
             // console.log(entryConfig.template);
             entryConfig.template = '!!html!' + path.join(name.replace('/\.js$/', ''), '../', entryConfig.template);
+        }
+        if (heroCliConfig && heroCliConfig.build && heroCliConfig.build.inlineSource) {
+            entryConfig.inlineSource = inlineSourceRegex;
         }
         var options = Object.assign({
             inject: 'head',
@@ -81,27 +86,32 @@ function getEntryAndPlugins(isDevelopmentEnv) {
         buildEntries[entry.entryName] = entry.file;
     });
 
+    var indexOptions = {
+        inject: 'head',
+          // webconfig html file loader using Polymer HTML
+        template: '!!html!' + paths.appHtml,
+        minify: {
+            removeComments: true,
+              // collapseWhitespace: true,
+              // removeRedundantAttributes: true,
+            useShortDoctype: true
+              // removeEmptyAttributes: true,
+              // removeStyleLinkTypeAttributes: true,
+              // keepClosingSlash: true,
+              // minifyJS: true,
+              // minifyCSS: true,
+              // minifyURLs: true
+        },
+          // chunks: isDevelopmentEnv ? [webComponentsKey, appIndexKey, webpackHotDevClientKey] : [webComponentsKey, appIndexKey]
+        chunks: isDevelopmentEnv ? [appIndexKey, webpackHotDevClientKey] : [appIndexKey]
+    };
+
+    if (heroCliConfig && heroCliConfig.build && heroCliConfig.build.inlineSource) {
+        indexOptions.inlineSource = inlineSourceRegex;
+    }
     var indexPlugin = isStandAlone ? [] : [
     // Generates an `index.html` file with the <script> injected.
-        new HtmlWebpackPlugin({
-            inject: 'head',
-            // webconfig html file loader using Polymer HTML
-            template: '!!html!' + paths.appHtml,
-            minify: {
-                removeComments: true,
-                // collapseWhitespace: true,
-                // removeRedundantAttributes: true,
-                useShortDoctype: true
-                // removeEmptyAttributes: true,
-                // removeStyleLinkTypeAttributes: true,
-                // keepClosingSlash: true,
-                // minifyJS: true,
-                // minifyCSS: true,
-                // minifyURLs: true
-            },
-            // chunks: isDevelopmentEnv ? [webComponentsKey, appIndexKey, webpackHotDevClientKey] : [webComponentsKey, appIndexKey]
-            chunks: isDevelopmentEnv ? [appIndexKey, webpackHotDevClientKey] : [appIndexKey]
-        })
+        new HtmlWebpackPlugin(indexOptions)
     ];
     var buildPlugins = entries.map(entry => {
         return entry.plugin;

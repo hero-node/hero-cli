@@ -5,5 +5,6 @@
   "sourceFolder": "src",
   "entryFolder": "entry",
   "homePageKey": "__homepage",
-  "devServerPort": 3000
+  "devServerPort": 3000,
+  "inlineSourceRegex": ".js$"
 }
