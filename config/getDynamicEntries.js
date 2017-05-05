@@ -100,7 +100,8 @@ function getEntryAndPlugins(isDevelopmentEnv) {
             // minifyCSS: true,
             // minifyURLs: true
                 },
-                chunks: [attriName]
+                // In Native App, No JS `appIndexKey`, so Need Add Reload in Every Page
+                chunks: isDevelopmentEnv ? [webpackHotDevClientKey, attriName] : [attriName]
             }, entryConfig);
 
         // console.log(options);
