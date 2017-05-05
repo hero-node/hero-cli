@@ -9,13 +9,9 @@ var getDynamicEntries = require('./getDynamicEntries');
 var options = global.options;
 var paths = require('./paths');
 var heroCliConfig = require('./hero-config.json');
-var heroCustomConfig = require(paths.heroCliConfig);
+var getPublicPath = require('../lib/getPublicPath');
 
-var publicPath = heroCustomConfig[heroCliConfig.homePageKey];
-
-if (typeof publicPath !== 'string') {
-    publicPath = '/';
-}
+var publicPath = getPublicPath();
 
 var dynamicEntries = getDynamicEntries(false);
 

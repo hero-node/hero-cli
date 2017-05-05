@@ -12,13 +12,10 @@ var options = global.options;
 var WatchMissingNodeModulesPlugin = require('../lib/WatchMissingNodeModulesPlugin');
 var paths = require('./paths');
 var heroCliConfig = require('./hero-config.json');
-var heroCustomConfig = require(paths.heroCliConfig);
+var getPublicPath = require('../lib/getPublicPath');
 
-var publicPath = heroCustomConfig[heroCliConfig.homePageKey];
+var publicPath = getPublicPath();
 
-if (typeof publicPath !== 'string') {
-    publicPath = '/';
-}
 webConfig.output = {
   // Next line is not used in dev but WebpackDevServer crashes without it:
     path: paths.appBuild,
