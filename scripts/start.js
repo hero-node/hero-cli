@@ -96,23 +96,28 @@ var expectedType = /\.js$/;
 var needUpdateEntry = false;
 
 function _checkRebuild(path, isDelete) {
-    // console.log('check.....=' + path);
-    // Is JS File
-    if (expectedType.test(path)) {
-        if (!isFirstWatch) {
-            try {
-                needUpdateEntry = updateEntryFile(compiler, path, isDelete);
-            } catch (e) {
+    if (!expectedType.test(path)) {
+        // Only Handler JS File
+        return;
+    }
+    if (path === paths.appIndexJs) {
+        // Ignore the src/index.js, using webpck default rebuild
+        return;
+    }
+    if (!isFirstWatch) {
+        // console.log('check.....=' + path);
+        try {
+            needUpdateEntry = updateEntryFile(compiler, path, isDelete);
+        } catch (e) {
                 // e && console.log(e);
-                needUpdateEntry = false;
-            }
-            if (needUpdateEntry) {
+            needUpdateEntry = false;
+        }
+        if (needUpdateEntry) {
                 // console.log('restart....');
             // devServer.middleware.invalidate();
-                devServer.close();
+            devServer.close();
             // eslint-disable-next-line
                 run(availablePort);
-            }
         }
     }
 }
@@ -126,6 +131,7 @@ function watchSources() {
             checkRebuild(path);
         }
     }).on('change', function (path) {
+        // console.log('File Change: ' + path);
         checkRebuild(path);
     }).on('unlink', function (path) {
         // Using Webpack Re-Build
@@ -244,21 +250,7 @@ function setupCompiler(config, host, port, protocol) {
 }
 
 function runDevServer(config, host, port, protocol) {
-    // var path = require('path');
-    // var mockRouter = null;
-    //
-    // console.log(paths.appSrc);
-    // var mockIndex = path.join(paths.appSrc, '../', 'mock/index.js');
-    //
-    // console.log(mockIndex);
-    //
-    // if (checkRequiredFiles([mockIndex])) {
-    //     try {
-    //         mockRouter = require(mockIndex);
-    //     } catch (e) {
-    //         console.log('No Mock Data');
-    //     }
-    // }
+
     devServer = new WebpackDevServer(compiler, {
     // Enable gzip compression of generated files.
         compress: true,
