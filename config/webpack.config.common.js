@@ -5,6 +5,7 @@ var webpack = require('webpack');
 var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 var InterpolateHtmlPlugin = require('../lib/InterpolateHtmlPlugin');
+var options = global.options;
 var paths = require('./paths');
 
 var getClientEnvironment = require('./env');
@@ -101,12 +102,11 @@ var webConfig = {
     },
     plugins: [
         new ProgressBarPlugin(),
-        new HtmlWebpackInlineSourcePlugin(),
         new InterpolateHtmlPlugin(env.raw),
         new webpack.DefinePlugin(env.stringified),
         new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.optimize.DedupePlugin()
-    ],
+    ].concat(options.isInlineSource ? [new HtmlWebpackInlineSourcePlugin()] : []),
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
     node: {

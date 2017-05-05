@@ -6,6 +6,7 @@ var AppCachePlugin = require('appcache-webpack-plugin');
 var webConfig = require('./webpack.config.common');
 var ManifestPlugin = require('webpack-manifest-plugin');
 var getDynamicEntries = require('./getDynamicEntries');
+var options = global.options;
 var paths = require('./paths');
 var heroCliConfig = require('./hero-config.json');
 var getClientEnvironment = require('./env');
@@ -16,7 +17,6 @@ var publicPath = env[heroCliConfig.homePageKey];
 if (typeof publicPath !== 'string') {
     publicPath = '/';
 }
-var notGenerateSourceMap = global.argv.m;
 
 var dynamicEntries = getDynamicEntries(false);
 
@@ -26,8 +26,10 @@ webConfig.output = {
   // Generated JS file names (with nested folders).
   // There will be one main bundle, and one file per asynchronous chunk.
   // We don't currently advertise code splitting but Webpack supports it.
-    filename: 'static/js/[name].js',
-    chunkFilename: 'static/js/[name].chunk.js',
+    // filename: 'static/js/[name].js',
+    // chunkFilename: 'static/js/[name].chunk.js',
+    filename: options.noHashName ? 'static/js/[name].js' : 'static/js/[name].[chunkhash:8].js',
+    chunkFilename: options.noHashName ? 'static/js/[name].chunk.js' : 'static/js/[name].[chunkhash:8].chunk.js',
   // We inferred the "public path" (such as / or /my-project) from homepage.
     publicPath: publicPath
 };
@@ -37,7 +39,7 @@ webConfig.plugins = webConfig.plugins.concat(dynamicEntries.plugin);
 
 var config = extend(true, {}, webConfig, {
 
-    devtool: notGenerateSourceMap ? '' : 'source-map',
+    devtool: options.noSourceMap ? '' : 'source-map',
     plugins: webConfig.plugins.concat([
         new webpack.optimize.UglifyJsPlugin({
             compress: {

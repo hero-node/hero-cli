@@ -58,6 +58,24 @@ if (yargs.argv.h || yargs.argv.e === undefined || typeof yargs.argv.e === 'boole
 }
 global.argv = yargs.argv;
 
+var options = {
+    isStandAlone: global.argv.s,
+    isHeroBasic: global.argv.b,
+    isInlineSource: global.argv.i,
+    noHashName: global.argv.n,
+    noSourceMap: global.argv.m,
+    hasAppCache: global.argv.f,
+    env: global.argv.f
+};
+
+if (!options.isStandAlone && !options.isHeroBasic) {
+  // equals build all, same as default
+    options.isStandAlone = true;
+    options.isHeroBasic = true;
+}
+
+global.options = options;
+
 var availablePort;
 var cli = 'npm';
 var isInteractive = process.stdout.isTTY;
@@ -257,7 +275,7 @@ function runDevServer(config, host, port, protocol) {
         setup: function (app) {
             var proxy;
             var proxyConfig = require(paths.heroCliConfig).proxy;
-            
+
             if (proxyConfig) {
                 proxy = require('express-http-proxy');
 

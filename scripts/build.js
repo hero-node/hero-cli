@@ -64,6 +64,24 @@ if (yargs.argv.h || yargs.argv.e === undefined || (typeof yargs.argv.e === 'bool
 }
 global.argv = yargs.argv;
 
+var options = {
+    isStandAlone: global.argv.s,
+    isHeroBasic: global.argv.b,
+    isInlineSource: global.argv.i,
+    noHashName: global.argv.n,
+    noSourceMap: global.argv.m,
+    hasAppCache: global.argv.f,
+    env: global.argv.f
+};
+
+if (!options.isStandAlone && !options.isHeroBasic) {
+  // equals build all, same as default
+    options.isStandAlone = true;
+    options.isHeroBasic = true;
+}
+
+global.options = options;
+
 var config = require('../config/webpack.config.prod');
 // Warn and crash if required files are missing
 
@@ -189,4 +207,6 @@ fs.emptyDirSync(paths.appBuild);
 build();
 
 // Merge with the public folder
-copyPublicFolder();
+if (global.options.isHeroBasic) {
+    copyPublicFolder();
+}

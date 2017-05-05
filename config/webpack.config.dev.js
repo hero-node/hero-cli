@@ -3,12 +3,12 @@
 var extend = require('extend');
 var webpack = require('webpack');
 var AppCachePlugin = require('appcache-webpack-plugin');
-var notGenerateSourceMap = global.argv.m;
 
 delete require.cache[require.resolve('./webpack.config.common')];
 var webConfig = require('./webpack.config.common');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 var getDynamicEntries = require('./getDynamicEntries');
+var options = global.options;
 var WatchMissingNodeModulesPlugin = require('../lib/WatchMissingNodeModulesPlugin');
 var paths = require('./paths');
 var heroCliConfig = require('./hero-config.json');
@@ -28,9 +28,11 @@ webConfig.output = {
   // This does not produce a real file. It's just the virtual path that is
   // served by WebpackDevServer in development. This is the JS bundle
   // containing code from all our entry points, and the Webpack runtime.
-    filename: 'static/js/[name].js',
+    filename: options.noHashName ? 'static/js/[name].js' : 'static/js/[name].[chunkhash:8].js',
+    chunkFilename: options.noHashName ? 'static/js/[name].chunk.js' : 'static/js/[name].[chunkhash:8].chunk.js',
+    // filename: 'static/js/[name].js',
     // chunkFilename: 'static/js/[name.chunk.js',
-    chunkFilename: 'static/js/[name].chunk.js',
+    // chunkFilename: 'static/js/[name].chunk.js',
   // This is the URL that app is served from. We use "/" in development.
     publicPath: publicPath
 };
@@ -42,7 +44,7 @@ webConfig.plugins = webConfig.plugins.concat(dynamicEntries.plugin);
 
 var config = extend(true, {}, webConfig, {
 
-    devtool: notGenerateSourceMap ? '' : 'cheap-module-source-map',
+    devtool: options.noSourceMap ? '' : 'cheap-module-source-map',
     plugins: webConfig.plugins.concat([
         new AppCachePlugin({
             cache: ['/images/ok.png'],
