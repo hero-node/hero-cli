@@ -1,16 +1,11 @@
 {
+  "proxy": {
+    "/api/v2": "https://www.my-site.com",
+    "/feapi": "https://www.my-site.com",
+  },
   "environments": {
     "dev": "src/environments/environment-dev.js",
     "prod": "src/environments/environment-prod.js"
   },
-  "proxy": {
-    "/api/v2": "https://www-demo.my-site.com",
-    "/feapi": "https://www-demo.my-site.com",
-    "/images/captcha.jpg": "https://www-demo.my-site.com"
-  },
-  "build":{
-    "appCache": true,
-    "inlineSource": true,
-    "hashName": true
-  }
+  "homepage":"/myapp"
 }

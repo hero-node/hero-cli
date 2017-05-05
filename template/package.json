@@ -3,18 +3,18 @@
   "version": "0.0.1",
   "dependencies": {
     "axios": "^0.16.1",
+    "babel-plugin-transform-class-properties": "~6.19.0",
+    "babel-plugin-transform-decorators-legacy": "~1.3.4",
+    "babel-preset-es2015": "^6.24.1",
     "hero-cli": "github:hero-mobile/hero-cli",
     "hero-js": "github:hero-mobile/hero-js",
-    "promise": "^7.1.1"
+    "promise": "^7.1.1",
+    "qs": "^6.4.0"
   },
   "devDependencies": {
-    "body-parser": "^1.13.3",
-    "chalk": "1.1.3",
-    "cookie-parser": "^1.4.0",
     "express": "^4.13.3",
-    "http-proxy": "^1.16.2",
-    "log4js": "^0.6.35",
-    "mockjs": "^1.0.1-beta3"
+    "express-http-proxy": "^1.0.2",
+    "log4js": "^0.6.35"
   },
   "scripts": {
     "start": "hero start -e dev",
