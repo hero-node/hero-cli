@@ -86,16 +86,19 @@ var devServer = null;
 var DEFAULT_PORT = parseInt(process.env.PORT, 10) || heroCliConfig.devServerPort;
 var compiler;
 
-var watcher = chokidar.watch(paths.appSrc, {
-    ignored: /[\/\\]\./,
-    persistent: true
-});
-
 var expectedType = /\.js$/;
 // Something to use when events are received.
 var needUpdateEntry = false;
 
+function restart() {
+  // console.log('restart....');
+// devServer.middleware.invalidate();
+    devServer.close();
+// eslint-disable-next-line
+  run(availablePort);
+}
 function _checkRebuild(path, isDelete) {
+
     if (!expectedType.test(path)) {
         // Only Handler JS File
         return;
@@ -113,43 +116,57 @@ function _checkRebuild(path, isDelete) {
             needUpdateEntry = false;
         }
         if (needUpdateEntry) {
-                // console.log('restart....');
-            // devServer.middleware.invalidate();
-            devServer.close();
-            // eslint-disable-next-line
-                run(availablePort);
+            restart();
         }
     }
 }
 var checkRebuild = _.throttle(_checkRebuild, 1000, { 'trailing': true });
 
-function watchSources() {
-    watcher.on('add', function (path) {
-        if (expectedType.test(path)) {
-            // console.log('File ADD: ' + path);
-            watcher.add(path);
-            checkRebuild(path);
-        }
-    }).on('change', function (path) {
-        // console.log('File Change: ' + path);
+var watcher;
+
+var fileAddWatchListener = function (path) {
+    if (expectedType.test(path)) {
+        // console.log('File ADD: ' + path);
+        watcher.add(path);
         checkRebuild(path);
-    }).on('unlink', function (path) {
-        // Using Webpack Re-Build
-        // console.log('File REMOVE: ' + path);
-        watcher.unwatch(path);
-        checkRebuild(path, true);
+    }
+};
+
+var fileChangeWatchListener = function (path) {
+    // console.log('File Change: ' + path);
+    checkRebuild(path);
+};
+
+var fileRemoveWatchListener = function (path) {
+  // Using Webpack Re-Build
+    // console.log('File REMOVE: ' + path);
+    watcher.unwatch(path);
+    checkRebuild(path, true);
+};
+
+var addDirListener = function (path) {
+  // console.log('Dir ADD: ' + path);
+    watcher.add(path);
+};
+
+var unlinkDirListener = function (path) {
+  // console.log('Dir REMOVE: ' + path);
+    watcher.unwatch(path);
+};
+
+function watchSources() {
+    watcher = chokidar.watch(paths.appSrc, {
+        ignored: /[\/\\]\./,
+        persistent: true
     });
 
+    watcher.on('add', fileAddWatchListener)
+          .on('change', fileChangeWatchListener)
+          .on('unlink', fileRemoveWatchListener);
+
     // More possible events.
-    watcher.on('addDir', function (path) {
-        // console.log('Dir ADD: ' + path);
-        watcher.add(path);
-    }).on('unlinkDir', function (path) {
-        // console.log('Dir REMOVE: ' + path);
-        watcher.unwatch(path);
-    }).on('error', function (error) {
-        console.log('Watcher error: ' + error);
-    });
+    watcher.on('addDir', addDirListener)
+      .on('unlinkDir', unlinkDirListener);
 
 }
 
@@ -183,7 +200,7 @@ function setupCompiler(config, host, port, protocol) {
     // "done" event fires when Webpack has finished recompiling the bundle.
     // Whether or not you have warnings or errors, you will get this event.
     compiler.plugin('done', function (stats) {
-        watchSources();
+        if (!watcher) { watchSources(); }
         if (isFirstWatch) {
             isFirstWatch = false;
         }
