@@ -42,18 +42,17 @@ var dynamicEntries = getDynamicEntries(true);
 webConfig.entry = dynamicEntries.entry;
 webConfig.plugins = webConfig.plugins.concat(dynamicEntries.plugin);
 
+// Keep the Plugin at the last
+if (options.hasAppCache) {
+    webConfig.plugins.push(new AppCachePlugin({
+        output: (typeof options.hasAppCache === 'boolean') ? heroCliConfig.defaultAppCacheName : options.hasAppCache
+    }));
+}
+
 var config = extend(true, {}, webConfig, {
 
     devtool: options.noSourceMap ? '' : 'cheap-module-source-map',
     plugins: webConfig.plugins.concat([
-        new AppCachePlugin({
-            cache: ['/images/ok.png'],
-          // network: null,  // No network access allowed!
-          // fallback: ['failwhale.jpg'],
-          // settings: ['prefer-online'],
-            exclude: ['file.txt', /.*\.js$/],  // Exclude file.txt and all .js files
-            output: 'app.appcache'
-        }),
         new webpack.HotModuleReplacementPlugin(),
         new CaseSensitivePathsPlugin(),
         new WatchMissingNodeModulesPlugin(paths.appNodeModules)

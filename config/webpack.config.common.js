@@ -11,6 +11,18 @@ var paths = require('./paths');
 var getClientEnvironment = require('./env');
 var env = getClientEnvironment();
 
+var plugins = [
+    new ProgressBarPlugin(),
+    new InterpolateHtmlPlugin(env.raw),
+    new webpack.DefinePlugin(env.stringified),
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.optimize.DedupePlugin()
+];
+
+if (options.isInlineSource) {
+    plugins.push(new HtmlWebpackInlineSourcePlugin());
+}
+
 var webConfig = {
 
     resolve: {
@@ -100,13 +112,7 @@ var webConfig = {
         configFile: path.join(__dirname, '../eslintrc'),
         useEslintrc: false
     },
-    plugins: [
-        new ProgressBarPlugin(),
-        new InterpolateHtmlPlugin(env.raw),
-        new webpack.DefinePlugin(env.stringified),
-        new webpack.optimize.OccurrenceOrderPlugin(),
-        new webpack.optimize.DedupePlugin()
-    ].concat(options.isInlineSource ? [new HtmlWebpackInlineSourcePlugin()] : []),
+    plugins: plugins,
   // Some libraries import Node modules but don't use them in the browser.
   // Tell Webpack to provide empty mocks for them so importing them works.
     node: {

@@ -138,7 +138,7 @@ function build() {
             console.log('The project was built assuming it is hosted at ' + chalk.green(publicPathname) + '.');
             console.log('You can control this with the ' + chalk.green('homepage') + ' field in your '  + chalk.cyan('package.json') + '.');
             console.log();
-            console.log('The ' + chalk.cyan('build') + ' folder is ready to be deployed.');
+            console.log('The ' + chalk.cyan(buildFolder) + ' folder is ready to be deployed.');
             console.log('To publish it at ' + chalk.green(publicUrl) + ', run:');
       // If script deploy has been added to package.json, skip the instructions
             if (typeof appPackage.scripts.deploy === 'undefined') {
@@ -164,7 +164,7 @@ function build() {
             console.log('The project was built assuming it is hosted at ' + chalk.green(publicPath) + '.');
             console.log('You can control this with the ' + chalk.green('homepage') + ' field in your '  + chalk.cyan('package.json') + '.');
             console.log();
-            console.log('The ' + chalk.cyan('build') + ' folder is ready to be deployed.');
+            console.log('The ' + chalk.cyan(buildFolder) + ' folder is ready to be deployed.');
             console.log();
         } else {
             if (publicUrl) {

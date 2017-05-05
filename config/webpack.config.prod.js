@@ -37,6 +37,13 @@ webConfig.output = {
 webConfig.entry = dynamicEntries.entry;
 webConfig.plugins = webConfig.plugins.concat(dynamicEntries.plugin);
 
+// Keep the Plugin at the last
+if (options.hasAppCache) {
+    webConfig.plugins.push(new AppCachePlugin({
+        output: (typeof options.hasAppCache === 'boolean') ? heroCliConfig.defaultAppCacheName : options.hasAppCache
+    }));
+}
+
 var config = extend(true, {}, webConfig, {
 
     devtool: options.noSourceMap ? '' : 'source-map',
@@ -53,14 +60,6 @@ var config = extend(true, {}, webConfig, {
                 comments: false,
                 'screw_ie8': true
             }
-        }),
-        new AppCachePlugin({
-            cache: ['/images/ok.png'],
-            // network: null,  // No network access allowed!
-            // fallback: ['failwhale.jpg'],
-            // settings: ['prefer-online'],
-            exclude: ['file.txt', /.*\.js$/],  // Exclude file.txt and all .js files
-            output: 'app.appcache'
         }),
         // Generate a manifest file which contains a mapping of all asset filenames
         // to their corresponding output file so that tools can pick it up without

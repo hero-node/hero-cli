@@ -6,5 +6,6 @@
   "entryFolder": "entry",
   "homePageKey": "__homepage",
   "devServerPort": 3000,
+  "defaultAppCacheName": "app.appcache",
   "inlineSourceRegex": ".js$"
 }

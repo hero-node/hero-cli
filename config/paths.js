@@ -58,7 +58,7 @@ function getServedPath(appPackageJson) {
 
 // config after eject: we're in ./config/
 module.exports = {
-    appBuild: resolveApp('build'),
+    appBuild: resolveApp(heroConfig.outDir),
     appPublic: resolveApp('public'),
     appHtml: resolveApp('src/index.html'),
     appIndexJs: resolveApp('src/index.js'),
@@ -81,7 +81,7 @@ function resolveOwn(relativePath) {
 // config before eject: we're in ./node_modules/react-scripts/config/
 module.exports = {
     appPath: resolveApp('.'),
-    appBuild: resolveApp('build'),
+    appBuild: resolveApp(heroConfig.outDir),
     appPublic: resolveApp('public'),
     appHtml: resolveApp('src/index.html'),
     appIndexJs: resolveApp('src/index.js'),
@@ -107,7 +107,7 @@ var reactScriptsLinked = fs.existsSync(reactScriptsPath) && fs.lstatSync(reactSc
 if (!reactScriptsLinked && __dirname.indexOf(path.join('packages', 'react-scripts', 'config')) !== -1) {
     module.exports = {
         appPath: resolveApp('.'),
-        appBuild: resolveOwn('../../build'),
+        appBuild: resolveOwn('../../' + heroConfig.outDir),
         appPublic: resolveOwn('template/public'),
         appHtml: resolveOwn('template/src/index.html'),
         appIndexJs: resolveOwn('template/src/index.js'),

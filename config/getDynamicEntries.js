@@ -122,7 +122,6 @@ function getEntryAndPlugins(isDevelopmentEnv) {
             return entry.plugin;
         }));
     }
-    console.log('buildPlugins\n', buildPlugins);
     return {
         entry: buildEntries,
         plugin: buildPlugins
