@@ -26,18 +26,32 @@ function showUsage() {
         .option('e', {
             demandOption: true,
             // default: '/etc/passwd',
-            describe: 'Environment name of the configuration when start the server\n ' +
-                      'Available value refer to \n\n' +
-                      '<you-project-path>/' + heroCliConfig.heroCliConfig + '\n\nor you can add attribute environment names to attribute [' + heroCliConfig.environmentKey + '] in that file',
+            describe: 'Environment name of the configuration when start the application',
             type: 'string'
         })
         .option('s', {
             // demandOption: false,
-            describe: 'build pakcage without dependecies like hero-js or webcomponents, just code in <you-project-path>/src folder'
+            describe: 'build pakcage without dependecies like hero-js or webcomponents, just code in <you-project-path>/src folder. Default value is [false].'
+        })
+        .option('i', {
+          // demandOption: false,
+            describe: 'Inline JavaScript code into HTML. Default value is [false].'
+        })
+        .option('b', {
+          // demandOption: false,
+            describe: 'build pakcage only contain dependecies like hero-js or webcomponents, withou code in <you-project-path>/src folder. Default value is [false]'
         })
         .option('m', {
             // demandOption: false,
-            describe: 'build without sourcemap'
+            describe: 'build without sourcemap. Default value is [false], will generate sourcemap.'
+        })
+        .option('f', {
+            // demandOption: false,
+            describe: 'generate AppCache file, default file name is "app.appcache". Default value is [false], will not generate this file.'
+        })
+        .option('n', {
+            // demandOption: false,
+            describe: 'rename file without hashcode. Default value is [false], cause filename with hashcode.'
         })
         .nargs('e', 1)
         .help('h')
@@ -71,7 +85,7 @@ var options = {
     noHashName: global.argv.n,
     noSourceMap: global.argv.m,
     hasAppCache: global.argv.f,
-    env: global.argv.f
+    env: global.argv.e
 };
 
 if (!options.isStandAlone && !options.isHeroBasic) {
