@@ -14,50 +14,25 @@ var formatWebpackMessages = require('../lib/formatWebpackMessages');
 var pgk = require('../package.json');
 var paths = require('../config/paths');
 var heroCliConfig = require('../config/hero-config.json');
+var commandOptions = require('../config/options');
 var chokidar = require('chokidar');
 var updateEntryFile = require('../lib/updateWebpackEntry');
 var commandName = Object.keys(pgk.bin)[0];
 
 function showUsage() {
-    var argv = yargs
+    var command = yargs
         .usage('Usage: ' + commandName + ' start <options>')
         // .command('count', 'Count the lines in a file')
-        .example(commandName + ' start -e dev', 'Start the server using the dev configuration')
-        .option('e', {
-            demandOption: true,
-            // default: '/etc/passwd',
-            describe: 'Environment name of the configuration when start the application',
-            type: 'string'
-        })
-        .option('s', {
-            // demandOption: false,
-            describe: 'build pakcage without dependecies like hero-js or webcomponents, just code in <you-project-path>/src folder. Default value is [false].'
-        })
-        .option('i', {
-          // demandOption: false,
-            describe: 'Inline JavaScript code into HTML. Default value is [false].'
-        })
-        .option('b', {
-          // demandOption: false,
-            describe: 'build pakcage only contain dependecies like hero-js or webcomponents, withou code in <you-project-path>/src folder. Default value is [false]'
-        })
-        .option('m', {
-            // demandOption: false,
-            describe: 'build without sourcemap. Default value is [false], will generate sourcemap.'
-        })
-        .option('f', {
-            // demandOption: false,
-            describe: 'generate AppCache file, default file name is "app.appcache". Default value is [false], will not generate this file.'
-        })
-        .option('n', {
-            // demandOption: false,
-            describe: 'rename file without hashcode. Default value is [false], cause filename with hashcode.'
-        })
-        .nargs('e', 1)
-        .help('h')
-        .epilog('copyright 2017')
-        .detectLocale(false)
-        .argv;
+        .example(commandName + ' start -e dev', 'Start the server using the dev configuration');
+
+    commandOptions.forEach(function (option) {
+        command = command.option(option.name, option.value);
+    });
+
+    var argv = command.nargs('e', 1)
+            .help('h')
+            .epilog('copyright 2017')
+            .argv;
 
     var fs = require('fs');
     var s = fs.createReadStream(argv.file);
