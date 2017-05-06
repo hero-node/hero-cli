@@ -9,9 +9,7 @@ var getDynamicEntries = require('./getDynamicEntries');
 var options = global.options;
 var paths = require('./paths');
 var heroCliConfig = require('./hero-config.json');
-var getPublicPath = require('../lib/getPublicPath');
-
-var publicPath = getPublicPath();
+var homePageConfig = require('../lib/getHomePage');
 
 var dynamicEntries = getDynamicEntries(false);
 
@@ -26,7 +24,7 @@ webConfig.output = {
     filename: options.noHashName ? 'static/js/[name].js' : 'static/js/[name].[chunkhash:8].js',
     chunkFilename: options.noHashName ? 'static/js/[name].chunk.js' : 'static/js/[name].[chunkhash:8].chunk.js',
   // We inferred the "public path" (such as / or /my-project) from homepage.
-    publicPath: publicPath
+    publicPath: homePageConfig.getServedPath
 };
 
 webConfig.entry = dynamicEntries.entry;

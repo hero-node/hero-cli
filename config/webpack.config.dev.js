@@ -12,9 +12,7 @@ var options = global.options;
 var WatchMissingNodeModulesPlugin = require('../lib/WatchMissingNodeModulesPlugin');
 var paths = require('./paths');
 var heroCliConfig = require('./hero-config.json');
-var getPublicPath = require('../lib/getPublicPath');
-
-var publicPath = getPublicPath();
+var homePageConfig = require('../lib/getHomePage');
 
 webConfig.output = {
   // Next line is not used in dev but WebpackDevServer crashes without it:
@@ -30,7 +28,7 @@ webConfig.output = {
     // chunkFilename: 'static/js/[name.chunk.js',
     // chunkFilename: 'static/js/[name].chunk.js',
   // This is the URL that app is served from. We use "/" in development.
-    publicPath: publicPath
+    publicPath: homePageConfig.getServedPath
 };
 
 var dynamicEntries = getDynamicEntries(true);

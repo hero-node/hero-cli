@@ -6,14 +6,14 @@ process.env.NODE_ENV = 'production';
 var yargs = require('yargs');
 var chalk = require('chalk');
 var fs = require('fs-extra');
-var path = require('path');
-var url = require('url');
 var webpack = require('webpack');
 var paths = require('../config/paths');
+var homePageConfig = require('../lib/getHomePage');
 var heroCliConfig = require('../config/hero-config.json');
 var checkRequiredFiles = require('../lib/checkRequiredFiles');
 var FileSizeReporter = require('../lib/FileSizeReporter');
 var printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
+var buildFolder = heroCliConfig.outDir;
 
 var pgk = require('../package.json');
 var commandName = Object.keys(pgk.bin)[0];
@@ -99,6 +99,31 @@ function printErrors(summary, errors) {
     });
 }
 
+function showHomepageExample(homepage, isGithub) {
+    console.log('The project was built assuming it is hosted at ' + homepage + '.');
+    console.log('To override this, specify the ' + chalk.green('homepage') + ' in your '  + chalk.cyan(heroCliConfig.heroCliConfig) + '.');
+    if (!isGithub) {
+        console.log('For example, add this to build it for GitHub Pages:');
+        console.log();
+        console.log('  ' + chalk.green('"homepage"') + chalk.cyan(': ') + chalk.green('"http://myname.github.io/myapp"') + chalk.cyan(','));
+        console.log();
+        console.log('or add this to build it for custom path');
+    } else {
+        console.log('For example, add this to build it for custom path');
+    }
+    console.log();
+    console.log('  ' + chalk.green('"homepage"') + chalk.cyan(': ') + chalk.green('"/mkt/myapp"') + chalk.cyan(','));
+    console.log();
+    console.log('The ' + chalk.cyan(paths.appBuild) + ' folder is ready to be deployed.');
+    console.log();
+}
+function showServeBuild() {
+    console.log('You may serve it with a static server:');
+    console.log();
+    console.log(`  ${chalk.cyan('npm')} install -g serve`);
+    console.log(`  ${chalk.cyan('serve')} -s build`);
+    console.log();
+}
 // Create the production build and print the deployment instructions.
 function build() {
     console.log('Creating an optimized production build...');
@@ -127,25 +152,37 @@ function build() {
         printFileSizesAfterBuild(stats);
         console.log();
 
-        var appPackage  = require(paths.appPackageJson);
-        var publicUrl = paths.publicUrl;
-        var publicPath = config.output.publicPath;
-        var publicPathname = url.parse(publicPath).pathname;
-        var buildFolder = path.relative(process.cwd(), paths.appBuild);
+        var original = homePageConfig.original;
+        var getServedPath = homePageConfig.getServedPath;
+        var isExists = homePageConfig.isExists;
 
-        if (publicUrl && publicUrl.indexOf('.github.io/') !== -1) {
-      // "homepage": "http://user.github.io/project"
-            console.log('The project was built assuming it is hosted at ' + chalk.green(publicPathname) + '.');
-            console.log('You can control this with the ' + chalk.green('homepage') + ' field in your '  + chalk.cyan('package.json') + '.');
-            console.log();
-            console.log('The ' + chalk.cyan(buildFolder) + ' folder is ready to be deployed.');
-            console.log('To publish it at ' + chalk.green(publicUrl) + ', run:');
-      // If script deploy has been added to package.json, skip the instructions
-            if (typeof appPackage.scripts.deploy === 'undefined') {
+        var isServedAtRoot = (getServedPath === '/');
+
+        if (!isExists || isServedAtRoot) {
+            if (!isExists) {
+              // no homepage
+                showHomepageExample('the server root');
+                showServeBuild();
+            } else if (isServedAtRoot) {
+              // "homepage": "http://mywebsite.com"
+                showHomepageExample(chalk.green(original));
+                showServeBuild();
+            }
+            return;
+        }
+        var isGithubHome = (original && original.indexOf('.github.io/') !== -1);
+
+        if (!isServedAtRoot) {
+            if (isGithubHome) {
+              // "homepage": "http://user.github.io/project"
+                showHomepageExample(chalk.green(original), true);
+                console.log('The ' + chalk.cyan(buildFolder) + ' folder is ready to be deployed.');
+                console.log('To publish it at ' + chalk.green(original) + ', run:');
+              // If script deploy has been added to package.json, skip the instructions
                 console.log();
                 console.log('  ' + chalk.cyan('npm') +  ' install --save-dev gh-pages');
                 console.log();
-                console.log('Add the following script in your ' + chalk.cyan('package.json') + '.');
+                console.log('Add the following script in your ' + chalk.cyan(heroCliConfig.heroCliConfig) + '.');
                 console.log();
                 console.log('    ' + chalk.dim('// ...'));
                 console.log('    ' + chalk.yellow('"scripts"') + ': {');
@@ -155,47 +192,21 @@ function build() {
                 console.log('    }');
                 console.log();
                 console.log('Then run:');
-            }
-            console.log();
-            console.log('  ' + chalk.cyan('npm') +  ' run deploy');
-            console.log();
-        } else if (publicPath !== '/') {
-      // "homepage": "http://mywebsite.com/project"
-            console.log('The project was built assuming it is hosted at ' + chalk.green(publicPath) + '.');
-            console.log('You can control this with the ' + chalk.green('homepage') + ' field in your '  + chalk.cyan('package.json') + '.');
-            console.log();
-            console.log('The ' + chalk.cyan(buildFolder) + ' folder is ready to be deployed.');
-            console.log();
-        } else {
-            if (publicUrl) {
-        // "homepage": "http://mywebsite.com"
-                console.log('The project was built assuming it is hosted at ' + chalk.green(publicUrl) +  '.');
-                console.log('You can control this with the ' + chalk.green('homepage') + ' field in your '  + chalk.cyan('package.json') + '.');
+                console.log();
+                console.log('  ' + chalk.cyan('npm') +  ' run deploy');
                 console.log();
             } else {
-        // no homepage
-                console.log('The project was built assuming it is hosted at the server root.');
-                console.log('To override this, specify the ' + chalk.green('homepage') + ' in your '  + chalk.cyan('package.json') + '.');
-                console.log('For example, add this to build it for GitHub Pages:');
-                console.log();
-                console.log('  ' + chalk.green('"homepage"') + chalk.cyan(': ') + chalk.green('"http://www.dianrong.com/myapp"') + chalk.cyan(','));
-                console.log();
-            }
+              // "homepage": "http://mywebsite.com/project"
+                showHomepageExample(chalk.green(original));
 
-            console.log('The ' + chalk.cyan(buildFolder) + ' folder is ready to be deployed.');
-            console.log('You may serve it with a static server:');
-            console.log();
-            console.log(`  ${chalk.cyan('npm')} install -g serve`);
-            console.log(`  ${chalk.cyan('serve')} -s build`);
-            console.log();
+            }
         }
     });
 }
 
 function copyPublicFolder() {
     fs.copySync(paths.appPublic, paths.appBuild, {
-        dereference: true,
-        filter: file => file !== paths.appHtml
+        dereference: true
     });
 }
 

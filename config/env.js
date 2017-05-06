@@ -5,9 +5,7 @@ var path = require('path');
 var checkRequiredFiles = require('../lib/checkRequiredFiles');
 var chalk = require('chalk');
 var config = require('./hero-config.json');
-var getPublicPath = require('../lib/getPublicPath');
-
-var publicPath = getPublicPath();
+var homePageConfig = require('../lib/getHomePage');
 
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.heroCliConfig])) {
@@ -42,7 +40,10 @@ function getClientEnvironment() {
     var raw = require(configPath);
 
     raw.NODE_ENV = process.env.NODE_ENV || 'development';
-    raw.HOME_PAGE = publicPath;
+    // `publicUrl` is just like `publicPath`, but we will provide it to our app
+    // as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
+    // Omit trailing slash as %PUBLIC_URL%/xyz looks better than %PUBLIC_URL%xyz.
+    raw.HOME_PAGE = homePageConfig.publicURL;
   // Stringify all values so we can feed into Webpack DefinePlugin
     var stringified = {
         'process.env': JSON.stringify(raw)

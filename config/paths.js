@@ -33,29 +33,6 @@ var nodePaths = (process.env.NODE_PATH || '')
   .filter(folder => !path.isAbsolute(folder))
   .map(resolveApp);
 
-var envPublicUrl = process.env.PUBLIC_URL;
-
-var ensureSlash = require('../lib/ensureSlash');
-
-function getPublicUrl(appPackageJson) {
-    return envPublicUrl || require(appPackageJson).homepage;
-}
-
-// We use `PUBLIC_URL` environment variable or "homepage" field to infer
-// "public path" at which the app is served.
-// Webpack needs to know it to put the right <script> hrefs into HTML even in
-// single-page apps that may serve index.html for nested URLs like /todos/42.
-// We can't use a relative path in HTML because we don't want to load something
-// like /todos/42/static/js/bundle.7289d.js. We have to know the root.
-function getServedPath(appPackageJson) {
-    var publicUrl = getPublicUrl(appPackageJson);
-    var servedUrl = envPublicUrl || (
-    publicUrl ? url.parse(publicUrl).pathname : '/'
-  );
-
-    return ensureSlash(servedUrl, true);
-}
-
 // config after eject: we're in ./config/
 module.exports = {
     appBuild: resolveApp(heroConfig.outDir),
@@ -68,9 +45,7 @@ module.exports = {
     testsSetup: resolveApp('src/setupTests.js'),
     appNodeModules: resolveApp('node_modules'),
     nodePaths: nodePaths,
-    heroCliConfig: resolveApp(heroConfig.heroCliConfig),
-    publicUrl: getPublicUrl(resolveApp('package.json')),
-    servedPath: getServedPath(resolveApp('package.json'))
+    heroCliConfig: resolveApp(heroConfig.heroCliConfig)
 };
 
 // @remove-on-eject-begin
@@ -92,8 +67,6 @@ module.exports = {
     appNodeModules: resolveApp('node_modules'),
     nodePaths: nodePaths,
     heroCliConfig: resolveApp(heroConfig.heroCliConfig),
-    publicUrl: getPublicUrl(resolveApp('package.json')),
-    servedPath: getServedPath(resolveApp('package.json')),
   // These properties only exist before ejecting:
     ownPath: resolveOwn('.'),
     ownNodeModules: resolveOwn('node_modules') // This is empty on npm 3
@@ -118,8 +91,6 @@ if (!reactScriptsLinked && __dirname.indexOf(path.join('packages', 'react-script
         appNodeModules: resolveOwn('node_modules'),
         nodePaths: nodePaths,
         heroCliConfig: resolveApp(heroConfig.heroCliConfig),
-        publicUrl: getPublicUrl(resolveOwn('package.json')),
-        servedPath: getServedPath(resolveOwn('package.json')),
     // These properties only exist before ejecting:
         ownPath: resolveOwn('.'),
         ownNodeModules: resolveOwn('node_modules')
