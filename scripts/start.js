@@ -12,6 +12,7 @@ var clearConsole = require('../lib/clearConsole');
 var checkRequiredFiles = require('../lib/checkRequiredFiles');
 var formatWebpackMessages = require('../lib/formatWebpackMessages');
 var pgk = require('../package.json');
+var homePageConfig = require('../lib/getHomePage');
 var paths = require('../config/paths');
 var heroCliConfig = require('../config/hero-config.json');
 var commandOptions = require('../config/options');
@@ -251,7 +252,7 @@ function setupCompiler(config, host, port, protocol) {
             console.log();
             console.log('The app is running at:');
             console.log();
-            console.log('  ' + chalk.cyan(protocol + '://' + host + ':' + port + '/'));
+            console.log('  ' + chalk.cyan(protocol + '://' + host + ':' + port + homePageConfig.getServedPath));
             console.log();
             console.log('Note that the development build is not optimized.');
             console.log('To create a production build, use ' + chalk.cyan(cli + ' run build') + '.');
