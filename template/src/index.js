@@ -1,5 +1,5 @@
 function init() {
-  // Hero Core Web Components
+    // Hero Core Web Components
     require('hero-js/src/hero-app.html');
     var args = {};
     var params = (window.location.search.split('?')[1] || '').split('&');
@@ -12,20 +12,32 @@ function init() {
             args[paramParts[0]] = decodeURIComponent(paramParts[1] || '');
         }
     }
-    var app = { tabs: [
-    { url: args.state, title: '首页', class: 'DRViewController', image: 'home_green' }
-    ] };
+    var app = {
+        tabs: [
+            {
+                url: args.state,
+                title: '首页',
+                class: 'DRViewController',
+                image: 'home_green'
+            }
+        ]
+    };
 
     window.document.write('<hero-app json=' + JSON.stringify(app) + '></hero-app>');
 }
 
-var supportWebComponent = ('registerElement' in document
-    && 'import' in document.createElement('link')
-    && 'content' in document.createElement('template'));
+// Dynamic Load WebComponents Polyfills
+var supportWebComponent = (
+  'registerElement' in document
+  && 'import' in document.createElement('link')
+  && 'content' in document.createElement('template'));
 
 if (!supportWebComponent) {
     require.ensure(['../public/lib/webcomponents-lite'], function () {
-        window.Polymer = { lazyRegister: true, dom: 'shadow' };
+        window.Polymer = {
+            lazyRegister: true,
+            dom: 'shadow'
+        };
         require('../public/lib/webcomponents-lite');
         init();
     });
@@ -33,4 +45,5 @@ if (!supportWebComponent) {
     init();
 }
 
+// You can access all the global variables via `process.env`
 console.log('process.env', process.env);

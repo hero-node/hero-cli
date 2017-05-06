@@ -13,14 +13,14 @@
   },
   "devDependencies": {
     "express": "^4.13.3",
-    "express-http-proxy": "^1.0.2",
+    "http-proxy": "^1.16.2",
     "log4js": "^0.6.35"
   },
   "scripts": {
-    "start": "hero start -e dev",
-    "build": "NODE_ENV=production hero build -e prod",
-    "build-without-sourcemap": "NODE_ENV=production hero build -e prod -m",
-    "build-standalone": "NODE_ENV=production hero build -e prod -s",
-    "mock": "NODE_ENV=development node mock/index.js"
+    "start": "hero start -e dev -f",
+    "build": "hero build -m -e prod -f",
+    "build-demo": "hero build -e prod -m",
+    "build-standalone": "hero build -e prod -s",
+    "mock": "node mock/index.js"
   }
 }

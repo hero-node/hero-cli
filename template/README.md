@@ -11,7 +11,7 @@ npm start
 
 ```
 
-Once start successfully, open URL: [http://localhost:3000?state=http://localhost:3000/entry/login.html](http://localhost:3000?state=http://localhost:3000/entry/login.html).
+Once start successfully, open URL: [http://localhost:3000?state=http://localhost:3000/pages/login.html](http://localhost:3000?state=http://localhost:3000/pages/login.html).
 
 ## How to build
 Run command:
@@ -22,7 +22,6 @@ npm run build
 ```
 
 ## How to start mock server
-For more detail, see file ./mock/README.md.
 
 Run command:
 
@@ -30,3 +29,5 @@ Run command:
 npm run mock
 
 ```
+
+For more detail, see file `mock/README.md`.

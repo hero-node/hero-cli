@@ -8,11 +8,11 @@
     "express-http-proxy": "^1.0.2",
     "log4js": "^0.6.35"
   },
-  "proxyPort": "4001",
+  "proxyPort": "4000",
   "proxyTarget":"https://www.my-site.com",
   "devDependencies": {},
   "scripts": {
-    "start": "NODE_ENV=development node index.js"
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC"
