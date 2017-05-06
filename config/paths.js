@@ -2,7 +2,6 @@
 
 var path = require('path');
 var fs = require('fs');
-var url = require('url');
 var heroConfig = require('./hero-config.json');
 // Make sure any symlinks in the project folder are resolved:
 // https://github.com/facebookincubator/create-react-app/issues/637

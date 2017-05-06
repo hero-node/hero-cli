@@ -41,6 +41,8 @@ var config = extend(true, {}, webConfig, {
 
     devtool: options.noSourceMap ? '' : 'source-map',
     plugins: webConfig.plugins.concat([
+        new webpack.optimize.OccurrenceOrderPlugin(),
+        new webpack.optimize.DedupePlugin(),
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 'screw_ie8': true,

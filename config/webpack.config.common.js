@@ -14,9 +14,7 @@ var env = getClientEnvironment();
 var plugins = [
     new ProgressBarPlugin(),
     new InterpolateHtmlPlugin(env.raw),
-    new webpack.DefinePlugin(env.stringified),
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.DedupePlugin()
+    new webpack.DefinePlugin(env.stringified)
 ];
 
 if (options.isInlineSource) {
@@ -36,10 +34,7 @@ var webConfig = {
     },
     resolveLoader: {
         root: paths.ownNodeModules,
-        moduleTemplates: ['*-loader'],
-        alias: {
-            'my-loader': path.join(__dirname, '../lib/my-loader')
-        }
+        moduleTemplates: ['*-loader']
     },
     module: {
     // First, run the linter.
