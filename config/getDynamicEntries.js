@@ -9,7 +9,7 @@ var webpackHotDevClientKey = 'web-hot-reload';
 var appIndexKey = 'appIndex';
 var heroConfig = require('./hero-config.json');
 // var webComponentsKey = 'webcomponents-lite';
-var getComponentsData = require('../lib/getComponentsData');
+var getComponentsData = require('../lib/getComponentsData').getComponentsData;
 
 var isStandAlone = global.options.isStandAlone;
 var isInlineSource = global.options.isInlineSource;
