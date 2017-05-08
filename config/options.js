@@ -12,7 +12,7 @@ var options = [
         name: 's',
         value: {
             // demandOption: false,
-            describe: 'build pakcage without dependecies like hero-js or webcomponents, just code in <you-project-path>/src folder. Default value is [false].'
+            describe: 'Build pakcage without dependecies like hero-js or webcomponents, just code in <you-project-path>/src folder. Default value is [false].'
         }
     }, {
         name: 'i',
@@ -24,37 +24,31 @@ var options = [
         name: 'b',
         value: {
             // demandOption: false,
-            describe: 'build pakcage only contain dependecies like hero-js or webcomponents, withou code in <you-project-path>/src folder. Default value is [false]'
+            describe: 'Build pakcage only contain dependecies like hero-js or webcomponents, withou code in <you-project-path>/src folder. Default value is [false]'
         }
     }, {
         name: 'm',
         value: {
             // demandOption: false,
-            describe: 'build without sourcemap. Default value is [false], will generate sourcemap.'
+            describe: 'Build without sourcemap. Default value is [false], will generate sourcemap.'
         }
     }, {
         name: 'f',
         value: {
             // demandOption: false,
-            describe: 'generate AppCache file, default file name is "app.appcache". Default value is [false], will not generate this file.'
+            describe: 'Generate AppCache file, default file name is "app.appcache". Default value is [false], will not generate this file.'
         }
     }, {
         name: 'n',
         value: {
             // demandOption: false,
-            describe: 'rename file without hashcode. Default value is [false], cause filename with hashcode.'
-        }
-    }, {
-        name: 'p',
-        value: {
-            // demandOption: false,
-            describe: 'port used to start the application. Default value is [' + heroCliConfig.devServerPort + '].'
+            describe: 'Rename file without hashcode. Default value is [false], cause filename with hashcode.'
         }
     }, {
         name: 'c',
         value: {
             // demandOption: false,
-            describe: 'the path of webpack config file used to build.'
+            describe: 'The path of webpack config file used to build.'
         }
     }
 ];

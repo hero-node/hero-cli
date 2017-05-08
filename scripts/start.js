@@ -12,7 +12,6 @@ var clearConsole = require('../lib/clearConsole');
 var checkRequiredFiles = require('../lib/checkRequiredFiles');
 var formatWebpackMessages = require('../lib/formatWebpackMessages');
 var pgk = require('../package.json');
-var homePageConfig = require('../lib/getHomePage');
 var paths = require('../config/paths');
 var heroCliConfig = require('../config/hero-config.json');
 var commandOptions = require('../config/options');
@@ -29,7 +28,10 @@ function showUsage() {
     commandOptions.forEach(function (option) {
         command = command.option(option.name, option.value);
     });
-
+    command.option('p', {
+        // demandOption: false,
+        describe: 'Port to listen on (defaults to 3000)'
+    });
     var argv = command.nargs('e', 1)
             .help('h')
             .epilog('copyright 2017')
@@ -63,7 +65,8 @@ var options = {
     noHashName: global.argv.n,
     noSourceMap: global.argv.m,
     hasAppCache: global.argv.f,
-    env: global.argv.e
+    env: global.argv.e,
+    port: global.argv.p
 };
 
 if (!options.isStandAlone && !options.isHeroBasic) {
@@ -74,6 +77,7 @@ if (!options.isStandAlone && !options.isHeroBasic) {
 
 global.options = options;
 
+var homePageConfig = require('../lib/getHomePage');
 var availablePort;
 var cli = 'npm';
 var isInteractive = process.stdout.isTTY;
@@ -81,7 +85,7 @@ var isInteractive = process.stdout.isTTY;
 var isFirstWatch = true;
 var devServer = null;
 // Tools like Cloud9 rely on this.
-var DEFAULT_PORT = parseInt(process.env.PORT, 10) || heroCliConfig.devServerPort;
+var DEFAULT_PORT = (options.port && /^\d+$/.test(options.port)) ? options.port : heroCliConfig.devServerPort;
 var compiler;
 
 var expectedType = /\.js$/;

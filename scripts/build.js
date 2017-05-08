@@ -8,7 +8,6 @@ var chalk = require('chalk');
 var fs = require('fs-extra');
 var webpack = require('webpack');
 var paths = require('../config/paths');
-var homePageConfig = require('../lib/getHomePage');
 var heroCliConfig = require('../config/hero-config.json');
 var checkRequiredFiles = require('../lib/checkRequiredFiles');
 var FileSizeReporter = require('../lib/FileSizeReporter');
@@ -71,6 +70,7 @@ if (!options.isStandAlone && !options.isHeroBasic) {
 
 global.options = options;
 
+var homePageConfig = require('../lib/getHomePage');
 var config = require('../config/webpack.config.prod');
 // Warn and crash if required files are missing
 
