@@ -1,4 +1,3 @@
-var heroCliConfig = require('./hero-config.json');
 var options = [
     {
         name: 'e',
@@ -43,12 +42,6 @@ var options = [
         value: {
             // demandOption: false,
             describe: 'Rename file without hashcode. Default value is [false], cause filename with hashcode.'
-        }
-    }, {
-        name: 'c',
-        value: {
-            // demandOption: false,
-            describe: 'The path of webpack config file used to build.'
         }
     }
 ];
