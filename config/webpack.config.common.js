@@ -62,7 +62,8 @@ var webConfig = {
             },
             {
                 test: /\.html$/, // handles html files. <link rel="import" href="path.html"> and import 'path.html';
-                loader: 'babel!wc'
+                loader: 'babel?babelrc=false!wc'
+//                loader: 'babel?babelrc=false,presets[]=es2015,presets[]=stage-2,plugins[]=transform-decorators-legacy,plugins[]=transform-class-properties,plugins[]=transform-object-rest-spread!wc'
                 // if you are using es6 inside html use
                 // loader: 'babel-loader!wc-loader'
                 // similarly you can use coffee, typescript etc. pipe wc result through the respective loader.
