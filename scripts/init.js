@@ -44,7 +44,7 @@ function generate(appName) {
 
     shell.cp('-Rf', templatePath + '/*', targetPath);
 
-    var dotFiles = ['editorconfig', 'gitattributes', 'gitignore', 'hero-cli.json'];
+    var dotFiles = ['babelrc', 'eslintrc', 'editorconfig', 'gitattributes', 'gitignore', 'hero-cli.json'];
 
     dotFiles.forEach(file => {
         shell.mv('-f', path.join(targetPath, file), path.join(targetPath, '.' + file));

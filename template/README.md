@@ -20,14 +20,3 @@ Run command:
 npm run build
 
 ```
-
-## How to start mock server
-
-Run command:
-
-```sh
-npm run mock
-
-```
-
-For more detail, see file `mock/README.md`.

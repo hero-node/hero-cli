@@ -1,10 +1,7 @@
 import { Component,AfterMessage, BeforeMessage, ViewWillDisappear, ViewWillAppear, Message, Boot, Hero } from 'hero-js';
 import { Entry } from 'hero-cli/decorator';
-import request from '../../common/request';
 import getDefaultUIViews from './view';
 import {PATH as path} from '../../constant/index';
-
-var host = window.location.origin;
 
 var ui2Data = Hero.getState();
 

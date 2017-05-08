@@ -3,24 +3,16 @@
   "version": "0.0.1",
   "dependencies": {
     "axios": "^0.16.1",
-    "babel-plugin-transform-class-properties": "~6.19.0",
-    "babel-plugin-transform-decorators-legacy": "~1.3.4",
-    "babel-preset-es2015": "^6.24.1",
     "hero-cli": "github:hero-mobile/hero-cli",
     "hero-js": "github:hero-mobile/hero-js",
     "promise": "^7.1.1",
     "qs": "^6.4.0"
   },
-  "devDependencies": {
-    "express": "^4.13.3",
-    "http-proxy": "^1.16.2",
-    "log4js": "^0.6.35"
-  },
   "scripts": {
     "start": "hero start -e dev -f",
-    "build": "hero build -m -e prod -f",
-    "build-demo": "hero build -e prod -m",
-    "build-standalone": "hero build -e prod -s",
+    "build": "hero build -e prod -m -f",
+    "build-framework": "hero build -e prod -m -f -b",
+    "build-basic": "hero build -e prod -m -f -s",
     "mock": "node mock/index.js"
   }
 }
