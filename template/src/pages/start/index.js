@@ -1,11 +1,9 @@
 import { Component,AfterMessage, BeforeMessage, ViewWillDisappear, ViewWillAppear, Message, Boot, Hero } from 'hero-js';
 import { Entry } from 'hero-cli/decorator';
-import getDefaultUIViews from './view';
+import ui from './view';
 import {PATH as path} from '../../constant/index';
 
 var ui2Data = Hero.getState();
-
-var defaultUIViews = getDefaultUIViews();
 
 @Entry({
   filename: 'pages/start.html'
@@ -20,7 +18,7 @@ var defaultUIViews = getDefaultUIViews();
 // This is use [html-webpack-plugin](https://www.npmjs.com/package/html-webpack-plugin) generate HTML.
 // Valid options in @Entry as same as html-webpack-plugin.
 @Component({
-  view: defaultUIViews
+  view: ui
 })
 export class DecoratePage {
 
@@ -47,12 +45,12 @@ export class DecoratePage {
       }
     }
 
-    @Message('__data.click && __data.click == "login"')
+    @Message(function(){ return data.click && data.click === "login";})
     login(data) {
       console.log('Sending request...');
       setTimeout(function(){
         Hero.out({command:'goto:'+path+'/pages/home/index.html'})
-      },1000)
+      },300)
     }
 
     @AfterMessage

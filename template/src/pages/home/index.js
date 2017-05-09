@@ -3,9 +3,8 @@ import { Entry } from 'hero-cli/decorator';
 import {fmoney , dateFormat } from '../../utils/index';
 import request from '../../common/request';
 import {PATH as path} from '../../constant/index';
-import getDefaultUIViews from './view';
+import ui from './view';
 
-var defaultUIViews = getDefaultUIViews();
 function realizationHanlder(data){
 
 			if (!data.content.realizeAmount) {
@@ -40,7 +39,7 @@ function realizationHanlder(data){
 }
 @Entry()
 @Component({
-	view: defaultUIViews
+	view: ui
 })
 export class DecoratePage {
 
@@ -65,19 +64,18 @@ export class DecoratePage {
 					]});
 			},2000);
     }
-    @Message('__data.click === "apply"')
+    @Message(function(data){return data.click==='apply';})
     apply(){
       if (localStorage.realizeAmount && localStorage.feeRateList) {
           // Hero.out({command:'load:'+path+'/cash_apply.html'})
       };
     }
-
-    @Message('__data.click === "faq"')
+		@Message(function(data){return data.click==='faq';})
     faq(){
       // Hero.out({command:'goto:'+path+'/webview.html'});
     }
 
-    @Message('__data.click === "info"')
+		@Message(function(data){return data.click==='info';})
     info(){
 			Hero.out({datas:[
 					{name:'maskBtn',hidden:false},
@@ -85,7 +83,7 @@ export class DecoratePage {
 			]});
     }
 
-    @Message('__data.click === "mask"')
+		@Message(function(data){return data.click==='mask';})
     mask(){
 			Hero.out({datas:[
 					{name:'maskBtn',hidden:true},
