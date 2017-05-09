@@ -11,7 +11,7 @@ npm start
 
 ```
 
-Once start successfully, open URL: [http://localhost:3000](http://localhost:3000).
+Once start successfully, open URL: [http://localhost:3000/index.html](http://localhost:3000/index.html).
 
 ## How to build
 Run command:
