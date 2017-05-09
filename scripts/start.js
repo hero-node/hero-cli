@@ -308,7 +308,18 @@ function runDevServer(config, host, port, protocol) {
         },
     // Enable HTTPS if the HTTPS environment variable is set to 'true'
         https: protocol === 'https',
-        host: host
+        host: host,
+        historyApiFallback: {
+            rewrites: [
+                {
+                    from: /^\/.*$/,
+                    to: function (context) {
+                        // console.log(context.parsedUrl.pathname, config.output.publicPath, context.parsedUrl.pathname.replace(config.output.publicPath, '/'));
+                        return config.output.publicPath === '/' ? context.parsedUrl.pathname : context.parsedUrl.pathname.replace(config.output.publicPath, '/');
+                    }
+                }
+            ]
+        }
     });
 
     devServer.use(devServer.middleware);
