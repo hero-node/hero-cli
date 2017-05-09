@@ -8,14 +8,14 @@ var ui2Data = Hero.getState();
 var defaultUIViews = getDefaultUIViews();
 
 @Entry({
-  filename: 'pages/login.html'
+  filename: 'pages/start.html'
 })
 // This is cause HTML login.html will generated in `pages` folder,
-// So we can access /pages/login.html
+// So we can access /pages/start.html
 
 // The default action is keep the same path structure as the current JavaScript like below:
 // @Entry({
-//    filename: 'entry/login/index.html'
+//    filename: 'entry/start/index.html'
 // })
 // This is use [html-webpack-plugin](https://www.npmjs.com/package/html-webpack-plugin) generate HTML.
 // Valid options in @Entry as same as html-webpack-plugin.

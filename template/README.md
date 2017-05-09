@@ -11,7 +11,7 @@ npm start
 
 ```
 
-Once start successfully, open URL: [http://localhost:3000?state=http://localhost:3000/pages/login.html](http://localhost:3000?state=http://localhost:3000/pages/login.html).
+Once start successfully, open URL: [http://localhost:3000](http://localhost:3000).
 
 ## How to build
 Run command:
