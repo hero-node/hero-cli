@@ -290,6 +290,11 @@ function runDevServer(config, host, port, protocol) {
 
                 Object.keys(proxyConfig).forEach(function (url) {
                     app.use(url, proxy(proxyConfig[url], {
+                        decorateRequest: function (req) {
+                            req.headers.Referer = proxyConfig[url];
+                            req.headers.Host = require('url').parse(proxyConfig[url]).host;
+                            return req;
+                        },
                         forwardPath: function (req) {
                             return url + require('url').parse(req.url).path;
                         }
