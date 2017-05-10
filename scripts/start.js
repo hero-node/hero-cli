@@ -286,6 +286,7 @@ function runDevServer(config, host, port, protocol) {
         setup: function (app) {
             app.use(function (req, resp, next) {
                 // console.log(req.url);
+                // Fix Android Debug cannot Get 404 when loading Images
                 if (req.headers.accept && req.headers.accept.trim() === '') {
                     req.headers.accept = '*/*';
                 }
