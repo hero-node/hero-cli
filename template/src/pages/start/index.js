@@ -45,7 +45,7 @@ export class DecoratePage {
       }
     }
 
-    @Message(function(){ return data.click && data.click === "login";})
+    @Message(function(data){ return data.click && data.click === "login";})
     login(data) {
       console.log('Sending request...');
       setTimeout(function(){
