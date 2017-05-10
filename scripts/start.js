@@ -5,6 +5,7 @@ process.env.NODE_ENV = 'development';
 var yargs = require('yargs');
 var chalk = require('chalk');
 var _ = require('lodash');
+var express = require('express');
 var webpack = require('webpack');
 var WebpackDevServer = require('webpack-dev-server');
 var detect = require('detect-port');
@@ -18,6 +19,7 @@ var commandOptions = require('../config/options');
 var chokidar = require('chokidar');
 var updateEntryFile = require('../lib/updateWebpackEntry');
 var commandName = Object.keys(pgk.bin)[0];
+var __heroContentBaseURL = '/__hero_app_contentBase_' + new Date().getTime();
 
 function showUsage() {
     var command = yargs
@@ -267,14 +269,14 @@ function setupCompiler(config, host, port, protocol) {
 }
 
 function runDevServer(config, host, port, protocol) {
-
     devServer = new WebpackDevServer(compiler, {
     // Enable gzip compression of generated files.
         compress: true,
     // Silence WebpackDevServer's own logs since they're generally not useful.
     // It will still show compile warnings and errors with this setting.
         clientLogLevel: 'none',
-        contentBase: paths.appPublic,
+        contentBase: false,
+        // contentBase: paths.appPublic,
     // Enable hot reloading server. It will provide /sockjs-node/ endpoint
     // for the WebpackDevServer client so it can learn when the files were
     // updated. The WebpackDevServer client is included as an entry point
@@ -283,7 +285,8 @@ function runDevServer(config, host, port, protocol) {
         hot: true,
         setup: function (app) {
             app.use(function (req, resp, next) {
-                if (req.headers.accept.trim() === '') {
+                // console.log(req.url);
+                if (req.headers.accept && req.headers.accept.trim() === '') {
                     req.headers.accept = '*/*';
                 }
                 next();
@@ -325,8 +328,7 @@ function runDevServer(config, host, port, protocol) {
                 {
                     from: /^\/.*$/,
                     to: function (context) {
-                        // console.log(context.parsedUrl.pathname, config.output.publicPath, context.parsedUrl.pathname.replace(config.output.publicPath, '/'));
-                        return config.output.publicPath === '/' ? context.parsedUrl.pathname : context.parsedUrl.pathname.replace(config.output.publicPath, '/');
+                        return __heroContentBaseURL + (config.output.publicPath === '/' ? context.parsedUrl.pathname : context.parsedUrl.pathname.slice(config.output.publicPath.length - 1));
                     }
                 }
             ]
@@ -334,7 +336,10 @@ function runDevServer(config, host, port, protocol) {
     });
 
     devServer.use(devServer.middleware);
-  // Launch WebpackDevServer.
+    // Fix WebpackDevServer cannot Handler contentBase correctly when config.output.publicPath is not equals to '/'
+    devServer.use(__heroContentBaseURL, express.static(paths.appPublic));
+
+    // Launch WebpackDevServer.
     devServer.listen(port, err => {
         if (err) {
             return console.log(err);
