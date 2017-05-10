@@ -179,7 +179,11 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
     process.exit(1);
 }
 
-
+function ensureAcceptHeader(req) {
+    if (!req.headers.accept || req.headers.accept.trim() === '') {
+        req.headers.accept = '*/*';
+    }
+}
 function setupCompiler(config, host, port, protocol) {
     // "Compiler" is a low-level interface to Webpack.
     // It lets us listen to some events and provide our own custom messages.
@@ -287,9 +291,7 @@ function runDevServer(config, host, port, protocol) {
             app.use(function (req, resp, next) {
                 // console.log(req.url);
                 // Fix Android Debug cannot Get 404 when loading Images
-                if (req.headers.accept && req.headers.accept.trim() === '') {
-                    req.headers.accept = '*/*';
-                }
+                ensureAcceptHeader(req);
                 next();
             });
             var proxy;
@@ -336,6 +338,11 @@ function runDevServer(config, host, port, protocol) {
         }
     });
 
+    devServer.use(function (req, resp, next) {
+          // Fix Android Debug cannot Get 404 when loading Images
+        ensureAcceptHeader(req);
+        next();
+    });
     devServer.use(devServer.middleware);
     // Fix WebpackDevServer cannot Handler contentBase correctly when config.output.publicPath is not equals to '/'
     devServer.use(__heroContentBaseURL, express.static(paths.appPublic));
