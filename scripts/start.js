@@ -282,6 +282,12 @@ function runDevServer(config, host, port, protocol) {
     // to CSS are currently hot reloaded. JS changes will refresh the browser.
         hot: true,
         setup: function (app) {
+            app.use(function (req, resp, next) {
+                if (req.headers.accept.trim() === '') {
+                    req.headers.accept = '*/*';
+                }
+                next();
+            });
             var proxy;
             var proxyConfig = require(paths.heroCliConfig).proxy;
 
