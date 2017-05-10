@@ -1,8 +1,6 @@
 {
   "proxy": {
-    "/api/v2": "https://www-demo.dianrong.com",
-    "/feapi": "https://www-demo.dianrong.com",
-    "/images/captcha.jpg": "https://www-demo.dianrong.com"
+    "/api/v2": "https://www.my-site.com"
   },
   "environments": {
     "dev": "src/environments/environment-dev.js",
