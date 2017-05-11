@@ -29,7 +29,7 @@ function getEntryAndPlugins(isDevelopmentEnv) {
         buildEntries[appIndexKey] = paths.appIndexJs;
 
         indexOptions = {
-            inject: 'head',
+            inject: 'body',
                   // webconfig html file loader using Polymer HTML
             template: '!!html!' + paths.appHtml,
             minify: {
@@ -84,7 +84,7 @@ function getEntryAndPlugins(isDevelopmentEnv) {
                 entryConfig.inlineSource = inlineSourceRegex;
             }
             var options = Object.assign({
-                inject: 'head',
+                inject: 'body',
           // webconfig html file loader using Polymer HTML
                 template: '!!html!' + path.join(__dirname, 'entryTemplate.html'),
                 filename: fileNamePath + '.html',
