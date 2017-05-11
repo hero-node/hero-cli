@@ -14,16 +14,18 @@ function init() {
             args[paramParts[0]] = decodeURIComponent(paramParts[1] || '');
         }
     }
-    var app = {
-        tabs: [
-            {
-                url: args.state || path + '/pages/start.html',
-                title: '首页',
-                class: 'DRViewController',
-                image: 'home_green'
-            }
-        ]
-    };
+
+    var app = { tabs: [
+      { url: args.state || path + '/pages/start.html', title: '首页' }
+    ] };
+
+    var appHero = document.createElement('hero-app');
+
+    if (!window.document.body) {
+        document.body = document.createElement('body');
+    }
+    window.document.body.appendChild(appHero);
+    appHero.json = JSON.stringify(app);
 
     window.document.write('<hero-app json=' + JSON.stringify(app) + '></hero-app>');
 }
