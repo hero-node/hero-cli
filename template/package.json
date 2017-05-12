@@ -13,6 +13,6 @@
     "build": "hero build -e prod -m -f",
     "build-framework": "hero build -e prod -m -f -b",
     "build-basic": "hero build -e prod -m -f -s",
-    "mock": "node mock/index.js"
+    "serve": "hero serve"
   }
 }

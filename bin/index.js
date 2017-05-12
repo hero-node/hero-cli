@@ -36,6 +36,7 @@ function showUsage() {
 switch (script) {
     case 'build':
     case 'init':
+    case 'serve':
     case 'start':
         result = spawn.sync('node', [require.resolve('../scripts/' + script)].concat(args), { stdio: 'inherit' });
 
