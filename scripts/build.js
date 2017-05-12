@@ -107,10 +107,9 @@ function showHomepageExample(homepage, isGithub) {
     console.log();
 }
 function showServeBuild() {
-    console.log('You may serve it with a static server:');
+    console.log('You may serve it with a static server using command:');
     console.log();
-    console.log(`  ${chalk.cyan('npm')} install -g serve`);
-    console.log(`  ${chalk.cyan('serve')} -s build`);
+    console.log('  ' + chalk.cyan('hero serve'));
     console.log();
 }
 // Create the production build and print the deployment instructions.
@@ -187,8 +186,8 @@ function build() {
             } else {
               // "homepage": "http://mywebsite.com/project"
                 showHomepageExample(chalk.green(original));
-
             }
+            showServeBuild();
         }
     });
 }
