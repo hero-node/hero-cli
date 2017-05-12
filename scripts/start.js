@@ -7,6 +7,7 @@ var chalk = require('chalk');
 var _ = require('lodash');
 var express = require('express');
 var webpack = require('webpack');
+var serveStatic = require('serve-static');
 var WebpackDevServer = require('webpack-dev-server');
 var detect = require('detect-port');
 var clearConsole = require('../lib/clearConsole');
@@ -97,7 +98,8 @@ var needUpdateEntry = false;
 
 function restart() {
   // console.log('restart....');
-// devServer.middleware.invalidate();
+    devServer.middleware.invalidate();
+    devServer.middleware.close();
     devServer.close();
 // eslint-disable-next-line
   run(availablePort);
@@ -309,6 +311,8 @@ function runDevServer(config, host, port, protocol) {
     // WebpackDevServer is noisy by default so we emit custom message instead
     // by listening to the compiler events with `compiler.plugin` calls above.
         quiet: true,
+        // quiet: false,
+        // stats: 'normal',
         watchOptions: {
             ignored: /node_modules/
         },
@@ -334,7 +338,15 @@ function runDevServer(config, host, port, protocol) {
     });
     devServer.use(devServer.middleware);
     // Fix WebpackDevServer cannot Handler contentBase correctly when config.output.publicPath is not equals to '/'
-    devServer.use(__heroContentBaseURL, express.static(paths.appPublic));
+
+    devServer.use(serveStatic(__heroContentBaseURL, {
+        index: ['index.html'],
+        etag: false,
+        dotfiles: 'ignore',
+        lastModified: false,
+        maxAge: 0
+    }));
+    // devServer.use(__heroContentBaseURL, express.static(paths.appPublic));
 
     // Launch WebpackDevServer.
     devServer.listen(port, err => {
