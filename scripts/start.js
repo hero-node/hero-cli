@@ -80,12 +80,9 @@ var needUpdateEntry = false;
 var watcher;
 
 function restart() {
-    // console.log(watcher.getWatched());
-  // console.log('restart....');
     devServer.invalidate();
     devServer.close();
 
-    getGlobalConfig();
 // eslint-disable-next-line
   run(availablePort);
 }
@@ -329,7 +326,7 @@ function runDevServer(config, host, port, protocol) {
     devServer.use(devServer.middleware);
     // Fix WebpackDevServer cannot Handler contentBase correctly when config.output.publicPath is not equals to '/'
     // Disable Cache to Using the latest file, Fix @Entry Issue.
-    devServer.use(serveStatic(__heroContentBaseURL, {
+    devServer.use(__heroContentBaseURL, serveStatic(paths.appPublic, {
         index: ['index.html'],
         etag: false,
         dotfiles: 'ignore',
