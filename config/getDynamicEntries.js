@@ -1,24 +1,20 @@
 'use strict';
 
 var path = require('path');
-var paths = require('./paths');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ensureSlash = require('../lib/ensureSlash');
 var getEntries = require('../lib/getEntries');
 var webpackHotDevClientKey = 'web-hot-reload';
 var appIndexKey = 'appIndex';
-var heroConfig = require('./hero-config.json');
-// var webComponentsKey = 'webcomponents-lite';
 var getComponentsData = require('../lib/getComponentsData').getComponentsData;
-
-var isStandAlone = global.options.isStandAlone;
-var isInlineSource = global.options.isInlineSource;
-var isHeroBasic = global.options.isHeroBasic;
-
-var inlineSourceRegex = heroConfig.inlineSourceRegex;
 
 function getEntryAndPlugins(isDevelopmentEnv) {
 
+    var inlineSourceRegex = global.defaultCliConfig.inlineSourceRegex;
+    var isStandAlone = global.options.isStandAlone;
+    var isInlineSource = global.options.isInlineSource;
+    var isHeroBasic = global.options.isHeroBasic;
+    var paths = global.paths;
     var buildEntries = {};
 
     // We ship a few polyfills by default:

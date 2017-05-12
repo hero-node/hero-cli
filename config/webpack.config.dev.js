@@ -3,16 +3,17 @@
 var extend = require('extend');
 var webpack = require('webpack');
 var AppCachePlugin = require('appcache-webpack-plugin');
+var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+var WatchMissingNodeModulesPlugin = require('../lib/WatchMissingNodeModulesPlugin');
+var getDynamicEntries = require('./getDynamicEntries');
 
 delete require.cache[require.resolve('./webpack.config.common')];
 var webConfig = require('./webpack.config.common');
-var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-var getDynamicEntries = require('./getDynamicEntries');
+
 var options = global.options;
-var WatchMissingNodeModulesPlugin = require('../lib/WatchMissingNodeModulesPlugin');
-var paths = require('./paths');
-var heroCliConfig = require('./hero-config.json');
-var homePageConfig = require('../lib/getHomePage');
+var paths = global.paths;
+var heroCliConfig = global.defaultCliConfig;
+var homePageConfig = global.homePageConfigs;
 
 webConfig.output = {
   // Next line is not used in dev but WebpackDevServer crashes without it:

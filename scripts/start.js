@@ -5,7 +5,6 @@ process.env.NODE_ENV = 'development';
 var yargs = require('yargs');
 var chalk = require('chalk');
 var _ = require('lodash');
-var express = require('express');
 var webpack = require('webpack');
 var serveStatic = require('serve-static');
 var WebpackDevServer = require('webpack-dev-server');
@@ -15,10 +14,10 @@ var checkRequiredFiles = require('../lib/checkRequiredFiles');
 var formatWebpackMessages = require('../lib/formatWebpackMessages');
 var pgk = require('../package.json');
 var setProxy = require('../lib/setProxy');
-var paths = require('../config/paths');
 var heroCliConfig = require('../config/hero-config.json');
 var commandOptions = require('../config/options');
 var chokidar = require('chokidar');
+var getGlobalConfig = require('../lib/getGlobalConfig');
 var updateEntryFile = require('../lib/updateWebpackEntry');
 var commandName = Object.keys(pgk.bin)[0];
 var __heroContentBaseURL = '/__hero_app_contentBase_' + new Date().getTime();
@@ -60,28 +59,11 @@ function showUsage() {
 if (yargs.argv.h || yargs.argv.e === undefined || typeof yargs.argv.e === 'boolean') {
     showUsage();
 }
-global.argv = yargs.argv;
 
-var options = {
-    isStandAlone: global.argv.s,
-    isHeroBasic: global.argv.b,
-    isInlineSource: global.argv.i,
-    noHashName: global.argv.n,
-    noSourceMap: global.argv.m,
-    hasAppCache: global.argv.f,
-    env: global.argv.e,
-    port: global.argv.p
-};
+getGlobalConfig();
 
-if (!options.isStandAlone && !options.isHeroBasic) {
-  // equals build all, same as default
-    options.isStandAlone = true;
-    options.isHeroBasic = true;
-}
-
-global.options = options;
-
-var homePageConfig = require('../lib/getHomePage');
+var paths = global.paths;
+var homePageConfig = global.homePageConfigs;
 var availablePort;
 var cli = 'npm';
 var isInteractive = process.stdout.isTTY;
@@ -89,23 +71,32 @@ var isInteractive = process.stdout.isTTY;
 var isFirstWatch = true;
 var devServer = null;
 // Tools like Cloud9 rely on this.
-var DEFAULT_PORT = (options.port && /^\d+$/.test(options.port)) ? options.port : heroCliConfig.devServerPort;
+var DEFAULT_PORT = (global.options.port && /^\d+$/.test(global.options.port)) ? global.options.port : heroCliConfig.devServerPort;
 var compiler;
 
 var expectedType = /\.js$/;
 // Something to use when events are received.
 var needUpdateEntry = false;
+var watcher;
 
 function restart() {
+    // console.log(watcher.getWatched());
   // console.log('restart....');
-    devServer.middleware.invalidate();
-    devServer.middleware.close();
+    devServer.invalidate();
     devServer.close();
+
+    getGlobalConfig();
 // eslint-disable-next-line
   run(availablePort);
 }
 function _checkRebuild(path, isDelete) {
-
+    if (isFirstWatch) {
+        return;
+    }
+    if (path === paths.heroCliConfig || path === global.clientEnvironmentConfig.configPath) {
+        restart();
+        return;
+    }
     if (!expectedType.test(path)) {
         // Only Handler JS File
         return;
@@ -128,8 +119,6 @@ function _checkRebuild(path, isDelete) {
     }
 }
 var checkRebuild = _.throttle(_checkRebuild, 1000, { 'trailing': true });
-
-var watcher;
 
 var fileAddWatchListener = function (path) {
     if (expectedType.test(path)) {
@@ -163,10 +152,11 @@ var unlinkDirListener = function (path) {
 
 function watchSources() {
     watcher = chokidar.watch(paths.appSrc, {
-        ignored: /[\/\\]\./,
+        // ignored: /[\/\\]\./,
         persistent: true
     });
-
+    // watcher.add(paths.heroCliConfig);
+    // watcher.add(global.clientEnvironmentConfig.configPath);
     watcher.on('add', fileAddWatchListener)
           .on('change', fileChangeWatchListener)
           .on('unlink', fileRemoveWatchListener);
@@ -174,7 +164,6 @@ function watchSources() {
     // More possible events.
     watcher.on('addDir', addDirListener)
       .on('unlinkDir', unlinkDirListener);
-
 }
 
 // Warn and crash if required files are missing
@@ -297,8 +286,9 @@ function runDevServer(config, host, port, protocol) {
                 ensureAcceptHeader(req);
                 next();
             });
-            var proxyConfig = require(paths.heroCliConfig).proxy;
+            var proxyConfig = global.heroCliConfig.proxy;
 
+            console.log('proxyConfig', proxyConfig);
             if (proxyConfig) {
                 Object.keys(proxyConfig).forEach(function (url) {
                     setProxy(app, proxyConfig[url], url);

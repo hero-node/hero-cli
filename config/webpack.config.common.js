@@ -5,16 +5,13 @@ var webpack = require('webpack');
 var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 var InterpolateHtmlPlugin = require('../lib/InterpolateHtmlPlugin');
+var paths = global.paths;
 var options = global.options;
-var paths = require('./paths');
-
-var getClientEnvironment = require('./env');
-var env = getClientEnvironment();
 
 var plugins = [
     new ProgressBarPlugin(),
-    new InterpolateHtmlPlugin(env.raw),
-    new webpack.DefinePlugin(env.stringified)
+    new InterpolateHtmlPlugin(global.clientEnvironmentConfig.raw),
+    new webpack.DefinePlugin(global.clientEnvironmentConfig.stringified)
 ];
 
 if (options.isInlineSource) {

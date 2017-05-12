@@ -6,10 +6,11 @@ var AppCachePlugin = require('appcache-webpack-plugin');
 var webConfig = require('./webpack.config.common');
 var ManifestPlugin = require('webpack-manifest-plugin');
 var getDynamicEntries = require('./getDynamicEntries');
+
 var options = global.options;
-var paths = require('./paths');
-var heroCliConfig = require('./hero-config.json');
-var homePageConfig = require('../lib/getHomePage');
+var paths = global.paths;
+var heroCliConfig = global.defaultCliConfig;
+var homePageConfig = global.homePageConfigs;
 
 var dynamicEntries = getDynamicEntries(false);
 

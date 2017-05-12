@@ -4,36 +4,39 @@ var yargs = require('yargs');
 var detect = require('detect-port');
 var chalk = require('chalk');
 var http = require('http');
-var paths = require('../config/paths');
 var express = require('express');
+var getGlobalConfig = require('../lib/getGlobalConfig');
 var clearConsole = require('../lib/clearConsole');
-var heroCliConfig = require('../config/hero-config.json');
-var homePageConfig = require('../lib/getHomePage');
 var setProxy = require('../lib/setProxy');
 var pgk = require('../package.json');
 
-var listenPort = yargs.argv.p;
 var commandName = Object.keys(pgk.bin)[0];
 var app = express();
 var isInteractive = process.stdout.isTTY;
-var DEFAULT_PORT = (listenPort && /^\d+$/.test(listenPort)) ? listenPort : heroCliConfig.buildServePort;
 
 var proxyTips = '\n';
 
+getGlobalConfig(true);
+var paths = global.paths;
+var listenPort = global.options.p;
+var heroCliConfig = global.defaultCliConfig;
+var DEFAULT_PORT = (listenPort && /^\d+$/.test(listenPort)) ? listenPort : heroCliConfig.buildServePort;
+var homePageConfig = global.homePageConfigs;
+
 function showUsage() {
     var command = yargs
-        .usage('Usage: ' + commandName + ' serve [options]')
-        // .command('count', 'Count the lines in a file')
-        .example(commandName + ' serve -p ' + heroCliConfig.buildServePort, 'Serve the application after build.');
+  .usage('Usage: ' + commandName + ' serve [options]')
+  // .command('count', 'Count the lines in a file')
+  .example(commandName + ' serve -p ' + heroCliConfig.buildServePort, 'Serve the application after build.');
 
     command.option('p', {
         describe: 'Port to listen on (defaults to ' + heroCliConfig.buildServePort + ')'
     });
 
     var argv = command.nargs('e', 1)
-            .help('h')
-            .epilog('copyright 2017')
-            .argv;
+  .help('h')
+  .epilog('copyright 2017')
+  .argv;
 
     var fs = require('fs');
     var s = fs.createReadStream(argv.file);
@@ -58,7 +61,7 @@ if (yargs.argv.h) {
 function run(port) {
     var portStr = (port === 80 ? '' : ':' + port);
 
-    var proxyConfig = require(paths.heroCliConfig).proxy;
+    var proxyConfig = global.heroCliConfig.proxy;
 
     if (proxyConfig) {
         Object.keys(proxyConfig).forEach(function (url) {

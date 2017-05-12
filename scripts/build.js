@@ -7,12 +7,9 @@ var yargs = require('yargs');
 var chalk = require('chalk');
 var fs = require('fs-extra');
 var webpack = require('webpack');
-var paths = require('../config/paths');
-var heroCliConfig = require('../config/hero-config.json');
 var checkRequiredFiles = require('../lib/checkRequiredFiles');
 var FileSizeReporter = require('../lib/FileSizeReporter');
 var printFileSizesAfterBuild = FileSizeReporter.printFileSizesAfterBuild;
-var buildFolder = heroCliConfig.outDir;
 var commandOptions = require('../config/options');
 var pgk = require('../package.json');
 var commandName = Object.keys(pgk.bin)[0];
@@ -50,27 +47,13 @@ function showUsage() {
 if (yargs.argv.h || yargs.argv.e === undefined || (typeof yargs.argv.e === 'boolean')) {
     showUsage();
 }
-global.argv = yargs.argv;
 
-var options = {
-    isStandAlone: global.argv.s,
-    isHeroBasic: global.argv.b,
-    isInlineSource: global.argv.i,
-    noHashName: global.argv.n,
-    noSourceMap: global.argv.m,
-    hasAppCache: global.argv.f,
-    env: global.argv.e
-};
+require('../lib/getGlobalConfig')();
 
-if (!options.isStandAlone && !options.isHeroBasic) {
-  // equals build all, same as default
-    options.isStandAlone = true;
-    options.isHeroBasic = true;
-}
-
-global.options = options;
-
-var homePageConfig = require('../lib/getHomePage');
+var paths = global.paths;
+var heroCliConfig = global.defaultCliConfig;
+var homePageConfig = global.homePageConfigs;
+var buildFolder = heroCliConfig.outDir;
 var config = require('../config/webpack.config.prod');
 // Warn and crash if required files are missing
 

@@ -1,43 +1,32 @@
 'use strict';
 
-var paths = require('./paths');
 var path = require('path');
 var checkRequiredFiles = require('../lib/checkRequiredFiles');
 var chalk = require('chalk');
-var config = require('./hero-config.json');
-var homePageConfig = require('../lib/getHomePage');
 var HERO_APP = /^HERO_APP_/i;
 
 // Warn and crash if required files are missing
-if (!checkRequiredFiles([paths.heroCliConfig])) {
-    process.exit(1);
-}
 
-function getClientEnvironment() {
-    var env = global.envName || global.argv.e;
 
-  // Hero will restart webpack, keep the variable
-    global.envName = env;
+function getClientEnvironment(env, heroFileConfig, homePageConfig) {
+    var paths = global.paths;
 
-    var heroFileConfig = require(paths.heroCliConfig);
+    if (!checkRequiredFiles([global.paths.heroCliConfig])) {
+        process.exit(1);
+    }
+    var config = global.defaultCliConfig;
     var environments = heroFileConfig[config.environmentKey];
 
-    if (environments && Object.keys(environments) === 1) {
-        if (!env) {
-            env = Object.keys(environments)[0];
-        }
+    if (!environments || !environments[env]) {
+        console.log(chalk.red('Unknown Environment "' + env + '".'));
+        console.log('You may need to update ' + paths.heroCliConfig);
+        console.log(chalk.red('  Add attribute "' + env + '" under key "' + config.environmentKey + '" in : ') + chalk.cyan(paths.heroCliConfig) + ' and set the value to the config file path');
+        process.exit(1);
     }
-    if (env) {
-        if (!environments || !environments[env]) {
-            console.log(chalk.red('Unknown Environment "' + env + '".'));
-            console.log('You may need to update ' + paths.heroCliConfig);
-            console.log(chalk.red('  Add attribute "' + env + '" under key "' + config.environmentKey + '" in : ') + chalk.cyan(paths.heroCliConfig) + ' and set the value to the config file path');
-            process.exit(1);
-        }
-    }
-    // console.log('env=' + env);
+
     var configPath = path.resolve(paths.heroCliConfig, '../', heroFileConfig[config.environmentKey][env]);
 
+    // delete require.cache[configPath];
     var heroCustomConfig = require(configPath);
 
     var raw = Object
@@ -59,7 +48,7 @@ function getClientEnvironment() {
         'process.env': JSON.stringify(raw)
     };
 
-    return { raw, stringified };
+    return { raw, stringified, configPath };
 }
 
 module.exports = getClientEnvironment;
