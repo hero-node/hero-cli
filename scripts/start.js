@@ -13,6 +13,7 @@ var clearConsole = require('../lib/clearConsole');
 var checkRequiredFiles = require('../lib/checkRequiredFiles');
 var formatWebpackMessages = require('../lib/formatWebpackMessages');
 var pgk = require('../package.json');
+var setProxy = require('../lib/setProxy');
 var paths = require('../config/paths');
 var heroCliConfig = require('../config/hero-config.json');
 var commandOptions = require('../config/options');
@@ -32,7 +33,7 @@ function showUsage() {
     });
     command.option('p', {
         // demandOption: false,
-        describe: 'Port to listen on (defaults to 3000)'
+        describe: 'Port to listen on (defaults to ' + heroCliConfig.devServerPort + ')'
     });
     var argv = command.nargs('e', 1)
             .help('h')
@@ -294,23 +295,11 @@ function runDevServer(config, host, port, protocol) {
                 ensureAcceptHeader(req);
                 next();
             });
-            var proxy;
             var proxyConfig = require(paths.heroCliConfig).proxy;
 
             if (proxyConfig) {
-                proxy = require('express-http-proxy');
-
                 Object.keys(proxyConfig).forEach(function (url) {
-                    app.use(url, proxy(proxyConfig[url], {
-                        decorateRequest: function (req) {
-                            req.headers.Referer = proxyConfig[url];
-                            req.headers.Host = require('url').parse(proxyConfig[url]).host;
-                            return req;
-                        },
-                        forwardPath: function (req) {
-                            return url + require('url').parse(req.url).path;
-                        }
-                    }));
+                    setProxy(app, proxyConfig[url], url);
                 });
             }
         },
