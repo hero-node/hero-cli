@@ -332,5 +332,8 @@ Then you can access the `start.html` by URL `/mkt/pages/start.html`
 
 This will let Hero App correctly infer the root path to use in the generated HTML file.
 
+#### `hero serve`
+After `hero build` process completedly, `build` folder will generated. You can serve a static server using `hero serve`.
+
 #### `hero init`
 You can run `hero build -h` for help. It will generate the initial project structure of Hero App. See [Creating an App](#creating-an-app).
