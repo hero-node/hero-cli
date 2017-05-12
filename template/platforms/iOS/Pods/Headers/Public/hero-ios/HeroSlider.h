@@ -1,0 +1,1 @@
+../../../hero-ios/hero-ios/Classes/HeroSlider.h

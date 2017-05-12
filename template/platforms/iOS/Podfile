@@ -1,0 +1,6 @@
+platform :ios, '7.0'
+
+target 'sample' do
+    pod 'hero-ios','1.1.32'
+end
+

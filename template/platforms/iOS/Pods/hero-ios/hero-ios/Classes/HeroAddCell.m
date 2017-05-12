@@ -1,0 +1,59 @@
+//
+//  BSD License
+//  Copyright (c) Hero software.
+//  All rights reserved.
+//
+//Redistribution and use in source and binary forms, with or without modification,
+//are permitted provided that the following conditions are met:
+//
+//* Redistributions of source code must retain the above copyright notice, this
+//list of conditions and the following disclaimer.
+//
+//* Redistributions in binary form must reproduce the above copyright notice,
+//this list of conditions and the following disclaimer in the documentation
+//and/or other materials provided with the distribution.
+//
+//* Neither the name Facebook nor the names of its contributors may be used to
+//endorse or promote products derived from this software without specific
+//prior written permission.
+//
+//THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+//ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+//WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+//DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
+//ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+//(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+// LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+//ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+//(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+//SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//  Created by 朱成尧 on 4/26/16.
+//
+
+#import "HeroAddCell.h"
+#import "HeroUploadFlowLayout.h"
+
+static NSString *iconBase64 = @"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";
+
+@interface HeroAddCell ()
+
+@property (nonatomic) UIImageView *imageView;
+
+@end
+
+@implementation HeroAddCell
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (!(self = [super initWithFrame:CGRectZero])) return nil;
+    self.backgroundColor = [UIColor clearColor];
+    self.imageView = [[UIImageView alloc] initWithFrame:CGRectMake(kOutSizeWidth, kOutSizeWidth, kImageHeight, kImageHeight)];
+    self.imageView.contentMode = UIViewContentModeScaleAspectFill;
+    self.imageView.clipsToBounds = YES;
+    self.imageView.backgroundColor = [UIColor whiteColor];
+    self.imageView.image = [UIImage imageWithData:[[NSData alloc] initWithBase64EncodedString:iconBase64 options:NSDataBase64DecodingIgnoreUnknownCharacters]];
+    [self addSubview:self.imageView];
+    return self;
+}
+
+@end
