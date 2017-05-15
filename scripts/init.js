@@ -60,9 +60,6 @@ function generate(appName) {
     console.log(chalk.cyan('  ' + displayedCommand + ' run build'));
     console.log('    Bundles the app into static files for production.');
     console.log();
-    console.log(chalk.cyan('  ' + displayedCommand + ' run mock'));
-    console.log('    Starts the mock server.');
-    console.log();
     console.log('Welcome to the Hero!');
     console.log();
 }
