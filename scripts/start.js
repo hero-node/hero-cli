@@ -90,7 +90,7 @@ function _checkRebuild(path, isDelete) {
     if (isFirstWatch) {
         return;
     }
-    if (path === paths.heroCliConfig || path === global.clientEnvironmentConfig.configPath) {
+    if (path === paths.appHtml) {
         restart();
         return;
     }
@@ -152,7 +152,7 @@ function watchSources() {
         // ignored: /[\/\\]\./,
         persistent: true
     });
-    // watcher.add(paths.heroCliConfig);
+    watcher.add(paths.appHtml);
     // watcher.add(global.clientEnvironmentConfig.configPath);
     watcher.on('add', fileAddWatchListener)
           .on('change', fileChangeWatchListener)
