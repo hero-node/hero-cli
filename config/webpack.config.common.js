@@ -51,9 +51,9 @@ var webConfig = {
                     /\.json$/,
                     /\.svg$/
                 ],
-                loader: 'url',
+                loader: 'file',
                 query: {
-                    limit: 10000,
+                    // limit: 10000,
                     name: 'static/media/[name].[hash:8].[ext]'
                 }
             },
