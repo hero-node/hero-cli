@@ -8,6 +8,7 @@
 
 # production
 /build
+/.hero-cli.json
 
 # misc
 .DS_Store
