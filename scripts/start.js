@@ -285,7 +285,6 @@ function runDevServer(config, host, port, protocol) {
             });
             var proxyConfig = global.heroCliConfig.proxy;
 
-            console.log('proxyConfig', proxyConfig);
             if (proxyConfig) {
                 Object.keys(proxyConfig).forEach(function (url) {
                     setProxy(app, proxyConfig[url], url);
