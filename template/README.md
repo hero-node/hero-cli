@@ -1,6 +1,6 @@
 This project is created by [hero-cli](https://github.com/hero-mobile/hero-cli).
 
-For more detail, see file [Documentation](https://hero-mobile.github.io).
+For more detail, see file [Documentation](https://hero-mobile.github.io/hero-js).
 
 ## How to start
 Run command:
