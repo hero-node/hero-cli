@@ -28,5 +28,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.bumptech.glide:glide:3.7.0'
-    compile 'com.github.hero-mobile:hero-android:eb54979c40:release@aar'
+    compile 'hero-mobile:hero:1.3.6:release@aar'
 }
