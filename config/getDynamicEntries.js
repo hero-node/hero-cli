@@ -9,7 +9,7 @@ var appIndexKey = 'appIndex';
 var getComponentsData = require('../lib/getComponentsData').getComponentsData;
 
 function getEntryAndPlugins(isDevelopmentEnv) {
-
+    global.entryTemplates = [];
     var inlineSourceRegex = global.defaultCliConfig.inlineSourceRegex;
     var isStandAlone = global.options.isStandAlone;
     var isInlineSource = global.options.isInlineSource;
@@ -71,10 +71,14 @@ function getEntryAndPlugins(isDevelopmentEnv) {
             var attriName = index + '-' + (name.match(/(.*)\/(.*)\.js$/)[2]);
             var fileNamePath = filePath.match(/(.*)\.js$/)[1];
 
+            var customTemplateUrl;
+
             if (entryConfig.template) {
           // console.log(name);
           // console.log(entryConfig.template);
-                entryConfig.template = '!!html!' + path.join(name.replace('/\.js$/', ''), '../', entryConfig.template);
+                customTemplateUrl = path.join(name.replace('/\.js$/', ''), '../', entryConfig.template);
+                global.entryTemplates.push(customTemplateUrl);
+                entryConfig.template = '!!html!' + customTemplateUrl;
             }
             if (isInlineSource) {
                 entryConfig.inlineSource = inlineSourceRegex;

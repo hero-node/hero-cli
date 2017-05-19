@@ -74,7 +74,7 @@ var devServer = null;
 var DEFAULT_PORT = (global.options.port && /^\d+$/.test(global.options.port)) ? global.options.port : heroCliConfig.devServerPort;
 var compiler;
 
-var expectedType = /\.js$/;
+var expectedJsType = /\.js$/;
 // Something to use when events are received.
 var needUpdateEntry = false;
 var watcher;
@@ -90,12 +90,16 @@ function _checkRebuild(path, isDelete) {
     if (isFirstWatch) {
         return;
     }
-    if (path === paths.appHtml) {
-        restart();
+    // if file is the @Entry template
+    if (/\.html$/.test(path)) {
+      // Checking @Entry template
+        if (global.entryTemplates &&
+          global.entryTemplates.indexOf(path) !== -1) {
+            restart();
+        }
         return;
     }
-    if (!expectedType.test(path)) {
-        // Only Handler JS File
+    if (!expectedJsType.test(path)) {
         return;
     }
     if (path === paths.appIndexJs) {
@@ -118,27 +122,25 @@ function _checkRebuild(path, isDelete) {
 var checkRebuild = _.throttle(_checkRebuild, 1000, { 'trailing': true });
 
 var fileAddWatchListener = function (path) {
-    if (expectedType.test(path)) {
-        // console.log('File ADD: ' + path);
-        watcher.add(path);
-        checkRebuild(path);
-    }
+    // console.log('File ADD: ' + path);
+    watcher.add(path);
+    checkRebuild(path);
 };
 
 var fileChangeWatchListener = function (path) {
     // console.log('File Change: ' + path);
+    // console.log(watcher.getWatched());
     checkRebuild(path);
 };
 
 var fileRemoveWatchListener = function (path) {
-  // Using Webpack Re-Build
     // console.log('File REMOVE: ' + path);
     watcher.unwatch(path);
     checkRebuild(path, true);
 };
 
 var addDirListener = function (path) {
-  // console.log('Dir ADD: ' + path);
+    // console.log('Dir ADD: ' + path);
     watcher.add(path);
 };
 
@@ -167,6 +169,8 @@ function watchSources() {
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
     process.exit(1);
 }
+
+watchSources();
 
 function ensureAcceptHeader(req) {
     if (!req.headers.accept || req.headers.accept.trim() === '') {
@@ -197,7 +201,6 @@ function setupCompiler(config, host, port, protocol) {
     // "done" event fires when Webpack has finished recompiling the bundle.
     // Whether or not you have warnings or errors, you will get this event.
     compiler.plugin('done', function (stats) {
-        if (!watcher) { watchSources(); }
         if (isFirstWatch) {
             isFirstWatch = false;
         }
@@ -341,7 +344,7 @@ function runDevServer(config, host, port, protocol) {
         }
 
         if (isInteractive) {
-            clearConsole();
+            // clearConsole();
         }
         console.log(chalk.cyan('Starting the development server...'));
         console.log();
