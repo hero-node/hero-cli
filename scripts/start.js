@@ -343,8 +343,8 @@ function runDevServer(config, host, port, protocol) {
             return console.log(err);
         }
 
-        if (isInteractive) {
-            // clearConsole();
+        if (isInteractive && !isFirstWatch) {
+            clearConsole();
         }
         console.log(chalk.cyan('Starting the development server...'));
         console.log();
