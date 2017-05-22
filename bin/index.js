@@ -27,6 +27,7 @@ function showUsage() {
     console.log();
     console.log(yargs.argv.$0 + ' <cmd> -h\tquick help on <cmd>');
     console.log(yargs.argv.$0 + ' init\tInitialize workspace, copy project and other basic configuration');
+    console.log(yargs.argv.$0 + ' platform\tBuild native package.');
     console.log(yargs.argv.$0 + ' start\tStart the http server');
     console.log(yargs.argv.$0 + ' build\tCreate a build package');
     console.log();
@@ -36,6 +37,7 @@ function showUsage() {
 switch (script) {
     case 'build':
     case 'init':
+    case 'platform':
     case 'serve':
     case 'start':
         result = spawn.sync('node', [require.resolve('../scripts/' + script)].concat(args), { stdio: 'inherit' });
