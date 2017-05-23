@@ -1,8 +1,16 @@
 'use strict';
 
+var chalk = require('chalk');
+
+if (!process.env.ANDROID_HOME) {
+    console.log('Environment vairable ' + chalk.cyan('ANDROID_HOME') + ' doesn\'t exists! You can creating environmental variables like this:');
+    console.log();
+    console.log(chalk.cyan('export ANDROID_HOME=/my/user/path/android-sdk-linux'));
+    process.exit(1);
+}
+
 var fs = require('fs');
 var path = require('path');
-var chalk = require('chalk');
 var yargs = require('yargs');
 var shell = require('shelljs');
 var pgk = require('../package.json');
@@ -36,12 +44,6 @@ if (global.argv._[1] !== IOS && global.argv._[1] !== ANDROID) {
     showUsage();
 }
 
-if (!process.env.ANDROID_HOME) {
-    console.log('Environment vairable ' + chalk.cyan('ANDROID_HOME') + ' doesn\'t exists! You can creating environmental variables like this:');
-    console.log();
-    console.log(chalk.cyan('export ANDROID_HOME=/my/user/path/android-sdk-linux'));
-    process.exit(1);
-}
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.heroCliConfig])) {
     console.log();
