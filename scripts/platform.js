@@ -109,7 +109,8 @@ var encoding = 'UTF-8';
 function handleAndroidFiles() {
     // Dealing with file platforms/android/app/build.gradle
     var buildVersion = getAndroidVersion(appConfigs);
-    var gradleTemplate = path.join(__dirname, '../config/build.gradle');
+    var gradleTemplate = path.join(paths.appSrc, '../platforms/', appType, '/template/build.gradle');
+
     var content = fs.readFileSync(gradleTemplate, {
         encoding: encoding
     });
@@ -125,7 +126,7 @@ function handleAndroidFiles() {
     });
 
     var javaPath = 'app/src/main/java/hero/hero_sample/HeroSampleApplication.java';
-    var javaHomePageTemplatePath = path.join(__dirname, '../config/HeroSampleApplication.java');
+    var javaHomePageTemplatePath = path.join(paths.appSrc, '../platforms/', appType, '/template/HeroSampleApplication.java');
 
     content = fs.readFileSync(javaHomePageTemplatePath, {
         encoding: encoding
