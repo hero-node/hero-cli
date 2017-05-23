@@ -13,6 +13,8 @@
     "build": "hero build -e prod -m -f",
     "build-framework": "hero build -e prod -m -f -b",
     "build-basic": "hero build -e prod -m -f -s",
-    "serve": "hero serve"
+    "serve": "hero serve",
+    "android": "hero platform build android -e prod",
+    "ios": "hero platform build ios -e prod"
   }
 }
