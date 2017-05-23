@@ -18,6 +18,7 @@ var commandName = Object.keys(pgk.bin)[0];
 var paths = require('../config/paths');
 var getAndroidVersion = require('../lib/getAndroidVersions');
 var checkRequiredFiles = require('../lib/checkRequiredFiles');
+var getEntries = require('../lib/getEntries');
 
 var ANDROID = 'android';
 var IOS = 'ios';
@@ -95,6 +96,17 @@ function generateApp() {
         cwd: path.join(paths.appSrc, '../platforms/', appType),
         env: {
             ANDROID_HOME: process.env.ANDROID_HOME
+        }
+    }, function (error) {
+        if (!error) {
+            console.log('Built the following apk(s): ');
+            console.log();
+            if (appConfigs[0] === ANDROID) {
+                getEntries(path.join(paths.appSrc, '../platforms/', appType, 'app/build/outputs/apk')).forEach(function (filename) {
+                    console.log('	' + chalk.cyan(filename));
+                });
+            }
+            console.log();
         }
     });
 
