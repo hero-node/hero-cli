@@ -16,7 +16,7 @@ var shell = require('shelljs');
 var pgk = require('../package.json');
 var commandName = Object.keys(pgk.bin)[0];
 var paths = require('../config/paths');
-var getBuildToosVersion = require('../lib/getAndroidVersions');
+var getAndroidVersion = require('../lib/getAndroidVersions');
 var checkRequiredFiles = require('../lib/checkRequiredFiles');
 
 var ANDROID = 'android';
@@ -40,7 +40,9 @@ if (global.argv.h ||
     global.argv._[0] !== 'build') {
     showUsage();
 }
-if (global.argv._[1] !== IOS && global.argv._[1] !== ANDROID) {
+var appConfigs = global.argv._[1].split(':');
+
+if (appConfigs[0] !== IOS  && appConfigs[0] !== ANDROID) {
     showUsage();
 }
 
@@ -52,13 +54,12 @@ if (!checkRequiredFiles([paths.heroCliConfig])) {
     process.exit(1);
 }
 
-var appType = global.argv._[1];
+var appType = appConfigs[0];
 var isWindows = process.platform.indexOf('win') === 0;
 var encoding = 'UTF-8';
 
 function handleAndroidFiles() {
-    var buildVersion = getBuildToosVersion();
-
+    var buildVersion = getAndroidVersion(appConfigs);
     var gradleTemplate = path.join(__dirname, '../config/build.gradle');
     var content = fs.readFileSync(gradleTemplate, {
         encoding: encoding
