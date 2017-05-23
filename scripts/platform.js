@@ -35,16 +35,23 @@ if (global.argv.h ||
 if (global.argv._[1] !== IOS && global.argv._[1] !== ANDROID) {
     showUsage();
 }
+
+if (!process.env.ANDROID_HOME) {
+    console.log('Environment vairable ' + chalk.cyan('ANDROID_HOME') + ' doesn\'t exists! You can creating environmental variables like this:');
+    console.log();
+    console.log(chalk.cyan('export ANDROID_HOME=/my/user/path/android-sdk-linux'));
+    process.exit(1);
+}
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.heroCliConfig])) {
     console.log();
-    console.log('Please make sure this is a hero application.');
+    console.log('Please make sure you\'re under the root folder of the hero application.');
     console.log();
     process.exit(1);
 }
 
 var appType = global.argv._[1];
-var isWindows = '';
+var isWindows = process.platform.indexOf('win') === 0;
 var encoding = 'UTF-8';
 
 function handleAndroidFiles() {
@@ -80,8 +87,6 @@ function generateApp() {
         command += '.bat';
     }
     command += ' assembleDebug';
-
-    console.log(path.join(paths.appSrc, '../platforms/', appType));
 
     shell.exec(command, {
         cwd: path.join(paths.appSrc, '../platforms/', appType),
