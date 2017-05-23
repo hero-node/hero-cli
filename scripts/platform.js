@@ -54,17 +54,6 @@ function showUsage() {
     s.on('end', function () {
         console.log(lines);
     });
-
-    process.exit(1);
-
-    console.log();
-    console.log('Please specify the platform: android or ios.');
-    console.log(chalk.cyan('    ' + commandName + ' platform build ') + chalk.green('<name>'));
-    console.log();
-    console.log('For example:');
-    console.log(chalk.cyan('    ' + commandName + ' platform build android'));
-    console.log();
-
     process.exit(1);
 }
 if (global.argv.h ||
@@ -86,6 +75,7 @@ var customHeroCliConfig = require(paths.heroCliConfig);
 if (!customHeroCliConfig[appConfigs[0]] ||
     !customHeroCliConfig[appConfigs[0]][global.argv.e] ||
     !customHeroCliConfig[appConfigs[0]][global.argv.e].host) {
+    console.log(chalk.red('Unknown Environment "' + global.argv.e + '".'));
     console.log('Please specify the ' + chalk.cyan('host') + ' attribute of environment ' + chalk.cyan(global.argv.e) + ' in the ' + chalk.cyan(appConfigs[0]) + ' configuration of file ' + chalk.cyan(paths.heroCliConfig));
     console.log();
     console.log('For example:');
@@ -95,7 +85,7 @@ if (!customHeroCliConfig[appConfigs[0]] ||
     console.log('      ' + chalk.dim('// ...'));
     console.log('      ' + chalk.yellow('"' + global.argv.e + '"') + ': {');
     console.log('        ' + chalk.dim('// ...'));
-    console.log('        ' + chalk.yellow('"host"') + ': ' + chalk.yellow('"http://10.0.2.2:3000/mkt/pages/start.html",'));
+    console.log('        ' + chalk.yellow('"host"') + ': ' + chalk.yellow('"http://10.0.2.2:3000/mkt/pages/start.html"'));
     console.log('      }');
     console.log('    }');
     console.log();

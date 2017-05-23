@@ -19,8 +19,16 @@ function getClientEnvironment(env, heroFileConfig, homePageConfig) {
 
     if (!environments || !environments[env]) {
         console.log(chalk.red('Unknown Environment "' + env + '".'));
-        console.log('You may need to update ' + paths.heroCliConfig);
-        console.log(chalk.red('  Add attribute "' + env + '" under key "' + config.environmentKey + '" in : ') + chalk.cyan(paths.heroCliConfig) + ' and set the value to the config file path');
+        console.log('You have to add attribute ' + chalk.cyan(env) + ' under key ' + chalk.cyan(config.environmentKey) + ' in file ' + chalk.cyan(paths.heroCliConfig));
+        console.log();
+        console.log('For example:');
+        console.log();
+        console.log('    ' + chalk.dim('// ...'));
+        console.log('    ' + chalk.yellow('"environments"') + ': {');
+        console.log('      ' + chalk.dim('// ...'));
+        console.log('      ' + chalk.yellow('"' + env + '"') + ': ' + chalk.yellow('"src/environments/environment-' + env + '.js"'));
+        console.log('    }');
+        console.log();
         process.exit(1);
     }
 

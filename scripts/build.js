@@ -90,9 +90,17 @@ function showHomepageExample(homepage, isGithub) {
     console.log();
 }
 function showServeBuild() {
-    console.log('You may serve it with a static server using command:');
+    console.log('Add the following script in your ' + chalk.cyan('package.json') + '.');
     console.log();
-    console.log('  ' + chalk.cyan('hero serve'));
+    console.log('    ' + chalk.dim('// ...'));
+    console.log('    ' + chalk.yellow('"scripts"') + ': {');
+    console.log('      ' + chalk.dim('// ...'));
+    console.log('      ' + chalk.yellow('"serve"') + ': ' + chalk.yellow('"hero serve",'));
+    console.log('    }');
+    console.log();
+    console.log('And then you can serve it with a static server using command:');
+    console.log();
+    console.log('  ' + chalk.cyan('npm run serve'));
     console.log();
 }
 // Create the production build and print the deployment instructions.
