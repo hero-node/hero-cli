@@ -35,7 +35,7 @@ public class HeroSampleApplication extends HeroApplication {
 
     @Override
     public String getHomeAddress() {
-        return HOME_ADDRESS;
+        return getDomainAddress(HOME_ADDRESS);
     }
 
 
