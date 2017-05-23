@@ -14,5 +14,13 @@
       "host": "http://www.my-site.com:3000/mkt/pages/start.html"
     }
   },
+  "ios": {
+    "dev": {
+      "host": "http://10.0.2.2:3000/mkt/pages/start.html"
+    },
+    "prod": {
+      "host": "http://www.my-site.com:3000/mkt/pages/start.html"
+    }
+  },
   "homepage": "/"
 }
