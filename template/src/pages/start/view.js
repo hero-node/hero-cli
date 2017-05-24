@@ -12,7 +12,7 @@ export default {
             type: 'phone',
             theme: 'green',
             frame: { x: '15', r: '15', y: '115', h: '50' },
-            placeHolder: '手机号码',
+            placeHolder: 'Telephone',
             name: 'phone',
             textFieldDidEditing: { name: 'phone' }
         },
@@ -20,10 +20,10 @@ export default {
             class: 'DRTextField',
             theme: 'green',
             frame: { x: '15', r: '15', y: '178', h: '50' },
-            placeHolder: '密码',
+            placeHolder: 'Password',
             secure: true,
             name: 'password',
-            drSecure: { 'secure': true }, // 带小眼睛
+            drSecure: { 'secure': true }, 
             textFieldDidEditing: { name: 'password' }
         },
         {
@@ -33,14 +33,14 @@ export default {
             enable: false,
             frame: { x: '15', r: '15', y: '0', h: '44' },
             yOffset: 'password+50',
-            title: '登录',
+            title: 'Login',
             click: { click: 'login' }
         },
         {
             class: 'HeroLabel',
             size: 14,
             textColor: '00bc8d',
-            text: '忘记密码?',
+            text: 'Forget password?',
             frame: { x: '15', w: '100', h: '40', y: '0' },
             yOffset: 'loginBtn+10'
         },
