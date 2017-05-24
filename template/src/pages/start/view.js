@@ -23,7 +23,7 @@ export default {
             placeHolder: 'Password',
             secure: true,
             name: 'password',
-            drSecure: { 'secure': true }, 
+            drSecure: { 'secure': true }, // 带小眼睛
             textFieldDidEditing: { name: 'password' }
         },
         {
@@ -33,15 +33,15 @@ export default {
             enable: false,
             frame: { x: '15', r: '15', y: '0', h: '44' },
             yOffset: 'password+50',
-            title: 'Login',
+            title: 'Sign In',
             click: { click: 'login' }
         },
         {
             class: 'HeroLabel',
             size: 14,
             textColor: '00bc8d',
-            text: 'Forget password?',
-            frame: { x: '15', w: '100', h: '40', y: '0' },
+            text: 'Forget Password?',
+            frame: { x: '15', w: '150', h: '40', y: '0' },
             yOffset: 'loginBtn+10'
         },
         {
