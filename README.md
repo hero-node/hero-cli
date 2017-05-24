@@ -288,7 +288,7 @@ This way, when you `fetch('/api/v2/todos')` in development, the development serv
 
 Currently, generated android apk will loads resources hosted by remote server. In order to make the appliation available in the your mobile.
 
-Firstly, you have to deploy the codes generate by command [`hero build`] into remote server.
+Firstly, you have to deploy the codes generate by command [`hero build`](#hero-build) into remote server.<br>
 Secondly, before you generate the apk, you should using parameter `-e` to tell the apk loads which url when it startup.
 
 For example, you can config the url in file `.hero-cli.json` like this:
