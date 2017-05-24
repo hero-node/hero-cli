@@ -23,6 +23,7 @@ Once the installation is done, you can run some commands inside the project fold
 
 * `npm start` Start the application.
 * `npm run build` When you’re ready to deploy to production, create a minified bundle with this command.
+* `npm run android` Build the native android apk file.
 
 Run `npm start` and then open [http://localhost:3000/index.html](http://localhost:3000/index.html) to see your app.<br>
 
@@ -285,8 +286,27 @@ This way, when you `fetch('/api/v2/todos')` in development, the development serv
 * `ANDROID_HOME`
 * `GRADLE_HOME`
 
-##### Run command
-`hero platform build android`
+Currently, generated android apk will loads resources hosted by remote server. In order to make the appliation available in the your mobile.
+
+Firstly, you have to deploy the codes generate by command [`hero build`] into remote server.
+Secondly, before you generate the apk, you should using parameter `-e` to tell the apk loads which url when it startup.
+
+For example, you can config the url in file `.hero-cli.json` like this:
+
+```json
+{
+  "android": {
+    "prod": {
+      "host": "http://www.my-site.com:3000/mkt/pages/start.html"
+    }
+  }
+}
+```
+and then run below command to generate the android apk:
+
+```sh
+hero platform build android -e prod
+```
 
 Once project build successfully, android apk(s) will generated in folder `platforms/android/app/build/outputs/apk`.
 
