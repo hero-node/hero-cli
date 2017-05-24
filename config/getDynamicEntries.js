@@ -74,9 +74,7 @@ function getEntryAndPlugins(isDevelopmentEnv) {
             var customTemplateUrl;
 
             if (entryConfig.template) {
-          // console.log(name);
-          // console.log(entryConfig.template);
-                customTemplateUrl = path.join(name.replace('/\.js$/', ''), '../', entryConfig.template);
+                customTemplateUrl = path.join(name, '../', entryConfig.template);
                 global.entryTemplates.push(customTemplateUrl);
                 entryConfig.template = '!!html!' + customTemplateUrl;
             }
