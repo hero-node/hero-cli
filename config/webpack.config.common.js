@@ -88,9 +88,9 @@ var webConfig = {
                         require.resolve('babel-preset-stage-2')
                     ],
                     plugins: [
+                        require.resolve('babel-plugin-transform-decorators-legacy'),
                         require.resolve('babel-plugin-transform-class-properties'),
-                        require.resolve('babel-plugin-transform-object-rest-spread'),
-                        require.resolve('babel-plugin-transform-decorators-legacy')
+                        require.resolve('babel-plugin-transform-object-rest-spread')
                     ],
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
