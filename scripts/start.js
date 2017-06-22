@@ -5,6 +5,7 @@ process.env.NODE_ENV = 'development';
 var yargs = require('yargs');
 var chalk = require('chalk');
 var _ = require('lodash');
+var pathLib = require('path');
 var webpack = require('webpack');
 var serveStatic = require('serve-static');
 var WebpackDevServer = require('webpack-dev-server');
@@ -56,7 +57,7 @@ function showUsage() {
     process.exit(1);
 }
 
-if (yargs.argv.h || yargs.argv.e === undefined || typeof yargs.argv.e === 'boolean') {
+if (yargs.argv.h || yargs.argv.e === undefined || typeof yargs.argv.e === 'boolean' || yargs.argv.c === undefined || typeof yargs.argv.c === 'boolean') {
     showUsage();
 }
 
@@ -354,10 +355,12 @@ function runDevServer(config, host, port, protocol) {
 
 function run(port) {
     var config, protocol, host;
+    var customConfig = pathLib.join(global.paths.appIndexJs, '../../', global.options.webpackConfig);
 
+    console.log('customConfig=' + customConfig);
     try {
-        delete require.cache[require.resolve('../config/webpack.config.dev')];
-        config = require('../config/webpack.config.dev');
+        delete require.cache[require.resolve(customConfig)];
+        config = require(pathLib.join(customConfig));
 
         protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
         host = process.env.HOST || 'localhost';

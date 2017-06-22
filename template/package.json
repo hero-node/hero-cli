@@ -9,10 +9,10 @@
     "qs": "^6.4.0"
   },
   "scripts": {
-    "start": "hero start -e dev -p 3000",
-    "build": "hero build -e prod -m -f",
-    "build-framework": "hero build -e prod -m -f -b",
-    "build-basic": "hero build -e prod -m -f -s -i",
+    "start": "hero start -e dev -p 3000 -c webpack.config.dev.js",
+    "build": "hero build -e prod -m -f -c webpack.config.prod.js",
+    "build-framework": "hero build -e prod -m -f -b -c webpack.config.prod.js",
+    "build-basic": "hero build -e prod -m -f -s -i -c webpack.config.prod.js",
     "serve": "hero serve",
     "android": "hero platform build android -e prod",
     "ios": "hero platform build ios -e prod"

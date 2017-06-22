@@ -4,7 +4,7 @@ var path = require('path');
 var webpack = require('webpack');
 var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
-var InterpolateHtmlPlugin = require('../lib/InterpolateHtmlPlugin');
+var InterpolateHtmlPlugin = require('hero-cli/lib/InterpolateHtmlPlugin');
 var paths = global.paths;
 var options = global.options;
 
@@ -102,7 +102,7 @@ var webConfig = {
   // Point ESLint to our predefined config.
     eslint: {
         // e.g. to enable no-console and no-debugger only in production.
-        configFile: path.join(__dirname, '../eslintrc'),
+        configFile: path.join(__dirname, 'eslintrc'),
         useEslintrc: false
     },
     plugins: plugins,
