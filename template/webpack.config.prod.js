@@ -5,7 +5,7 @@ var webpack = require('webpack');
 var AppCachePlugin = require('appcache-webpack-plugin');
 var webConfig = require('./webpack.config.common');
 var ManifestPlugin = require('webpack-manifest-plugin');
-var getDynamicEntries = require('./getDynamicEntries');
+var getDynamicEntries = require('hero-cli/config/getDynamicEntries');
 
 var options = global.options;
 var paths = global.paths;

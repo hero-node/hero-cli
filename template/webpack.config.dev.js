@@ -4,8 +4,8 @@ var extend = require('extend');
 var webpack = require('webpack');
 var AppCachePlugin = require('appcache-webpack-plugin');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-var WatchMissingNodeModulesPlugin = require('../lib/WatchMissingNodeModulesPlugin');
-var getDynamicEntries = require('./getDynamicEntries');
+var WatchMissingNodeModulesPlugin = require('hero-cli/lib/WatchMissingNodeModulesPlugin');
+var getDynamicEntries = require('hero-cli/config/getDynamicEntries');
 
 delete require.cache[require.resolve('./webpack.config.common')];
 var webConfig = require('./webpack.config.common');

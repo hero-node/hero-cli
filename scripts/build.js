@@ -4,6 +4,7 @@ process.env.NODE_ENV = 'production';
 
 // Spawn Process
 var yargs = require('yargs');
+var path = require('path');
 var chalk = require('chalk');
 var fs = require('fs-extra');
 var webpack = require('webpack');
@@ -44,7 +45,7 @@ function showUsage() {
     process.exit(1);
 }
 
-if (yargs.argv.h || yargs.argv.e === undefined || (typeof yargs.argv.e === 'boolean')) {
+if (yargs.argv.h || yargs.argv.e === undefined || (typeof yargs.argv.e === 'boolean') || yargs.argv.c === undefined || (typeof yargs.argv.c === 'boolean')) {
     showUsage();
 }
 
@@ -54,7 +55,7 @@ var paths = global.paths;
 var heroCliConfig = global.defaultCliConfig;
 var homePageConfig = global.homePageConfigs;
 var buildFolder = heroCliConfig.outDir;
-var config = require('../config/webpack.config.prod');
+var config = require(path.join(paths.appIndexJs, '../../', yargs.argv.c));
 // Warn and crash if required files are missing
 
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
