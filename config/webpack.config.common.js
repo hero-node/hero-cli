@@ -1,10 +1,12 @@
 'use strict';
 
+var runInDefault = (global.options.webpackConfig === undefined);
+var pathPrefix = runInDefault ? '..' : 'hero-cli';
 var path = require('path');
 var webpack = require('webpack');
 var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
-var InterpolateHtmlPlugin = require('hero-cli/lib/InterpolateHtmlPlugin');
+var InterpolateHtmlPlugin = require(pathPrefix + '/lib/InterpolateHtmlPlugin');
 var paths = global.paths;
 var options = global.options;
 
@@ -30,9 +32,6 @@ var webConfig = {
         extensions: ['.js', '.json', '']
     },
     resolveLoader: {
-        alias: {
-            'hero-loader': require.resolve('hero-cli/lib/viewLoader')
-        },
         root: paths.ownNodeModules,
         moduleTemplates: ['*-loader']
     },
@@ -50,7 +49,6 @@ var webConfig = {
             {
                 exclude: [
                     /\.html$/,
-                    /\.hero.xml$/,
                     /\.js$/,
                     /\.json$/,
                     /\.svg$/
@@ -60,14 +58,6 @@ var webConfig = {
                     // limit: 10000,
                     name: 'static/media/[name].[hash:8].[ext]'
                 }
-            },
-            {
-                test: /\.hero\.xml/, // handles html files. <link rel="import" href="path.html"> and import 'path.html';
-                loader: 'hero-loader'
-//                loader: 'babel?babelrc=false,presets[]=es2015,presets[]=stage-2,plugins[]=transform-decorators-legacy,plugins[]=transform-class-properties,plugins[]=transform-object-rest-spread!wc'
-                // if you are using es6 inside html use
-                // loader: 'babel-loader!wc-loader'
-                // similarly you can use coffee, typescript etc. pipe wc result through the respective loader.
             },
             {
                 test: /\.html$/, // handles html files. <link rel="import" href="path.html"> and import 'path.html';
@@ -114,7 +104,7 @@ var webConfig = {
   // Point ESLint to our predefined config.
     eslint: {
         // e.g. to enable no-console and no-debugger only in production.
-        configFile: path.join(__dirname, 'eslintrc'),
+        configFile: runInDefault ? path.join(__dirname, '../eslintrc') : path.join(__dirname, 'eslintrc'),
         useEslintrc: false
     },
     plugins: plugins,

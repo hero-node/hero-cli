@@ -57,7 +57,7 @@ function showUsage() {
     process.exit(1);
 }
 
-if (yargs.argv.h || yargs.argv.e === undefined || typeof yargs.argv.e === 'boolean' || yargs.argv.c === undefined || typeof yargs.argv.c === 'boolean') {
+if (yargs.argv.h || yargs.argv.e === undefined || typeof yargs.argv.e === 'boolean' || typeof yargs.argv.c === 'boolean') {
     showUsage();
 }
 
@@ -355,12 +355,17 @@ function runDevServer(config, host, port, protocol) {
 
 function run(port) {
     var config, protocol, host;
-    var customConfig = pathLib.join(global.paths.appIndexJs, '../../', global.options.webpackConfig);
+    var customConfig;
 
+    if (global.options.webpackConfig === undefined) {
+        customConfig = '../config/webpack.config.dev';
+    } else {
+        customConfig = pathLib.join(global.paths.appIndexJs, '../../', global.options.webpackConfig);
+    }
     console.log('customConfig=' + customConfig);
     try {
         delete require.cache[require.resolve(customConfig)];
-        config = require(pathLib.join(customConfig));
+        config = require(customConfig);
 
         protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
         host = process.env.HOST || 'localhost';
