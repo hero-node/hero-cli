@@ -50,7 +50,7 @@ var webConfig = {
                 exclude: [
                     /\.html$/,
                     /\.css$/,
-                    /\.scss$/,
+                    /\.sass$/,
                     /\.js$/,
                     /\.json$/,
                     /\.svg$/
@@ -61,9 +61,9 @@ var webConfig = {
                     name: 'static/media/[name].[hash:8].[ext]'
                 }
             },
-            { test: /\.css$/, loader: 'style!css?importLoaders=1!postcss' },
+            { test: /\.css$/, loader: 'style!css' },
             {
-                test: /\.scss$/,
+                test: /\.sass$/,
                 include: [
                     paths.appSrc,
                     paths.appPublic
