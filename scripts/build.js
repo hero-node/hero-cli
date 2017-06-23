@@ -45,7 +45,7 @@ function showUsage() {
     process.exit(1);
 }
 
-if (yargs.argv.h || yargs.argv.e === undefined || (typeof yargs.argv.e === 'boolean') || yargs.argv.c === undefined || (typeof yargs.argv.c === 'boolean')) {
+if (yargs.argv.h || yargs.argv.e === undefined || (typeof yargs.argv.e === 'boolean') || (typeof yargs.argv.c === 'boolean')) {
     showUsage();
 }
 
@@ -55,7 +55,13 @@ var paths = global.paths;
 var heroCliConfig = global.defaultCliConfig;
 var homePageConfig = global.homePageConfigs;
 var buildFolder = heroCliConfig.outDir;
-var config = require(path.join(paths.appIndexJs, '../../', yargs.argv.c));
+var config;
+
+if (yargs.argv.c === undefined) {
+    config = require('../config/webpack.config.prod');
+} else {
+    config = require(path.join(paths.appIndexJs, '../../', yargs.argv.c));
+}
 // Warn and crash if required files are missing
 
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
