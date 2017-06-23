@@ -1,17 +1,32 @@
 var runInDefault = (global.options.webpackConfig === undefined);
 var pathPrefix = runInDefault ? '..' : 'hero-cli';
 var path = require('path');
-var assets = require('postcss-assets');
 var autoprefixer = require('autoprefixer');
 var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 var InterpolateHtmlPlugin = require(pathPrefix + '/lib/InterpolateHtmlPlugin');
 var paths = global.paths;
 var options = global.options;
+// Note: defined here because it will be used more than once.
+var cssFilename = 'static/css/[name].[contenthash:8].css';
+
+console.log(global.homePageConfigs);
+var shouldUseRelativeAssetPaths = global.homePageConfigs.getServedPath === './';
+// ExtractTextPlugin expects the build output to be flat.
+// (See https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/27)
+// However, our output is structured with css, js and media folders.
+// To have this structure working with relative paths, we have to use custom options.
+var extractTextPluginOptions = shouldUseRelativeAssetPaths
+  // Making sure that the publicPath goes back to to build folder.
+  ? { publicPath: Array(cssFilename.split('/').length).join('../') }
+  : undefined;
 
 var plugins = [
     new ProgressBarPlugin(),
+    // Note: this won't work without ExtractTextPlugin.extract(..) in `loaders`.
+    new ExtractTextPlugin(cssFilename),
     new InterpolateHtmlPlugin(global.clientEnvironmentConfig.raw),
     new webpack.DefinePlugin(global.clientEnvironmentConfig.stringified)
 ];
@@ -50,6 +65,7 @@ var webConfig = {
                 exclude: [
                     /\.html$/,
                     /\.css$/,
+                    /\.less$/,
                     /\.scss$/,
                     /\.js$/,
                     /\.json$/,
@@ -61,19 +77,33 @@ var webConfig = {
                     name: 'static/media/[name].[hash:8].[ext]'
                 }
             },
-            { test: /\.css$/, loader: 'style!css?importLoaders=1!postcss' },
+            // {
+            //   test: /\.css$/,
+            //   loader: 'style!css?importLoaders=1!postcss'
+            // },
+            {
+                test: /\.less$/,
+                loader: ExtractTextPlugin.extract(
+                // 'style',
+                'css?importLoaders=1!postcss!less',
+                extractTextPluginOptions
+              )
+            },
+            {
+                test: /\.css$/,
+                loader: ExtractTextPlugin.extract(
+                  // 'style',
+                  'css?importLoaders=1!postcss',
+                  extractTextPluginOptions
+                )
+            },
             {
                 test: /\.scss$/,
-                include: [
-                    paths.appSrc,
-                    paths.appPublic
-                ],
-                loaders: [
-                    'style',
-                    'css?importLoaders=1',
-                    'postcss',
-                    'sass'
-                ]
+                loader: ExtractTextPlugin.extract(
+                  // 'style',
+                  'css?importLoaders=1!postcss!sass',
+                  extractTextPluginOptions
+                )
             },
             {
                 test: /\.html$/, // handles html files. <link rel="import" href="path.html"> and import 'path.html';
@@ -131,12 +161,17 @@ var webConfig = {
         net: 'empty',
         tls: 'empty'
     },
-    postcss: function() {
-        return [assets, autoprefixer({
-            browsers: [
-                "last 2 versions"
-            ]
-        })];
+    postcss: function () {
+        return [
+            autoprefixer({
+                browsers: [
+                    '>1%',
+                    'last 4 versions',
+                    'Firefox ESR',
+                    'not ie < 9' // React doesn't support IE8 anyway
+                ]
+            })
+        ];
     }
 };
 

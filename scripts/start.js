@@ -203,6 +203,8 @@ function setupCompiler(config, host, port, protocol) {
     // Whether or not you have warnings or errors, you will get this event.
     compiler.plugin('done', function (stats) {
         if (isFirstWatch) {
+            clearConsole();
+            devServer.invalidate();
             isFirstWatch = false;
         }
         if (isInteractive) {
