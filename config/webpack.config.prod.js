@@ -1,13 +1,13 @@
 'use strict';
 
 var runInDefault = (global.options.webpackConfig === undefined);
-var pathConfigPrefix = runInDefault ? '.' : 'hero-cli';
+var pathConfigPrefix = runInDefault ? '.' : 'hero-cli/config';
 var extend = require('extend');
 var webpack = require('webpack');
 var AppCachePlugin = require('appcache-webpack-plugin');
 var webConfig = require('./webpack.config.common');
 var ManifestPlugin = require('webpack-manifest-plugin');
-var getDynamicEntries = require(pathConfigPrefix + '/config/getDynamicEntries');
+var getDynamicEntries = require(pathConfigPrefix + '/getDynamicEntries');
 
 var options = global.options;
 var paths = global.paths;
