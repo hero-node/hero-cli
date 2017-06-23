@@ -1,8 +1,8 @@
-
-
 var runInDefault = (global.options.webpackConfig === undefined);
 var pathPrefix = runInDefault ? '..' : 'hero-cli';
 var path = require('path');
+var assets = require('postcss-assets');
+var autoprefixer = require('autoprefixer');
 var webpack = require('webpack');
 var ProgressBarPlugin = require('progress-bar-webpack-plugin');
 var HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
@@ -49,6 +49,8 @@ var webConfig = {
             {
                 exclude: [
                     /\.html$/,
+                    /\.css$/,
+                    /\.scss$/,
                     /\.js$/,
                     /\.json$/,
                     /\.svg$/
@@ -58,6 +60,20 @@ var webConfig = {
                     // limit: 10000,
                     name: 'static/media/[name].[hash:8].[ext]'
                 }
+            },
+            { test: /\.css$/, loader: 'style!css?importLoaders=1!postcss' },
+            {
+                test: /\.scss$/,
+                include: [
+                    paths.appSrc,
+                    paths.appPublic
+                ],
+                loaders: [
+                    'style',
+                    'css?importLoaders=1',
+                    'postcss',
+                    'sass'
+                ]
             },
             {
                 test: /\.html$/, // handles html files. <link rel="import" href="path.html"> and import 'path.html';
@@ -114,6 +130,13 @@ var webConfig = {
         fs: 'empty',
         net: 'empty',
         tls: 'empty'
+    },
+    postcss: function() {
+        return [assets, autoprefixer({
+            browsers: [
+                "last 2 versions"
+            ]
+        })];
     }
 };
 
