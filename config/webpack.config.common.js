@@ -1,4 +1,4 @@
-'use strict';
+
 
 var runInDefault = (global.options.webpackConfig === undefined);
 var pathPrefix = runInDefault ? '..' : 'hero-cli';
@@ -104,7 +104,7 @@ var webConfig = {
   // Point ESLint to our predefined config.
     eslint: {
         // e.g. to enable no-console and no-debugger only in production.
-        configFile: runInDefault ? path.join(__dirname, '../eslintrc') : path.join(__dirname, 'eslintrc'),
+        configFile: runInDefault ? path.join(__dirname, '../eslintrc') : path.join(__dirname, '.eslintrc'),
         useEslintrc: false
     },
     plugins: plugins,

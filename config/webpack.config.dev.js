@@ -1,14 +1,12 @@
 'use strict';
 
 var runInDefault = (global.options.webpackConfig === undefined);
-var pathConfigPrefix = runInDefault ? '.' : 'hero-cli';
-var pathLibPrefix = runInDefault ? '..' : 'hero-cli';
 var extend = require('extend');
 var webpack = require('webpack');
 var AppCachePlugin = require('appcache-webpack-plugin');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-var WatchMissingNodeModulesPlugin = require(pathLibPrefix + '/lib/WatchMissingNodeModulesPlugin');
-var getDynamicEntries = require(pathConfigPrefix + '/config/getDynamicEntries');
+var WatchMissingNodeModulesPlugin = runInDefault ? require('../lib/WatchMissingNodeModulesPlugin') : require('hero-cli/lib/WatchMissingNodeModulesPlugin');
+var getDynamicEntries = runInDefault ? require('./getDynamicEntries') : require('hero-cli/config/getDynamicEntries');
 
 delete require.cache[require.resolve('./webpack.config.common')];
 var webConfig = require('./webpack.config.common');
