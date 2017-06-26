@@ -8,5 +8,5 @@
   "devServerPort": 3000,
   "buildServePort": 3000,
   "defaultAppCacheName": "app.appcache",
-  "inlineSourceRegex": ".js$"
+  "inlineSourceRegex": ".(js|css)$"
 }
