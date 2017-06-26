@@ -257,7 +257,7 @@ function setupCompiler(config, host, port, protocol) {
             console.log();
             console.log('The app is running at:');
             console.log();
-            console.log('  ' + chalk.cyan(protocol + '://' + host + ':' + port + homePageConfig.getServedPath + 'index.html'));
+            console.log('  ' + chalk.cyan(protocol + '://' + host + ':' + port + (homePageConfig.getServedPath === '.' ? '/' : homePageConfig.getServedPath) + 'index.html'));
             console.log();
             console.log('Note that the development build is not optimized.');
             console.log('To create a production build, use ' + chalk.cyan(cli + ' run build') + '.');
@@ -299,7 +299,7 @@ function runDevServer(config, host, port, protocol) {
         },
     // It is important to tell WebpackDevServer to use the same "root" path
     // as we specified in the config. In development, we always serve from /.
-        publicPath: config.output.publicPath,
+        publicPath: config.output.publicPath === '.' ? '/' : config.output.publicPath,
     // WebpackDevServer is noisy by default so we emit custom message instead
     // by listening to the compiler events with `compiler.plugin` calls above.
         quiet: true,

@@ -75,7 +75,7 @@ function run(port) {
         console.log();
         console.log(chalk.green('   The app is running at:'));
         console.log();
-        console.log(chalk.green('   http://localhost' + portStr + homePageConfig.getServedPath + 'index.html'));
+        console.log(chalk.green('   http://localhost' + portStr + (homePageConfig.getServedPath === '.' ? '/' : homePageConfig.getServedPath) + 'index.html'));
         console.log(proxyTips);
         console.log();
     });
