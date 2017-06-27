@@ -364,7 +364,6 @@ function run(port) {
     } else {
         customConfig = pathLib.join(global.paths.appIndexJs, '../../', global.options.webpackConfig);
     }
-    console.log('customConfig=' + customConfig);
     try {
         delete require.cache[require.resolve(customConfig)];
         config = require(customConfig);

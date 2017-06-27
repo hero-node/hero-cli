@@ -67,9 +67,17 @@ function getEntryAndPlugins(isDevelopmentEnv) {
             if (!entryConfig) {
                 return;
             }
+            if (entryConfig.path) {
+                entryConfig.filename = entryConfig.path;
+            }
+            if (entryConfig.filename && entryConfig.filename.indexOf('/') === 0) {
+                entryConfig.filename = entryConfig.filename.slice(1);
+            }
             var filePath = name.replace(ensureSlash(path.join(paths.appSrc), true), '');
             var attriName = index + '-' + (name.match(/(.*)\/(.*)\.js$/)[2]);
+
             var fileNamePath = filePath.match(/(.*)\.js$/)[1];
+
 
             var customTemplateUrl;
 
@@ -81,6 +89,7 @@ function getEntryAndPlugins(isDevelopmentEnv) {
             if (isInlineSource) {
                 entryConfig.inlineSource = inlineSourceRegex;
             }
+
             var options = Object.assign({
                 inject: 'head',
           // webconfig html file loader using Polymer HTML
@@ -102,7 +111,7 @@ function getEntryAndPlugins(isDevelopmentEnv) {
                 chunks: isDevelopmentEnv ? [webpackHotDevClientKey, attriName] : [attriName]
             }, entryConfig);
 
-        // console.log(options);
+            // console.log(options);
             return {
                 file: name,
                 entryName: attriName,

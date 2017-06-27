@@ -12,7 +12,6 @@ var options = global.options;
 // Note: defined here because it will be used more than once.
 var cssFilename = 'static/css/[name].[contenthash:8].css';
 
-console.log(global.homePageConfigs);
 var shouldUseRelativeAssetPaths = global.homePageConfigs.getServedPath === './';
 // ExtractTextPlugin expects the build output to be flat.
 // (See https://github.com/webpack-contrib/extract-text-webpack-plugin/issues/27)
