@@ -3,8 +3,8 @@
     "/api/v2": "https://www.my-site.com"
   },
   "environments": {
-    "dev": "src/environments/environment-dev.js",
-    "prod": "src/environments/environment-prod.js"
+    "dev": "./environments/environment-dev.js",
+    "prod": "./environments/environment-prod.js"
   },
   "android": {
     "dev": {
