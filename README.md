@@ -247,11 +247,10 @@ module.exports = environment;
 When you run command `hero start -e dev` or `hero build -e dev`, all variables from `src/environments/environment-dev.js` can be accessed via `process.env`.
 
 ### Proxying API Requests in Development
-People often serve the front-end React app from the same host and port as their backend implementation.
+People often serve the front-end appplication from the same host and port as their backend implementation.
 For example, a production setup might look like this after the app is deployed:
 ```
-/             - static server returns index.html with React app
-/todos        - static server returns index.html with React app
+/             - static server returns index.html with application
 /api/todos    - server handles any /api/* requests using the backend implementation
 
 ```
@@ -274,7 +273,7 @@ To tell the development server to proxy any unknown requests to your API server 
 
 ```
 
-This way, when you `fetch('/api/v2/todos')` in development, the development server will proxy your request to `http://localhost:4000/api/v2/todos`, and when you `fetch('/feapi/todos')`, the request will proxy to `https://localhost:4001`.
+This way, when you `fetch('/api/v2/todos')` in development, the development server will proxy your request to `https://localhost:4000/api/v2/todos`, and when you `fetch('/feapi/todos')`, the request will proxy to `https://localhost:4001/feapi/todos`.
 
 ### Build Native App
 #### Android
@@ -290,12 +289,13 @@ This way, when you `fetch('/api/v2/todos')` in development, the development serv
 * `ANDROID_HOME`
 * `GRADLE_HOME`
 
-Currently, generated android apk will loads resources hosted by remote server. In order to make the appliation available in the your mobile.
+Currently, generated native app will loads resources hosted by remote server. In order to make the appliation available in the your mobile.
 
-Firstly, you have to deploy the codes generate by command [`hero build`](#hero-build) into remote server.<br>
-Secondly, before you generate the apk, you should using parameter `-e` to tell the apk loads which url when it startup.
+* Firstly, you can using command [`hero build`](#hero-build) to generate the package which contains the application codes for deploy.<br>
+* Secondly, specify the entry url in file `.hero-cli.json` when native app startup.
+* Finally, using command [`hero platform build`](#hero- platform-build) build the native app. before you generate the apk, you should using parameter `-e` to tell the apk loads which url when it startup.
 
-For example, you can config the url in file `.hero-cli.json` like this:
+For example:
 
 ```json
 {
@@ -346,7 +346,7 @@ You will see the build errors and lint warnings in the console.
 
 * `-e`<br>Environment name of the configuration when start the application
 * `-s`<br>Build the boundle as standalone version, which should run in Native App environment. That's to say, build version without libarary like [webcomponent polyfills](http://webcomponents.org/polyfills/) or [hero-js](https://github.com/hero-mobile/hero-js)(These libarary is necessary for Hero App run in web browser, not Native App).
-* `-i`<br>Inline JavaScript code into HTML. Default value is [false].
+* `-i`<br>Inline JavaScript/CSS code into HTML. Default value is [false].
 * `-b`<br>Build pakcage only contain dependecies like hero-js or webcomponents, withou code in <you-project-path>/src folder. Default value is [false]
 * `-m`<br>Build without sourcemap. Default value is [false], will generate sourcemap.
 * `-f`<br>Generate AppCache file, default file name is "app.appcache". Default value is [false], will not generate this file.
@@ -389,7 +389,7 @@ This will let Hero App correctly infer the root path to use in the generated HTM
 After `hero build` process completedly, `build` folder will generated. You can serve a static server using `hero serve`.
 
 #### `hero init`
-You can run `hero build -h` for help. It will generate the initial project structure of Hero App. See [Creating an App](#creating-an-app).
+You can run `hero build -h` for help. It will generate the initial project structure of Hero App. See [Quick Overview](#quick-overview).
 
 #### `hero platform build`
 This command used for build native app. And you can run `hero platform build -h` for help.<br>
@@ -422,7 +422,7 @@ Once command `hero platform build android -e prod` execute successfully, a andro
 
 ###### How to specify the android build tool version in SDK
 Hero will dynamic using the lastest available one from your local install versions by default.
-You might have multiple available versions in the Android SDK. You can specify the `ANDROID_HOME/build-toos` version and compile `com.android.support:appcompat-v7` version following the keyword `android` and seperated by colon.
+You might have multiple available versions in the Android SDK. You can specify the `ANDROID_HOME/build-toos` version and compile `com.android.support:appcompat-v7` version following the command `hero platform build android` and seperated by colon.
 
 For example, you can using the below command specify the `ANDROID_HOME/build-toos` version `23.0.2` and compile `com.android.support:appcompat-v7` version `24.0.0-alpha1`:
 

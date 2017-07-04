@@ -223,12 +223,11 @@ HERO_APP_SECRET_CODE=abcdef npm start
 ```
 
 #### `.hero-cli.json`文件中添加环境变量
-Environment variables may varies from environments, such as `development`, `test` or `production`. <br>
-You can specify the mapping info in the `.hero-cli.json` file, tell hero-cli loads the corresponding variables into environment variables.<br>
+部署阶段，环境变量会随着部署环境的不同而不同，如开发环境, 测试环境和生产环境等。你可以通过在文件`.hero-cli.json`中指定相应环境及环境变量的对应关系。
 
-For example:
+示例：
 
-Here is the content of `.hero-cli.json`
+以下是文件`.hero-cli.json`的内容，指定了`dev`和`prod`环境及环境变量的对应关系
 ```json
 {
   "environments": {
@@ -238,7 +237,7 @@ Here is the content of `.hero-cli.json`
 }
 
 ```
-And here is the content of `src/environments/environment-prod.js`
+以下是文件`src/environments/environment-prod.js`的内容
 
 ```javascript
 var environment = {
@@ -248,23 +247,25 @@ var environment = {
 module.exports = environment;
 
 ```
-
-When you run command `hero start -e dev` or `hero build -e dev`, all variables from `src/environments/environment-dev.js` can be accessed via `process.env`.
+当运行命令`hero start -e dev`或`hero build -e dev`时，文件`src/environments/environment-dev.js`中定义的变量在JavaScript中可以通过`process.env`访问。
 
 ### 请求代理服务
-People often serve the front-end React app from the same host and port as their backend implementation.
-For example, a production setup might look like this after the app is deployed:
-```
-/             - static server returns index.html with React app
-/todos        - static server returns index.html with React app
-/api/todos    - server handles any /api/* requests using the backend implementation
+项目部署阶段，运维人员经常会把前后端部署在同一域名和端口下，从而避免跨域问题。
+
+例如，项目部署后，前后的的访问情况如下：
 
 ```
+/             - 可以访问前端的静态资源，如index.html
+/api/todos    - URL匹配/api/*的请求，能访问后端的服务API接口
 
-Such setup is not required. However, if you do have a setup like this, it is convenient to write requests like `fetch('/api/v2/todos')` without worrying about redirecting them to another host or port during development.
+```
+这样的线上配置并不是必须的，不过这样配置后，可以使用类似`fetch('/api/v2/todos')`的代码来发起后端服务请求。
 
-To tell the development server to proxy any unknown requests to your API server in development, add a proxy field to your `.hero-cli.json`, for example:
+然而在开发过程中，前端服务与后端服务通常在不同的端口，会出现跨域的问题。为了解决该问题，可以透明地将请求转发至相应的后端服务，从而解决跨域问题。
 
+可以通过配置文件`.hero-cli.json`，实现请求代理服务。
+
+实例：以下是文件`.hero-cli.json`内容
 ```json
 {
   "proxy": {
@@ -278,8 +279,7 @@ To tell the development server to proxy any unknown requests to your API server 
 }
 
 ```
-
-This way, when you `fetch('/api/v2/todos')` in development, the development server will proxy your request to `http://localhost:4000/api/v2/todos`, and when you `fetch('/feapi/todos')`, the request will proxy to `https://localhost:4001`.
+这样配置之后，当代码`fetch('/api/v2/todos')`发送请求时，该请求会被转发至`https://localhost:4000/api/v2/todos`；当代码`fetch('/feapi/todos')`发送请求时，该请求会被转发至`https://localhost:4001/feapi/todos`.
 
 ### 构建原生App安装包
 #### Android
@@ -289,19 +289,23 @@ This way, when you `fetch('/api/v2/todos')` in development, the development serv
 * [Android SDK](https://developer.android.com/)
 * [Gradle](https://gradle.org/)
 
-##### Configure your system environment variables
+##### 配置环境变量
 
 * `JAVA_HOME`
 * `ANDROID_HOME`
 * `GRADLE_HOME`
 
-Currently, generated android apk will loads resources hosted by remote server. In order to make the appliation available in the your mobile.
+当安装使用该工具生成后的App，在启动时会加载一个入口文件，该入口文件包含相应的业务逻辑代码。
 
-Firstly, you have to deploy the codes generate by command [`hero build`](#hero-build) into remote server.<br>
-Secondly, before you generate the apk, you should using parameter `-e` to tell the apk loads which url when it startup.
+因此，在生成该App的安装包时，需要进行以下步骤：
 
-For example, you can config the url in file `.hero-cli.json` like this:
+* 使用[`hero build`](#hero-build)命令将业务逻辑代码打包部署
+* 在文件`.hero-cli.json`中指定一个HTML入口地址
+* 使用[`hero platform build`](#hero- platform-build)命令生成App安装包，同时需使用`-e`参数指定使用哪个配置文件
 
+示例：　
+
+以下是文件`.hero-cli.json`的内容
 ```json
 {
   "android": {
@@ -311,15 +315,15 @@ For example, you can config the url in file `.hero-cli.json` like this:
   }
 }
 ```
-and then run below command to generate the android apk:
+接着运行以下命令便可生成Android APK安装文件：
 
 ```sh
 hero platform build android -e prod
 ```
 
-Once project build successfully, android apk(s) will generated in folder `platforms/android/app/build/outputs/apk`.
+该APK文件生成的路径为： `platforms/android/app/build/outputs/apk`.
 
-For more options, see command of Build Scripts: [`Build Android App`](#build-android-app)
+查看更多信息，点击查看[构建Android APK安装包](#构建android-apk安装包)
 
 #### iOS
 
@@ -327,55 +331,40 @@ For more options, see command of Build Scripts: [`Build Android App`](#build-and
 ### 构建命令
 
 #### `hero start`
+该命令会启动开发环境的模式，你可以运行`hero start -h`查看帮助。
+该命令需要一个`-e`参数，指定启动时的配置文件。用法为: `hero start -e <env>`。
 
-Runs the app in development mode. And you can run `hero start -h` for help.<br>
+`-e`参数的值是根据文件`.hero-cli.json`中属性`environments`来确定的。用法在[这里](#hero-clijson文件中添加环境变量)有说明
 
-This command has one mandatory parameter `-e`.
-Usage: `hero start -e <env>`
-
-The available `<env>` values come from keys configured in attribute `environments` in file `.hero-cli.json`.
-
-hero-cli will load the corresponding configurations according to the `<env>` value by rules mentioned [above](#adding-development-environment-variables-via-hero-clijson).<br>
-
-You can using `-p` specify the listen port start the application.<br>
+同时，可以使用`-p`参数指定服务启动的端口。
 
 ```sh
 hero start -e dev -p 3000
 ```
-When start successfully, the page will reload if you make edits in folder `src`.<br>
-You will see the build errors and lint warnings in the console.
-
+启动成功后，队友`src`目录中的改动，代码都会重新编译并且浏览器会重新刷新页面，对有JavaScript代码的ESLint结果会显示在浏览器的控制台中。
 <img src='https://github.com/hero-mobile/hero-cli/blob/master/images/readme/syntax-error-terminal.png?raw=true' width='600' alt='syntax error terminal'>
 
-##### More Vaild options
+##### 更多选项
 
-* `-e`<br>Environment name of the configuration when start the application
-* `-s`<br>Build the boundle as standalone version, which should run in Native App environment. That's to say, build version without libarary like [webcomponent polyfills](http://webcomponents.org/polyfills/) or [hero-js](https://github.com/hero-mobile/hero-js)(These libarary is necessary for Hero App run in web browser, not Native App).
-* `-i`<br>Inline JavaScript code into HTML. Default value is [false].
-* `-b`<br>Build pakcage only contain dependecies like hero-js or webcomponents, withou code in <you-project-path>/src folder. Default value is [false]
-* `-m`<br>Build without sourcemap. Default value is [false], will generate sourcemap.
-* `-f`<br>Generate AppCache file, default file name is "app.appcache". Default value is [false], will not generate this file.
-* `-n`<br>Rename file without hashcode. Default value is [false], cause filename with hashcode.
-
+* `-e`<br>指定在启动时加载的配置环境的名称
+* `-s`<br>指定打包后的文件中只包含业务逻辑代码，不包括[webcomponent polyfills](http://webcomponents.org/polyfills/) 和[hero-js](https://github.com/hero-mobile/hero-js)等组件库。
+* `-i`<br>指定将JavaScript和CSS内联至HTML文件中。
+* `-b`<br>指定打包后的文件中只包含[webcomponent polyfills](http://webcomponents.org/polyfills/) 和[hero-js](https://github.com/hero-mobile/hero-js)等组件库。
+* `-m`<br>不生成sourcemap文件。默认生成sourcemap文件。
+* `-f`<br>指定生成AppCache文件，默认的文件名称为"app.appcache"。默认情况下不生成该文件。
+* `-n`<br>指定文件名保留原始名称，不添加hash值。默认是添加hash值。
 
 #### `hero build`
-
-Builds the app for production to the `build` folder. Options as same as `hero start` mentioned [above](#more-vaild-options), or you can run `hero build -h` for help<br>
-The build is minified and the filenames include the hashes.<br>
-It correctly bundles Hero App in production mode and optimizes the build for the best performance.
-
-This command has one mandatory parameter `-e`.
-Usage: `hero build -e <env>`
-
-The available `<env>` values and configurations loading rules as same as [`hero start`](#hero start) .
+使用该命令可以对项目进行打包构建，该命令也需要指定一个必需的参数`-e`，相关的参数同`hero start`。
+你可以运行`hero build -h`查看帮助。
 
 ##### 构建路径配置
-By default, hero-cli produces a build assuming your app is hosted at the server root.
-To override this, specify the value of attribute **homepage** in configuration `.hero-cli.json` file. Accept values see [Webpack#publicpath](http://webpack.github.io/docs/configuration.html#output-publicpath).
+默认情况下，hero-cli会认为该项目打包构建后生成的文件，在这些文件中，互相引用的路径为绝对路径，并且部署在域名的根路径之下。
+当需要修改该情况，可以通过修改文件`.hero-cli.json`中属性　**homepage** 的值。
 
-For example:
+示例：
 
-Here is the content of `.hero-cli.json`
+以下是文件`.hero-cli.json`的内容
 ```json
 {
   "environments": {
@@ -386,28 +375,24 @@ Here is the content of `.hero-cli.json`
 }
 
 ```
-Then you can access the `start.html` by URL `/mkt/pages/start.html`
-
-This will let Hero App correctly infer the root path to use in the generated HTML file.
+这样配置之后，资源在访问是需要加上前缀`/mkt`,比如原先的`/start.html`路径变为`/mkt/pages/start.html`。
 
 #### `hero serve`
-After `hero build` process completedly, `build` folder will generated. You can serve a static server using `hero serve`.
+打使用`hero build`命令打包完成后，在部署之前，可以使用该命令预览构建后的代码运行后的效果。
 
 #### `hero init`
-You can run `hero build -h` for help. It will generate the initial project structure of Hero App. See [Creating an App](#creating-an-app).
+使用该命令可以初始化一个Hero App项目工程。示例用法见[如何构建Hero App](#如何构建hero-app).
 
 #### `hero platform build`
 This command used for build native app. And you can run `hero platform build -h` for help.<br>
-##### Build Android App
+##### 构建Android APK安装包
 
 `hero platform build android`
 
-It has one mandatory parameter `-e <env>`.
-The available `env` values from properties of attribute `android` in file `.hero-cli.json`.
+该命令需要指定一个必需的参数`-e <env>`，其中`<env>`的取值根据文件`.hero-cli.json`中属性`android`来确定。
 
-For example:
-
-Here is the content of `.hero-cli.json`
+示例：
+以下是文件`.hero-cli.json`的内容
 ```json
 {
   "android": {
@@ -421,21 +406,22 @@ Here is the content of `.hero-cli.json`
 }
 
 ```
-The available `env` values are `dev` and `prod`.
+那么可选的`env`参数则有`dev`和`prod`。
 
-Once command `hero platform build android -e prod` execute successfully, a android apk will generated, when you install and open the app in your mobile, `http://www.my-site.com:3000/mkt/pages/start.html` will be the entry page.
+当安装并打开该Native App时，启动时则会加载页面http://www.my-site.com:3000/mkt/pages/start.html。
 
 ###### How to specify the android build tool version in SDK
-Hero will dynamic using the lastest available one from your local install versions by default.
-You might have multiple available versions in the Android SDK. You can specify the `ANDROID_HOME/build-toos` version and compile `com.android.support:appcompat-v7` version following the keyword `android` and seperated by colon.
+hero-cli会自动检测当前开发者环境已安装的Android build tool的所有可用版本，并会默认使用最新的版本。
+当然，你也可以手动的指定在打包时需要使用的各个版本。方法是在命令`hero platform build android`中指定各个版本，不同工具的版本使用分号分割。
 
-For example, you can using the below command specify the `ANDROID_HOME/build-toos` version `23.0.2` and compile `com.android.support:appcompat-v7` version `24.0.0-alpha1`:
+示例：
+
+指定`ANDROID_HOME/build-toos`的版本为`23.0.2`，同时指定`com.android.support:appcompat-v7`的版本为`24.0.0-alpha1`，其命令格式如下
 
 ```sh
 hero platform build android:23.0.2:24.0.0-alpha1 -e prod
 ```
-
-or just specify the `ANDROID_HOME/build-toos` version only:
+或者只指定`ANDROID_HOME/build-toos`为`23.0.2`，则其命令格式如下：
 
 ```sh
 hero platform build android:23.0.2 -e prod
