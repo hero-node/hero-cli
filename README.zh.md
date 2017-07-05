@@ -344,6 +344,7 @@ hero platform build android -e prod
 hero start -e dev -p 3000
 ```
 启动成功后，队友`src`目录中的改动，代码都会重新编译并且浏览器会重新刷新页面，对有JavaScript代码的ESLint结果会显示在浏览器的控制台中。
+
 <img src='https://github.com/hero-mobile/hero-cli/blob/master/images/readme/syntax-error-terminal.png?raw=true' width='600' alt='syntax error terminal'>
 
 ##### 更多选项
