@@ -1,6 +1,6 @@
 # hero-cli
 
-[English](https://github.com/hero-mobile/hero-cli)
+[Documetation for English](https://github.com/hero-mobile/hero-cli)
 
 用来快速构建Hero App的命令行工具
 
