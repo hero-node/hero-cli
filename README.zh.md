@@ -1,5 +1,7 @@
 # hero-cli
 
+[English](https://github.com/hero-mobile/hero-cli)
+
 用来快速构建Hero App的命令行工具
 
 * [快速开始](#快速开始) – 如何使用hero-cli工具快速创建一个Hero App

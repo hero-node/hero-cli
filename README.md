@@ -1,5 +1,7 @@
 # hero-cli
 
+[中文版](https://github.com/hero-mobile/hero-cli/blob/master/README.zh.md)
+
 Create Hero apps with no build configuration.
 
 * [Getting Started](#getting-started) – How to create a new app.
