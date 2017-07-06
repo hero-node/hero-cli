@@ -48,7 +48,7 @@ function showUsage() {
 if (yargs.argv.h || yargs.argv.e === undefined || (typeof yargs.argv.e === 'boolean') || (typeof yargs.argv.c === 'boolean')) {
     showUsage();
 }
-
+global.logger = require('../lib/logger');
 require('../lib/getGlobalConfig')();
 
 var paths = global.paths;

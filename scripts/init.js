@@ -27,6 +27,7 @@ var generatedApp = global.argv._[0];
 if (!generatedApp) {
     showUsage();
 }
+global.logger = require('../lib/logger');
 function generate(appName) {
     var displayedCommand = 'npm';
     var targetPath = path.join(process.cwd(), appName);

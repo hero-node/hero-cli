@@ -64,6 +64,8 @@ if (global.argv.h || global.argv.e === undefined || typeof global.argv.e === 'bo
     showUsage();
 }
 
+global.logger = require('../lib/logger');
+
 var appConfigs = global.argv._[1].split(':');
 
 if (appConfigs[0] !== IOS  && appConfigs[0] !== ANDROID) {

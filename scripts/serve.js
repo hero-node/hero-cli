@@ -16,6 +16,7 @@ var isInteractive = process.stdout.isTTY;
 
 var proxyTips = '\n';
 
+global.logger = require('../lib/logger');
 getGlobalConfig(true);
 var paths = global.paths;
 var listenPort = global.options.p;
