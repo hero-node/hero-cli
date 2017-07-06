@@ -5,9 +5,6 @@ var checkRequiredFiles = require('../lib/checkRequiredFiles');
 var chalk = require('chalk');
 var HERO_APP = /^HERO_APP_/i;
 
-// Warn and crash if required files are missing
-
-
 function getClientEnvironment(env, heroFileConfig, homePageConfig) {
     var paths = global.paths;
 
@@ -30,6 +27,8 @@ function getClientEnvironment(env, heroFileConfig, homePageConfig) {
         console.log('    }');
         console.log();
         process.exit(1);
+    } else {
+        global.logger.debug('├── Using Envrionment Config: ' + chalk.yellow(environments[env]));
     }
 
     var configPath = path.resolve(paths.heroCliConfig, '../', heroFileConfig[config.environmentKey][env]);

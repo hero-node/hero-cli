@@ -56,11 +56,17 @@ var heroCliConfig = global.defaultCliConfig;
 var homePageConfig = global.homePageConfigs;
 var buildFolder = heroCliConfig.outDir;
 var config;
+var webpackConfigPath;
 
 if (yargs.argv.c === undefined) {
+    global.logger.debug('└── Using default built-in webpack configuration: ');
+    global.logger.debug('    └── ' + chalk.yellow(path.join(__dirname, '../config/webpack.config.prod')));
     config = require('../config/webpack.config.prod');
 } else {
-    config = require(path.join(paths.appIndexJs, '../../', yargs.argv.c));
+    webpackConfigPath = path.join(paths.appIndexJs, '../../', yargs.argv.c);
+    global.logger.info('└── Using custom webpack configuration: ');
+    global.logger.info('     └── ' + chalk.yellow(webpackConfigPath));
+    config = require(webpackConfigPath);
 }
 // Warn and crash if required files are missing
 
@@ -197,6 +203,9 @@ function copyPublicFolder() {
     });
 }
 
+global.logger.debug();
+global.logger.debug('Delete previous build folder: ' + chalk.yellow(paths.appBuild));
+global.logger.debug();
 // Remove all content but keep the directory so that
 // if you're in it, you don't end up in Trash
 fs.emptyDirSync(paths.appBuild);

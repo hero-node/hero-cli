@@ -60,6 +60,46 @@ function showUsage() {
 if (yargs.argv.h || yargs.argv.e === undefined || typeof yargs.argv.e === 'boolean' || typeof yargs.argv.c === 'boolean') {
     showUsage();
 }
+
+var isInteractive = process.stdout.isTTY;
+var customPort = yargs.argv.p;
+// We attempt to use the default port but if it is busy, we offer the user to
+// run on a different port. `detect()` Promise resolves to the next free port.
+var DEFAULT_PORT = (customPort && /^\d+$/.test(customPort)) ? customPort : heroCliConfig.devServerPort;
+
+detect(DEFAULT_PORT).then(port => {
+    if (port === DEFAULT_PORT) {
+        // console.log('A: port = ' + port);
+        // eslint-disable-next-line
+        run(port);
+        return;
+    }
+    var existingProcess, question;
+    var getProcessForPort = require('../lib/getProcessForPort');
+
+    existingProcess = getProcessForPort(DEFAULT_PORT);
+    if (isInteractive) {
+        // clearConsole();
+        console.log();
+        existingProcess = getProcessForPort(DEFAULT_PORT);
+        question = chalk.yellow('Something is already running on port ' + DEFAULT_PORT + '.' +
+        ((existingProcess) ? ' Probably:\n  ' + existingProcess : '')) +
+        '\n\nWould you like to run the app on another port instead?';
+
+        require('../lib/prompt')(question, true).then(shouldChangePort => {
+            if (shouldChangePort) {
+                // console.log('B: port = ' + port);
+                global.logger.debug('├── Port ' + DEFAULT_PORT + ' already used, using another port:');
+                global.logger.debug('│   └──' + chalk.yellow(port) + '');
+                // eslint-disable-next-line
+                run(port);
+            }
+        });
+    } else {
+        console.log(chalk.red('Something is already running on port ' + DEFAULT_PORT + '.'));
+    }
+});
+
 global.logger = require('../lib/logger');
 getGlobalConfig();
 
@@ -67,12 +107,12 @@ var paths = global.paths;
 var homePageConfig = global.homePageConfigs;
 var availablePort;
 var cli = 'npm';
-var isInteractive = process.stdout.isTTY;
 // Initialize watcher.
 var isFirstWatch = true;
 var devServer = null;
 // Tools like Cloud9 rely on this.
-var DEFAULT_PORT = (global.options.port && /^\d+$/.test(global.options.port)) ? global.options.port : heroCliConfig.devServerPort;
+
+global.logger.debug('├── ' + chalk.yellow('Default Port: ' + DEFAULT_PORT));
 var compiler;
 
 var expectedJsType = /\.js$/;
@@ -81,9 +121,9 @@ var needUpdateEntry = false;
 var watcher;
 
 function restart() {
+    global.logger.debug('Restart Server...');
     devServer.invalidate();
     devServer.close();
-
 // eslint-disable-next-line
   run(availablePort);
 }
@@ -96,6 +136,8 @@ function _checkRebuild(path, isDelete) {
       // Checking @Entry template
         if (global.entryTemplates &&
           global.entryTemplates.indexOf(path) !== -1) {
+            global.logger.debug('Entry HTML Template File Change:');
+            global.logger.debug('└──' + chalk.yellow(path));
             restart();
         }
         return;
@@ -116,6 +158,8 @@ function _checkRebuild(path, isDelete) {
             needUpdateEntry = false;
         }
         if (needUpdateEntry) {
+            global.logger.debug('Entry JS File Change:');
+            global.logger.debug('└──' + chalk.yellow(path));
             restart();
         }
     }
@@ -290,9 +334,18 @@ function runDevServer(config, host, port, protocol) {
                 next();
             });
             var proxyConfig = global.heroCliConfig.proxy;
+            var proxies = Object.keys(proxyConfig);
 
             if (proxyConfig) {
-                Object.keys(proxyConfig).forEach(function (url) {
+                global.logger.debug('└── Proxy settings: ');
+
+                proxies.forEach(function (url, index) {
+
+                    if (index === (proxies.length - 1)) {
+                        global.logger.debug('    └── ' + chalk.yellow(url + ' --> ' + proxyConfig[url]));
+                    } else {
+                        global.logger.debug('    ├── ' + chalk.yellow(url + ' --> ' + proxyConfig[url]));
+                    }
                     setProxy(app, proxyConfig[url], url);
                 });
             }
@@ -361,8 +414,12 @@ function run(port) {
 
     if (global.options.webpackConfig === undefined) {
         customConfig = '../config/webpack.config.dev';
+        global.logger.debug('├── Using default built-in webpack configuration: ');
+        global.logger.debug('│   └── ' + chalk.yellow(pathLib.join(__dirname, customConfig)));
     } else {
         customConfig = pathLib.join(global.paths.appIndexJs, '../../', global.options.webpackConfig);
+        global.logger.info('├── Using custom webpack configuration: ');
+        global.logger.info('│   └── ' + chalk.yellow(customConfig));
     }
     try {
         delete require.cache[require.resolve(customConfig)];
@@ -371,40 +428,15 @@ function run(port) {
         protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
         host = process.env.HOST || 'localhost';
 
+        global.logger.debug('├── Protocol:' + chalk.yellow(protocol));
+
+        global.logger.debug('├── Host:' + chalk.yellow(host));
+
         availablePort = port;
+        global.logger.debug('├── Port:' + chalk.yellow(port) + '');
         setupCompiler(config, host, port, protocol);
         runDevServer(config, host, port, protocol);
     } catch (e) {
         console.log(e);
     }
 }
-
-// We attempt to use the default port but if it is busy, we offer the user to
-// run on a different port. `detect()` Promise resolves to the next free port.
-detect(DEFAULT_PORT).then(port => {
-    if (port === DEFAULT_PORT) {
-        // console.log('A: port = ' + port);
-        run(port);
-        return;
-    }
-    var existingProcess, question;
-    var getProcessForPort = require('../lib/getProcessForPort');
-
-    existingProcess = getProcessForPort(DEFAULT_PORT);
-    if (isInteractive) {
-        clearConsole();
-        existingProcess = getProcessForPort(DEFAULT_PORT);
-        question = chalk.yellow('Something is already running on port ' + DEFAULT_PORT + '.' +
-        ((existingProcess) ? ' Probably:\n  ' + existingProcess : '')) +
-        '\n\nWould you like to run the app on another port instead?';
-
-        require('../lib/prompt')(question, true).then(shouldChangePort => {
-            if (shouldChangePort) {
-                // console.log('B: port = ' + port);
-                run(port);
-            }
-        });
-    } else {
-        console.log(chalk.red('Something is already running on port ' + DEFAULT_PORT + '.'));
-    }
-});
