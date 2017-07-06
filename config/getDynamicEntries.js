@@ -10,7 +10,6 @@ var appIndexKey = 'appIndex';
 var getComponentsData = require('../lib/getComponentsData').getComponentsData;
 var defaultTemplateContent = fs.readFileSync(path.join(__dirname, 'entryTemplate.html'), 'UTF-8');
 
-console.log(defaultTemplateContent);
 function getEntryAndPlugins(isDevelopmentEnv) {
     global.entryTemplates = [];
     var inlineSourceRegex = global.defaultCliConfig.inlineSourceRegex;
