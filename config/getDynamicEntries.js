@@ -1,13 +1,16 @@
 'use strict';
 
 var path = require('path');
+var fs = require('fs');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ensureSlash = require('../lib/ensureSlash');
 var getEntries = require('../lib/getEntries');
 var webpackHotDevClientKey = 'web-hot-reload';
 var appIndexKey = 'appIndex';
 var getComponentsData = require('../lib/getComponentsData').getComponentsData;
+var defaultTemplateContent = fs.readFileSync(path.join(__dirname, 'entryTemplate.html'), 'UTF-8');
 
+console.log(defaultTemplateContent);
 function getEntryAndPlugins(isDevelopmentEnv) {
     global.entryTemplates = [];
     var inlineSourceRegex = global.defaultCliConfig.inlineSourceRegex;
@@ -70,6 +73,23 @@ function getEntryAndPlugins(isDevelopmentEnv) {
             if (entryConfig.path) {
                 entryConfig.filename = entryConfig.path;
             }
+            var startWithSlash, pathPartLen;
+            var basePath = '';
+
+            if (entryConfig.filename) {
+                entryConfig.filename = entryConfig.filename.trim();
+                startWithSlash = entryConfig.filename.indexOf('/') === 0;
+
+                pathPartLen = entryConfig.filename.split('\/').length;
+                if (startWithSlash) {
+                    pathPartLen--;
+                }
+                pathPartLen--;
+                while (pathPartLen) {
+                    basePath += '../';
+                    pathPartLen--;
+                }
+            }
             if (entryConfig.filename && entryConfig.filename.indexOf('/') === 0) {
                 entryConfig.filename = entryConfig.filename.slice(1);
             }
@@ -78,22 +98,24 @@ function getEntryAndPlugins(isDevelopmentEnv) {
 
             var fileNamePath = filePath.match(/(.*)\.js$/)[1];
 
-
             var customTemplateUrl;
 
             if (entryConfig.template) {
                 customTemplateUrl = path.join(name, '../', entryConfig.template);
                 global.entryTemplates.push(customTemplateUrl);
-                entryConfig.template = '!!html!' + customTemplateUrl;
+                // entryConfig.template = '!!html!' + customTemplateUrl;
+                entryConfig.templateContent = fs.readFileSync(customTemplateUrl, 'UTF-8');
+                delete entryConfig.template;
             }
             if (isInlineSource) {
                 entryConfig.inlineSource = inlineSourceRegex;
             }
+            var templateContent = basePath ? defaultTemplateContent.replace('<base href="/">', '<base href="' + basePath + '">') : defaultTemplateContent;
 
             var options = Object.assign({
                 inject: 'head',
           // webconfig html file loader using Polymer HTML
-                template: '!!html!' + path.join(__dirname, 'entryTemplate.html'),
+                templateContent: templateContent,
                 filename: fileNamePath + '.html',
                 minify: {
                     removeComments: true,

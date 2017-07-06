@@ -204,7 +204,7 @@ function setupCompiler(config, host, port, protocol) {
     compiler.plugin('done', function (stats) {
         if (isFirstWatch) {
             clearConsole();
-            devServer.invalidate();
+            devServer.middleware.invalidate();
             isFirstWatch = false;
         }
         if (isInteractive) {
