@@ -154,14 +154,15 @@ function getEntryAndPlugins(isDevelopmentEnv) {
             }
 
             var color = hasDuplicatedPath ? 'red' : 'yellow';
+            var logMethod = hasDuplicatedPath ? 'warn' : 'debug';
             var prefix = '├── ';
             var isLastOne = index === (validEntries.length - 1);
 
             if (isLastOne) {
                 prefix = '└── ';
             }
-            global.logger.debug('│   ' + prefix + chalk[color](options.filename) + (hasDuplicatedPath ? chalk.red('(HTML Path Conflict!)') : ''));
-            global.logger.debug('│   ' + (isLastOne ? '' : '│') + '   ' + (customTemplateUrl ? '├──' : '└──') + ' JS Entry: ' + name.replace(paths.appSrc, 'src'));
+            global.logger[logMethod]((hasDuplicatedPath ? ' ' : '') + '│   ' + prefix + chalk[color](options.filename) + (hasDuplicatedPath ? chalk.red('(HTML Path Conflict!)') : ''));
+            global.logger[logMethod]((hasDuplicatedPath ? ' ' : '') + '│   ' + (isLastOne ? ' ' : '│') + '   ' + (customTemplateUrl ? '├──' : '└──') + ' JS Entry: ' + name.replace(paths.appSrc, 'src'));
             if (customTemplateUrl) {
                 global.logger.debug('│   ' + (isLastOne ? '' : '│') + '   └── HTML Template: ' + customTemplateUrl.replace(paths.appSrc, 'src'));
             }

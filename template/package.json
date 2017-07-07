@@ -10,9 +10,9 @@
   },
   "scripts": {
     "start": "hero start -e dev -p 3000 --verbose",
-    "build": "hero build -e prod -m -f",
-    "build-framework": "hero build -e prod -m -f -b",
-    "build-basic": "hero build -e prod -m -f -s -i",
+    "build": "hero build -e prod -m -f --verbose",
+    "build-framework": "hero build -e prod -m -f -b --verbose",
+    "build-basic": "hero build -e prod -m -f -s -i --verbose",
     "serve": "hero serve",
     "android": "hero platform build android -e prod",
     "ios": "hero platform build ios -e prod"

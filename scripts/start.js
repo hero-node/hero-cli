@@ -297,11 +297,13 @@ function setupCompiler(config, host, port, protocol) {
         console.log('Use ' + chalk.yellow('// eslint-disable-next-line') + ' to ignore the next line.');
         console.log('Use ' + chalk.yellow('/* eslint-disable */') + ' to ignore all warnings in a file.');
 
+        var serveRootPath = (homePageConfig.getServedPath === '.' || homePageConfig.getServedPath === './');
+
         if (showInstructions) {
             console.log();
             console.log('The app is running at:');
             console.log();
-            console.log('  ' + chalk.cyan(protocol + '://' + host + ':' + port + (homePageConfig.getServedPath === '.' ? '/' : homePageConfig.getServedPath) + 'index.html'));
+            console.log('  ' + chalk.cyan(protocol + '://' + host + ':' + port + (serveRootPath ? '/' : homePageConfig.getServedPath) + 'index.html'));
             console.log();
             console.log('Note that the development build is not optimized.');
             console.log('To create a production build, use ' + chalk.cyan(cli + ' run build') + '.');
@@ -345,6 +347,7 @@ function runDevServer(config, host, port, protocol) {
 
                     if (index === (proxies.length - 1)) {
                         global.logger.debug('    └── ' + chalk.yellow(url + ' --> ' + proxyConfig[url]));
+                        console.log();
                     } else {
                         global.logger.debug('    ├── ' + chalk.yellow(url + ' --> ' + proxyConfig[url]));
                     }
@@ -365,8 +368,8 @@ function runDevServer(config, host, port, protocol) {
         watchOptions: {
             ignored: /node_modules/
         },
-    // Enable HTTPS if the HTTPS environment variable is set to 'true'
         https: protocol === 'https',
+        // Enable HTTPS if the HTTPS environment variable is set to 'true'
         host: host,
         historyApiFallback: {
             rewrites: [
