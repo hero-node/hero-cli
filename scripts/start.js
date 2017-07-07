@@ -352,7 +352,7 @@ function runDevServer(config, host, port, protocol) {
         },
     // It is important to tell WebpackDevServer to use the same "root" path
     // as we specified in the config. In development, we always serve from /.
-        publicPath: config.output.publicPath === '.' ? '/' : config.output.publicPath,
+        publicPath: config.output.publicPath === './' ? '/' : config.output.publicPath,
     // WebpackDevServer is noisy by default so we emit custom message instead
     // by listening to the compiler events with `compiler.plugin` calls above.
         quiet: true,
@@ -369,7 +369,10 @@ function runDevServer(config, host, port, protocol) {
                 {
                     from: /^\/.*$/,
                     to: function (context) {
-                        return __heroContentBaseURL + (config.output.publicPath === '/' ? context.parsedUrl.pathname : context.parsedUrl.pathname.slice(config.output.publicPath.length - 1));
+                        var isServeRoot = (config.output.publicPath === '/' || config.output.publicPath === './');
+                        var subPath = isServeRoot ? context.parsedUrl.pathname : context.parsedUrl.pathname.slice(config.output.publicPath.length - 1);
+
+                        return __heroContentBaseURL +  subPath;
                     }
                 }
             ]
