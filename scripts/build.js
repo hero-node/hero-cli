@@ -64,8 +64,8 @@ if (yargs.argv.c === undefined) {
     config = require('../config/webpack.config.prod');
 } else {
     webpackConfigPath = path.join(paths.appIndexJs, '../../', yargs.argv.c);
-    global.logger.info('├── Using custom webpack configuration: ');
-    global.logger.info('│     └── ' + chalk.yellow(webpackConfigPath));
+    global.logger.info(' ├── Using custom webpack configuration: ');
+    global.logger.info(' │     └── ' + chalk.yellow(webpackConfigPath));
     config = require(webpackConfigPath);
 }
 // Warn and crash if required files are missing

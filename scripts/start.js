@@ -428,8 +428,8 @@ function run(port) {
         global.logger.debug('│   └── ' + chalk.yellow(pathLib.join(__dirname, customConfig)));
     } else {
         customConfig = pathLib.join(global.paths.appIndexJs, '../../', global.options.webpackConfig);
-        global.logger.info('├── Using custom webpack configuration: ');
-        global.logger.info('│   └── ' + chalk.yellow(customConfig));
+        global.logger.info(' ├── Using custom webpack configuration: ');
+        global.logger.info(' │   └── ' + chalk.yellow(customConfig));
     }
     try {
         delete require.cache[require.resolve(customConfig)];
