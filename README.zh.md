@@ -331,6 +331,7 @@ hero platform build android -e prod
 
 
 ### 构建命令
+以下构建命令可以添加`--verbose`参数输出详细日志。
 
 #### `hero start`
 该命令会启动开发环境的模式，你可以运行`hero start -h`查看帮助。

@@ -322,6 +322,7 @@ For more options, see command of Build Scripts: [`Build Android App`](#build-and
 
 
 ### Build Scripts
+Below scripts support option `--verbose` to output more details.
 
 #### `hero start`
 
