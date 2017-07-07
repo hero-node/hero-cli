@@ -2,6 +2,7 @@
 
 var path = require('path');
 var fs = require('fs');
+var chalk = require('chalk');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ensureSlash = require('../lib/ensureSlash');
 var getEntries = require('../lib/getEntries');
@@ -57,18 +58,32 @@ function getEntryAndPlugins(isDevelopmentEnv) {
         buildEntries[webpackHotDevClientKey] = require.resolve('../lib/webpackHotDevClient');
     }
     var entries;
+    var validEntries;
+    var allGeneratedHTMLNames = {};
 
     if (isStandAlone) {
-
-        entries = getEntries(path.join(paths.appSrc)).filter(name => {
+        validEntries = getEntries(path.join(paths.appSrc)).filter(name => {
             return /\.js$/.test(name);
-        }).map((name, index) => {
-            var entryConfig = getComponentsData(name);
+        }).map((name) => {
+            return {
+                name: name,
+                entryConfig: getComponentsData(name)
+            };
+        }).filter(data => {
+            return !!data.entryConfig;
+        });
 
-        // console.log('entryConfig---------', entryConfig);
+        entries = validEntries.map((data, index) => {
+            var entryConfig = data.entryConfig;
+
             if (!entryConfig) {
                 return;
             }
+            if (index === 0) {
+                global.logger.debug('├── Generate HTML: ');
+            }
+            var name = data.name;
+
             if (entryConfig.path) {
                 entryConfig.filename = entryConfig.path;
             }
@@ -132,6 +147,24 @@ function getEntryAndPlugins(isDevelopmentEnv) {
                 chunks: isDevelopmentEnv ? [webpackHotDevClientKey, attriName] : [attriName]
             }, entryConfig);
 
+            var hasDuplicatedPath = allGeneratedHTMLNames[options.filename];
+
+            if (!hasDuplicatedPath) {
+                allGeneratedHTMLNames[options.filename] = true;
+            }
+
+            var color = hasDuplicatedPath ? 'red' : 'yellow';
+            var prefix = '├── ';
+            var isLastOne = index === (validEntries.length - 1);
+
+            if (isLastOne) {
+                prefix = '└── ';
+            }
+            global.logger.debug('│   ' + prefix + chalk[color](options.filename) + (hasDuplicatedPath ? chalk.red('(HTML Path Conflict!)') : ''));
+            global.logger.debug('│   ' + (isLastOne ? '' : '│') + '   ' + (customTemplateUrl ? '├──' : '└──') + ' JS Entry: ' + name.replace(paths.appSrc, 'src'));
+            if (customTemplateUrl) {
+                global.logger.debug('│   ' + (isLastOne ? '' : '│') + '   └── HTML Template: ' + customTemplateUrl.replace(paths.appSrc, 'src'));
+            }
             // console.log(options);
             return {
                 file: name,

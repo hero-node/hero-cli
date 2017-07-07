@@ -137,7 +137,7 @@ function _checkRebuild(path, isDelete) {
         if (global.entryTemplates &&
           global.entryTemplates.indexOf(path) !== -1) {
             global.logger.debug('Entry HTML Template File Change:');
-            global.logger.debug('└──' + chalk.yellow(path));
+            global.logger.debug('    └── ' + chalk.yellow(path));
             restart();
         }
         return;
@@ -334,9 +334,11 @@ function runDevServer(config, host, port, protocol) {
                 next();
             });
             var proxyConfig = global.heroCliConfig.proxy;
-            var proxies = Object.keys(proxyConfig);
+            var proxies;
 
             if (proxyConfig) {
+                proxies = Object.keys(proxyConfig);
+
                 global.logger.debug('└── Proxy settings: ');
 
                 proxies.forEach(function (url, index) {
@@ -348,6 +350,8 @@ function runDevServer(config, host, port, protocol) {
                     }
                     setProxy(app, proxyConfig[url], url);
                 });
+            } else {
+                global.logger.debug('└── No Proxy settings.');
             }
         },
     // It is important to tell WebpackDevServer to use the same "root" path

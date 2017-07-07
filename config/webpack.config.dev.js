@@ -8,6 +8,7 @@ var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 var WatchMissingNodeModulesPlugin = runInDefault ? require('../lib/WatchMissingNodeModulesPlugin') : require('hero-cli/lib/WatchMissingNodeModulesPlugin');
 var getDynamicEntries = runInDefault ? require('./getDynamicEntries') : require('hero-cli/config/getDynamicEntries');
 
+// Webpack Start: Need to Clean the Cache
 delete require.cache[require.resolve('./webpack.config.common')];
 var webConfig = require('./webpack.config.common');
 
