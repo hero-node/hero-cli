@@ -9,7 +9,7 @@
     "qs": "^6.4.0"
   },
   "scripts": {
-    "start": "hero start -e dev -p 3000",
+    "start": "hero start -e dev -p 3000 --verbose",
     "build": "hero build -e prod -m -f",
     "build-framework": "hero build -e prod -m -f -b",
     "build-basic": "hero build -e prod -m -f -s -i",
