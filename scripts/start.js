@@ -93,6 +93,8 @@ detect(DEFAULT_PORT).then(port => {
                 global.logger.debug('│   └──' + chalk.yellow(port) + '');
                 // eslint-disable-next-line
                 run(port);
+            } else {
+                process.exit(0);
             }
         });
     } else {

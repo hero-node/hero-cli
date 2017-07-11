@@ -104,6 +104,8 @@ detect(DEFAULT_PORT).then(port => {
             if (shouldChangePort) {
                 // console.log('B: port = ' + port);
                 run(port);
+            } else {
+                process.exit(0);
             }
         });
     } else {
