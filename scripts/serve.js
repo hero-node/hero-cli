@@ -72,7 +72,7 @@ function run(port) {
     }
     app.use(homePageConfig.publicURL ? homePageConfig.publicURL : '/', express.static(paths.appBuild));
 
-    var serveRootPath = (homePageConfig.getServedPath === '.' || homePageConfig.getServedPath === './');
+    var serveRootPath = homePageConfig.isRelativePath;
 
     http.createServer(app).listen(port, function () {
         console.log(chalk.green('   The app is running at:'));

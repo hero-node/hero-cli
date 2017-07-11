@@ -299,7 +299,7 @@ function setupCompiler(config, host, port, protocol) {
         console.log('Use ' + chalk.yellow('// eslint-disable-next-line') + ' to ignore the next line.');
         console.log('Use ' + chalk.yellow('/* eslint-disable */') + ' to ignore all warnings in a file.');
 
-        var serveRootPath = (homePageConfig.getServedPath === '.' || homePageConfig.getServedPath === './');
+        var serveRootPath = homePageConfig.isRelativePath;
 
         if (showInstructions) {
             console.log();
@@ -363,7 +363,7 @@ function runDevServer(config, host, port, protocol) {
         },
     // It is important to tell WebpackDevServer to use the same "root" path
     // as we specified in the config. In development, we always serve from /.
-        publicPath: config.output.publicPath === './' ? '/' : config.output.publicPath,
+        publicPath: homePageConfig.isRelativePath ? '/' : config.output.publicPath,
     // WebpackDevServer is noisy by default so we emit custom message instead
     // by listening to the compiler events with `compiler.plugin` calls above.
         quiet: true,
@@ -380,7 +380,7 @@ function runDevServer(config, host, port, protocol) {
                 {
                     from: /^\/.*$/,
                     to: function (context) {
-                        var isServeRoot = (config.output.publicPath === '/' || config.output.publicPath === './');
+                        var isServeRoot = (config.output.publicPath === '/' || homePageConfig.isRelativePath);
                         var subPath = isServeRoot ? context.parsedUrl.pathname : context.parsedUrl.pathname.slice(config.output.publicPath.length - 1);
 
                         return __heroContentBaseURL +  subPath;

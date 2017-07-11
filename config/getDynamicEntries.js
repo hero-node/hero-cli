@@ -1,7 +1,6 @@
 'use strict';
 
 var path = require('path');
-var fs = require('fs');
 var yargs = require('yargs');
 var chalk = require('chalk');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -10,9 +9,9 @@ var getEntries = require('../lib/getEntries');
 var webpackHotDevClientKey = 'web-hot-reload';
 var appIndexKey = 'appIndex';
 var getComponentsData = require('../lib/getComponentsData').getComponentsData;
-var defaultTemplateContent = fs.readFileSync(path.join(__dirname, 'entryTemplate.html'), 'UTF-8');
 var hasVerbose = yargs.argv.verbose;
 var firstError = true;
+var isRelativePath = global.homePageConfigs.isRelativePath;
 
 function getEntryAndPlugins(isDevelopmentEnv) {
     global.entryTemplates = [];
@@ -119,20 +118,23 @@ function getEntryAndPlugins(isDevelopmentEnv) {
             if (entryConfig.template) {
                 customTemplateUrl = path.join(name, '../', entryConfig.template);
                 global.entryTemplates.push(customTemplateUrl);
-                // entryConfig.template = '!!html!' + customTemplateUrl;
-                entryConfig.templateContent = fs.readFileSync(customTemplateUrl, 'UTF-8');
-                delete entryConfig.template;
+                entryConfig.template = '!!ejs!' + customTemplateUrl;
             }
             if (isInlineSource) {
                 entryConfig.inlineSource = inlineSourceRegex;
             }
-            var templateContent = basePath ? defaultTemplateContent.replace('<base href="/">', '<base href="' + basePath + '">') : defaultTemplateContent;
+            var validPosition = (entryConfig.inject === 'head' || entryConfig.inject === 'body' || entryConfig.inject === false);
 
             var options = Object.assign({
-                inject: 'head',
+                title: '',
+                inject: customTemplateUrl ? (validPosition ? entryConfig.inject : 'head') : false,
           // webconfig html file loader using Polymer HTML
-                templateContent: templateContent,
+                template: '!!ejs!' + path.join(__dirname, 'entryTemplate.html'),
                 filename: fileNamePath + '.html',
+          // basePath = '../../' -->
+          // entry = './static/js/abc.js'
+          // basePath.length -2 + entry --> '../.' + './static/js/abc.js'
+                basePath: isRelativePath ? basePath.substring(0, basePath.length - 2) : '',
                 minify: {
                     removeComments: true,
             // collapseWhitespace: true,
@@ -192,7 +194,6 @@ function getEntryAndPlugins(isDevelopmentEnv) {
                     global.logger.warn(' └── ' + chalk.yellow('Total ' + total + ' Warning' + (total > 1 ? 's.' : '.')));
                 }
             }
-            // console.log(options);
             return {
                 file: name,
                 entryName: attriName,
