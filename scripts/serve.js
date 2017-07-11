@@ -70,18 +70,15 @@ function run(port) {
             proxyTips += ('   ' + chalk.cyan(url) + ' will proxy to ' + chalk.cyan(proxyConfig[url]) + '\n');
         });
     }
-    console.log('homePageConfig.publicURL', homePageConfig);
     app.use(homePageConfig.publicURL ? homePageConfig.publicURL : '/', express.static(paths.appBuild));
 
     var serveRootPath = (homePageConfig.getServedPath === '.' || homePageConfig.getServedPath === './');
 
     http.createServer(app).listen(port, function () {
-        console.log();
         console.log(chalk.green('   The app is running at:'));
         console.log();
         console.log(chalk.green('   http://localhost' + portStr + (serveRootPath ? '/' : homePageConfig.getServedPath) + 'index.html'));
         console.log(proxyTips);
-        console.log();
     });
 }
 

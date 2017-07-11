@@ -340,11 +340,11 @@ function runDevServer(config, host, port, protocol) {
 
             if (proxyConfig) {
                 proxies = Object.keys(proxyConfig);
+            }
 
+            if (proxies && proxies.length) {
                 global.logger.debug('└── Proxy settings: ');
-
                 proxies.forEach(function (url, index) {
-
                     if (index === (proxies.length - 1)) {
                         global.logger.debug('    └── ' + chalk.yellow(url + ' --> ' + proxyConfig[url]));
                         console.log();
@@ -353,8 +353,10 @@ function runDevServer(config, host, port, protocol) {
                     }
                     setProxy(app, proxyConfig[url], url);
                 });
+
             } else {
                 global.logger.debug('└── No Proxy settings.');
+                console.log();
             }
         },
     // It is important to tell WebpackDevServer to use the same "root" path
