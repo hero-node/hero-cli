@@ -88,23 +88,7 @@ function getEntryAndPlugins(isDevelopmentEnv) {
             if (entryConfig.path) {
                 entryConfig.filename = entryConfig.path;
             }
-            var startWithSlash, pathPartLen;
-            var basePath = '';
 
-            if (entryConfig.filename) {
-                entryConfig.filename = entryConfig.filename.trim();
-                startWithSlash = entryConfig.filename.indexOf('/') === 0;
-
-                pathPartLen = entryConfig.filename.split('\/').length;
-                if (startWithSlash) {
-                    pathPartLen--;
-                }
-                pathPartLen--;
-                while (pathPartLen) {
-                    basePath += '../';
-                    pathPartLen--;
-                }
-            }
             if (entryConfig.filename && entryConfig.filename.indexOf('/') === 0) {
                 entryConfig.filename = entryConfig.filename.slice(1);
             }
@@ -134,7 +118,6 @@ function getEntryAndPlugins(isDevelopmentEnv) {
           // basePath = '../../' -->
           // entry = './static/js/abc.js'
           // basePath.length -2 + entry --> '../.' + './static/js/abc.js'
-                basePath: isRelativePath ? basePath.substring(0, basePath.length - 2) : '',
                 minify: {
                     removeComments: true,
             // collapseWhitespace: true,
@@ -150,6 +133,26 @@ function getEntryAndPlugins(isDevelopmentEnv) {
                 // In Native App, No JS `appIndexKey`, so Need Add Reload in Every Page
                 chunks: isDevelopmentEnv ? [webpackHotDevClientKey, attriName] : [attriName]
             }, entryConfig);
+
+            var startWithSlash, pathPartLen;
+            var basePath = '';
+
+            options.filename = options.filename.trim();
+            startWithSlash = options.filename.indexOf('/') === 0;
+
+            pathPartLen = options.filename.split('\/').length;
+            if (startWithSlash) {
+                pathPartLen--;
+            }
+            pathPartLen--;
+            while (pathPartLen) {
+                basePath += '../';
+                pathPartLen--;
+            }
+
+            options.basePath = isRelativePath ? basePath.substring(0, basePath.length - 2) : '';
+
+            // console.log(options);
 
             var hasDuplicatedPath = allGeneratedHTMLNames[options.filename];
             var shortName = name.replace(paths.appSrc, 'src');
