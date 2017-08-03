@@ -30,6 +30,7 @@ function showUsage() {
     console.log(yargs.argv.$0 + ' platform\tBuild native package.');
     console.log(yargs.argv.$0 + ' start\tStart the http server');
     console.log(yargs.argv.$0 + ' build\tCreate a build package');
+    console.log(yargs.argv.$0 + ' publish\tpublish build to IPFS');
     console.log();
     console.log('See: https://github.com/hero-mobile/hero-cli');
     console.log();
@@ -40,6 +41,7 @@ switch (script) {
     case 'platform':
     case 'serve':
     case 'start':
+    case 'publish':
         result = spawn.sync('node', [require.resolve('../scripts/' + script)].concat(args), { stdio: 'inherit' });
 
         if (result.signal) {
