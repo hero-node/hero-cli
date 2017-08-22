@@ -8,6 +8,9 @@ var args = process.argv.slice(3);
 var yargs = require('yargs');
 var result = null;
 
+const startDev = require('../builder/dev-server')
+const build = require('../builder/build')
+
 function showUsage() {
     // var argv = yargs
     //   .usage('Usage: $0 <command> [options]')
@@ -35,8 +38,14 @@ function showUsage() {
     console.log('See: https://github.com/hero-mobile/hero-cli');
     console.log();
 }
+
 switch (script) {
+    case 'dev':
+        startDev()
+        break
     case 'build':
+        build()
+        break
     case 'init':
     case 'platform':
     case 'serve':
