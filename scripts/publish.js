@@ -19,13 +19,14 @@ var spawn = require('cross-spawn');
 
 var result = spawn.sync('ipfs', ['version'], { stdio: 'inherit' });
 if(result.error){
-    console.log('downloading ipfs pkg');
-    result = spawn.sync('curl', ['https://ipfs.io/ipfs/QmQqsmBKZSNVyVCgpKovNvwFRmAHpz88scGSdrS9S1Yt3T','--output','./ipfs'], { stdio: 'inherit' });
-    console.log('need root  to install ipfs');
-    result = spawn.sync('cp', ['./ipfs','/usr/local/bin/ipfs'], { stdio: 'inherit' });
-    result = spawn.sync('chmod', ['775','/usr/local/bin/ipfs'], { stdio: 'inherit' });
+    console.log('need ipfs install');
+    // result = spawn.sync('curl', ['https://ipfs.io/ipfs/QmQqsmBKZSNVyVCgpKovNvwFRmAHpz88scGSdrS9S1Yt3T','--output','./ipfs'], { stdio: 'inherit' });
+    // console.log('need root  to install ipfs');
+    // result = spawn.sync('cp', ['./ipfs','/usr/local/bin/ipfs'], { stdio: 'inherit' });
+    // result = spawn.sync('chmod', ['775','/usr/local/bin/ipfs'], { stdio: 'inherit' });
 }else{
     spawn.sync('ipfs', ['add','-r','./build'], { stdio: 'inherit' });
+    console.log('downloading ipfs pkg');
 }
 
 
