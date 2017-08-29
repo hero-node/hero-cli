@@ -1,20 +1,35 @@
 {
-  "name": "hero-template",
-  "version": "0.0.1",
+  "name": "hero-cli",
+  "description": "请修改 name, description, version",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "hero dev",
+    "build": "hero build && cms -d",
+    "build:production": "hero build && cms -p",
+    "build:all": "hero build && cms -dp"
+  },
   "dependencies": {
+    "@dr/hero-js": "^2.0.0",
     "axios": "^0.16.1",
-    "hero-cli": "github:hero-mobile/hero-cli",
-    "hero-js": "github:hero-mobile/hero-js",
-    "promise": "^7.1.1",
+    "babel-polyfill": "^6.26.0",
     "qs": "^6.4.0"
   },
-  "scripts": {
-    "start": "hero start -e dev -p 3000 --verbose",
-    "build": "hero build -e prod -m -f --verbose",
-    "build-framework": "hero build -e prod -m -f -b --verbose",
-    "build-basic": "hero build -e prod -m -f -s -i --verbose",
-    "serve": "hero serve",
-    "android": "hero platform build android -e prod",
-    "ios": "hero platform build ios -e prod"
+  "devDependencies": {
+    "@dr/cms-uploader": "^1.1.0",
+    "babel-eslint": "^7.2.3",
+    "babel-plugin-transform-class-properties": "^6.19.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "eslint": "^4.5.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1"
+  },
+  "engines": {
+    "node": ">= 8.4.0",
+    "npm": ">= 5.3.0"
   }
 }

@@ -1,9 +1,19 @@
 {
   "presets": [
-    "es2015"
-    ],
+    [
+      "env",
+      {
+        "targets": {
+          "browsers": ["android >= 4", "ios >= 7"]
+        },
+        "modules": false,
+        "useBuiltIns": true
+      }
+    ]
+  ],
   "plugins": [
+    "transform-class-properties",
     "transform-decorators-legacy",
-    "transform-class-properties"
+    "transform-object-rest-spread"
   ]
 }
