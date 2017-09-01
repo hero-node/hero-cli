@@ -17,7 +17,7 @@ const config = {
     filename: '[name].js'
   },
   resolve: {
-    extensions: ['.js', '.vue', '.json'],
+    extensions: ['.js', '.json'],
     alias: {
       '@': resolve('src')
     }

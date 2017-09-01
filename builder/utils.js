@@ -1,5 +1,8 @@
+/* eslint-disable standard/computed-property-even-spacing */
 const path = require('path')
 const glob = require('glob')
+
+const { build } = getUserConfig()
 
 function resolve(dir) {
   return path.resolve(process.cwd(), dir)
@@ -9,7 +12,10 @@ function getEntries(dir = 'src/pages') {
   const entries = {}
   const root = resolve(dir) + '/'
   const files = glob.sync(root + '**/*.js', {
-    ignore: [root + '**/view.js']
+    ignore: [
+      '**/view.js',
+      '**/_*/**', '_*.js'
+    ].concat(build.ignore || [])
   })
 
   files.forEach((file) => {
