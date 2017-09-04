@@ -31,16 +31,16 @@ function getEntries(dir = 'src/pages') {
   return entries
 }
 
-function renameByRouter(entry, router) {
-  const routes = Object.entries(router)
-  Object.entries(entry).forEach(([key, val]) => {
-    const target = routes.find((route) => route[1] === val)
-    if (target) {
-      delete entry[key]
-      entry[target[0]] = val
-    }
-  })
-  return entry
+function mergeEntries(entry, router) {
+  const reducer = (prev, [key, val]) => {
+    prev[val] = key
+    return prev
+  }
+  const reverse = source => Object
+    .entries(source)
+    .reduce(reducer, {})
+
+  return reverse(reverse(Object.assign({}, entry, router)))
 }
 
 function getUserConfig() {
@@ -50,6 +50,6 @@ function getUserConfig() {
 module.exports = {
   resolve,
   getEntries,
-  renameByRouter,
+  mergeEntries,
   getUserConfig
 }

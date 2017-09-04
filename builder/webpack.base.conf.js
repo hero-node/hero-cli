@@ -5,9 +5,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HappyPack = require('happypack')
 const os = require('os')
 
-const { getEntries, renameByRouter, getUserConfig, resolve } = require('./utils')
+const { getEntries, mergeEntries, getUserConfig, resolve } = require('./utils')
 const userConfig = getUserConfig()
-const entry = renameByRouter(getEntries('src/pages'), userConfig.router)
+const entry = mergeEntries(getEntries('src/pages'), userConfig.router)
 
 const config = {
   context: path.resolve(__dirname, '../'),
